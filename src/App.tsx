@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, useState } from "react";
+import "./App.css";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const App = () => {
+  const [counter, setCounter] = useState(0);
+  const className = ["main-button", counter % 2 === 0 ? "yellow" : "blue"].join(
+    " "
   );
-}
+  return (
+    <Fragment>
+      <div data-testid="mylabel" className="counter-label">
+        {counter}
+      </div>
+      <button
+        data-testid="mybutton"
+        className={className}
+        onClick={() => setCounter(counter + 1)}
+      >
+        Increment
+      </button>
+    </Fragment>
+  );
+};
 
 export default App;
