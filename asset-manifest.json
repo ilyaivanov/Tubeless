@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/tubeless/static/css/main.c2518853.chunk.css",
+    "main.js": "/tubeless/static/js/main.23422e75.chunk.js",
+    "main.js.map": "/tubeless/static/js/main.23422e75.chunk.js.map",
+    "runtime~main.js": "/tubeless/static/js/runtime~main.eb4fe3fe.js",
+    "runtime~main.js.map": "/tubeless/static/js/runtime~main.eb4fe3fe.js.map",
+    "static/js/2.228ecdc0.chunk.js": "/tubeless/static/js/2.228ecdc0.chunk.js",
+    "static/js/2.228ecdc0.chunk.js.map": "/tubeless/static/js/2.228ecdc0.chunk.js.map",
+    "index.html": "/tubeless/index.html",
+    "precache-manifest.4f2c7575b81041ab28920d274b516df6.js": "/tubeless/precache-manifest.4f2c7575b81041ab28920d274b516df6.js",
+    "service-worker.js": "/tubeless/service-worker.js",
+    "static/css/main.c2518853.chunk.css.map": "/tubeless/static/css/main.c2518853.chunk.css.map"
+  }
+}
