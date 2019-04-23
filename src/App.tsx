@@ -1,20 +1,36 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import "./App.css";
+import { createStore } from "redux";
+import { connect, Provider } from "react-redux";
 
-const App = () => {
-  const [counter, setCounter] = useState(0);
+interface AppProps {
+  counter: number;
+  increment: () => void;
+}
+
+const App = ({ counter, increment }: AppProps) => {
   return (
     <Fragment>
       <div data-testid="mylabel" className="counter-label">
         {counter}
       </div>
-      <MyButton
-        onPress={() => setCounter(counter + 1)}
-        isEven={counter % 2 === 0}
-      />
+      <MyButton onPress={increment} isEven={counter % 2 === 0} />
     </Fragment>
   );
 };
+
+const increment = () => ({
+  type: "INCREMENT"
+});
+
+const mapState = (state: any) => ({
+  counter: state.counter
+});
+
+const AppConnected = connect(
+  mapState,
+  { increment }
+)(App);
 
 interface Props {
   onPress: () => void;
@@ -31,4 +47,23 @@ export const MyButton = ({ onPress, isEven }: Props) => (
   </button>
 );
 
-export default App;
+const reducer = (state = { counter: 0 }, action: any) => {
+  if (action.type === "INCREMENT") {
+    return {
+      ...state,
+      counter: state.counter + 1
+    };
+  }
+  return state;
+};
+declare var window: any;
+const store = createStore(
+  reducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+
+export default () => (
+  <Provider store={store}>
+    <AppConnected />
+  </Provider>
+);
