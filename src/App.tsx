@@ -3,23 +3,32 @@ import "./App.css";
 
 const App = () => {
   const [counter, setCounter] = useState(0);
-  const className = ["main-button", counter % 2 === 0 ? "yellow" : "blue"].join(
-    " "
-  );
   return (
     <Fragment>
       <div data-testid="mylabel" className="counter-label">
         {counter}
       </div>
-      <button
-        data-testid="mybutton"
-        className={className}
-        onClick={() => setCounter(counter + 1)}
-      >
-        Increment
-      </button>
+      <MyButton
+        onPress={() => setCounter(counter + 1)}
+        isEven={counter % 2 === 0}
+      />
     </Fragment>
   );
 };
+
+interface Props {
+  onPress: () => void;
+  isEven: boolean;
+}
+
+export const MyButton = ({ onPress, isEven }: Props) => (
+  <button
+    data-testid="mybutton"
+    className={["main-button", isEven ? "yellow" : "blue"].join(" ")}
+    onClick={onPress}
+  >
+    Increment
+  </button>
+);
 
 export default App;
