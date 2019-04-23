@@ -8,5 +8,5 @@ import {MyButton} from "../App";
 
 
 storiesOf('Button', module)
-  .add('even', () => <MyButton onPress={() => action('clicked')} isEven={true}  />)
-  .add('odd', () => <MyButton onPress={() => action('clicked')} isEven={false}  />);
+  .add('even', () => <MyButton onPress={action('clicked even')} isEven={true}  />)
+  .add('odd', () => <MyButton onPress={action('clicked odd')} isEven={false}  />);
