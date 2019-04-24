@@ -1,28 +1,48 @@
-import React from 'react';
+import React from "react";
+import { storiesOf } from "@storybook/react";
+import { Node } from "../tree/Node";
 
-import {storiesOf} from '@storybook/react';
+storiesOf("Tree", module)
+  .add("beautiful after", () => (
+    <SampleTree beautifulArgs={{ isHighlightedAfter: true }} />
+  ))
+  .add("beautiful before", () => (
+    <SampleTree beautifulArgs={{ isHighlightedBefore: true }} />
+  ))
+  .add("something after", () => (
+    <SampleTree somethingArgs={{ isHighlightedAfter: true }} />
+  ))
+  .add("something before", () => (
+    <SampleTree somethingArgs={{ isHighlightedBefore: true }} />
+  ))
+  .add("something before with shift -1", () => (
+    <SampleTree
+      somethingArgs={{ isHighlightedBefore: true, highlightShift: -1 }}
+    />
+  ))
+  .add("beautiful after plus 1", () => (
+    <SampleTree
+      beautifulArgs={{ isHighlightedAfter: true, highlightShift: +1 }}
+    />
+  ))
+  .add("beautiful after minus 1", () => (
+    <SampleTree
+      beautifulArgs={{ isHighlightedAfter: true, highlightShift: -1 }}
+    />
+  ));
 
-storiesOf('Tree', module)
-  .add('tree', () => <SampleTree/>)
-
-
-const Node = ({level, text}: { level?: number, text: string }) => (
-  <div style={{marginLeft: level ? level * 30 : 0, height: 30, alignItems: 'center', display: 'flex'}}>
-    <div style={{height: 10, width: 10, backgroundColor: '#000000', borderRadius: 10}}/>
-    <span style={{marginLeft: 10}}>{text}</span>
+const SampleTree = ({ beautifulArgs, somethingArgs }: any) => (
+  <div>
+    <Node text="Item 1">
+      <Node text="Something" {...somethingArgs}>
+        <Node text="beautiful" {...beautifulArgs} />
+      </Node>
+      <Node text="and available">
+        <Node text="only via" />
+        <Node text="keyboard" />
+      </Node>
+    </Node>
+    <Node text="goo" />
+    <Node text="Item 2" />
   </div>
 );
-
-
-const SampleTree = () => (
-  <div>
-    <Node text="Item 1"/>
-    <Node text="Something" level={1}/>
-    <Node text="beautiful" level={2}/>
-    <Node text="and available" level={1}/>
-    <Node text="only via" level={2}/>
-    <Node text="keyboard" level={2}/>
-    <Node text="goo"/>
-    <Node text="Item 2"/>
-  </div>
-)
