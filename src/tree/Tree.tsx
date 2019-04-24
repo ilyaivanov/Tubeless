@@ -1,19 +1,21 @@
-import React, {Fragment, useState} from "react";
-import {canDragOver, convertPlacement} from "./rules";
-import {createInitialNodes} from "./nodes";
+import React, { Fragment, useState } from "react";
+import { canDragOver, convertPlacement, areEqualShallow } from "./rules";
+import { createInitialNodes } from "./nodes";
 import Node from "./Node";
 import DragDropContext from "./DragDropContext";
-import {NodeType, Placement, Tree} from "./types";
+import { NodeType, Placement, Tree } from "./types";
 
-export default ({tree}: { tree: Tree }) => {
+export default ({ tree }: { tree: Tree }) => {
   const [placement, setPlacement] = useState({
     id: ""
   });
 
   const updatePlacement = (newPlacement: Placement) => {
-    console.log(newPlacement, canDragOver(tree.nodes, newPlacement));
     if (canDragOver(tree.nodes, newPlacement)) {
-      setPlacement(convertPlacement(tree.nodes, newPlacement));
+      const converted = convertPlacement(tree.nodes, newPlacement);
+      if (!areEqualShallow(converted, placement)) {
+        setPlacement(converted);
+      }
     }
   };
 
@@ -31,7 +33,7 @@ export default ({tree}: { tree: Tree }) => {
   );
 };
 
-const TreeUI = ({tree, nodes, placement, level = 1, setPlacement}: any) => {
+const TreeUI = ({ tree, nodes, placement, level = 1, setPlacement }: any) => {
   return (
     <Fragment>
       {nodes.map((id: string) => (
