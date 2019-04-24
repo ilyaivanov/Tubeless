@@ -14,8 +14,7 @@ const Node =  React.forwardRef(({
   text,
   style,
   children,
-  isHighlightedAfter,
-  isHighlightedBefore,
+  highlightPlacement,
   highlightShift,
   connectDragSource,
   connectDropTarget
@@ -31,10 +30,9 @@ const Node =  React.forwardRef(({
       {connectDropTarget(
         <div ref={elementRef}>
           <NodeHeader>
-            {(isHighlightedAfter || isHighlightedBefore) && (
+            {highlightPlacement && (
               <Highlighted
-                isHighlightedAfter={isHighlightedAfter}
-                isHighlightedBefore={isHighlightedBefore}
+                highlightPlacement={highlightPlacement}
                 highlightShift={highlightShift}
               />
             )}
@@ -56,5 +54,7 @@ const Node =  React.forwardRef(({
     </NodeContainer>
   );
 });
+
+Node.displayName = 'Node';
 
 export default DropTarget(DragSource(Node));

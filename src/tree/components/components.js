@@ -36,8 +36,12 @@ export const Highlighted = styled.div`
 
   height: ${highlighHeight}px;
   background-color: grey;
-  ${props => props.isHighlightedAfter && `bottom: ${-highlighHeight / 2}px`}
-  ${props => props.isHighlightedBefore && `top: ${-highlighHeight / 2}px`}
+  ${props =>
+    props.highlightPlacement === "PLACE_AFTER" &&
+    `bottom: ${-highlighHeight / 2}px`}
+  ${props =>
+    props.highlightPlacement === "PLACE_BEFORE" &&
+    `top: ${-highlighHeight / 2}px`}
 `;
 
 export const Bullet = styled.div`
