@@ -1,5 +1,5 @@
 export interface Nodes {
-  [id: string]: Node;
+  [id: string]: NodeType;
 }
 
 export interface Tree{
@@ -8,7 +8,7 @@ export interface Tree{
 }
 
 
-interface Node {
+export interface NodeType {
   text: string;
   id: string;
   children?: string[];

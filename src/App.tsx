@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import "./App.css";
 import { createStore } from "redux";
 import { connect, Provider } from "react-redux";
 
