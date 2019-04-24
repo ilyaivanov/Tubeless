@@ -1,5 +1,5 @@
 import { DropTarget } from "react-dnd";
-import { circleWidth, itemMargin } from "./constants";
+import {bulletMargin, itemMargin} from "./constants";
 
 export const getVerticalPlacement = (rect, yPosition) => {
   const middlePoint = (rect.bottom + rect.top) / 2;
@@ -10,12 +10,12 @@ export const getVerticalPlacement = (rect, yPosition) => {
 export default DropTarget(
   "CARD",
   {
-    drop(props, monitor) {
+    drop(props) {
       props.setPlacement({
         id: ""
       });
     },
-    hover(props, monitor, component) {
+    hover(props, monitor, component, foo) {
       if (!component) {
         return null;
       }
@@ -34,22 +34,14 @@ export default DropTarget(
         x: 0
       };
       const diff = differenceFromInitialOffset.x;
-      let placementLevel = Math.floor(diff / itemMargin);
-
-      if (
-        props.placement != placement ||
-        props.placementLevel != placementLevel
-      ) {
-        props.setPlacement({
-          id: props.text,
-          highlightPlacement: placement,
-          highlightShift: placementLevel - props.level
-        });
-        console.log(
-          differenceFromInitialOffset.x,
-          placementLevel - props.level
-        );
-      }
+      const divider = itemMargin  + bulletMargin;
+      let placementLevel = Math.floor((itemMargin + diff) / divider);
+      props.setPlacement({
+        itemBeingDragged: monitor.getItem().id,
+        id: props.text,
+        highlightPlacement: placement,
+        relativeShift: placementLevel - props.level
+      });
     }
   },
   (connect, monitor) => ({
