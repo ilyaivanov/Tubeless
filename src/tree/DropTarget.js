@@ -37,7 +37,7 @@ export default DropTarget(
       let placementLevel = Math.floor((itemMargin + diff) / divider);
       props.setPlacement({
         itemBeingDragged: monitor.getItem().id,
-        id: props.text,
+        id: props.id,
         highlightPlacement: placement,
         relativeShift: placementLevel - props.level
       });

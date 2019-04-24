@@ -2,15 +2,10 @@ import React, { Fragment, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import Node from "../tree/Node";
 import DragDropContext from "../tree/DragDropContext";
-import { canDragOver, convertPlacement } from "../tree/rules";
+import { canDragOver, convertPlacement, findRoots } from "../tree/rules";
+import { createInitialNodes } from "../tree/nodes";
 
 storiesOf("Dragging Tree", module).add("dragafter", () => <SampleTree />);
-
-const node = (text, children) => ({
-  text,
-  id: text,
-  children
-});
 
 const SampleTree = () => {
   const [placement, setPlacement] = useState({
@@ -24,21 +19,14 @@ const SampleTree = () => {
     }
   };
 
-  const nodes = [
-    node("Item 1", [
-      node("Item 1.1"),
-      node("Item 1.2", [node("Item 1.2.1")]),
-      node("Item 1.3")
-    ]),
-    node("Item 2"),
-    node("Item 3")
-  ];
+  const nodes = createInitialNodes();
 
   return (
     <div>
       <DragDropContext>
         <Tree
-          nodes={nodes}
+          tree={createInitialNodes()}
+          nodes={findRoots(nodes)}
           placement={placement}
           setPlacement={updatePlacement}
         />
@@ -47,20 +35,22 @@ const SampleTree = () => {
   );
 };
 
-const Tree = ({ nodes, placement, level = 1, setPlacement }) => {
+const Tree = ({ tree, nodes, placement, level = 1, setPlacement }) => {
   return (
     <Fragment>
       {nodes.map(n => (
         <Node
+          id={tree[n].id}
           setPlacement={setPlacement}
-          key={n.text}
-          text={n.text}
-          {...getPlacementProps(n, placement)}
+          key={tree[n].id}
+          text={tree[n].text}
+          {...getPlacementProps(tree[n], placement)}
           level={level}
         >
-          {n.children && (
+          {tree[n].children && (
             <Tree
-              nodes={n.children}
+              tree={tree}
+              nodes={tree[n].children}
               placement={placement}
               level={level + 1}
               setPlacement={setPlacement}
