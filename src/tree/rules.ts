@@ -10,10 +10,17 @@ export const convertPlacement = (
 ): Placement => {
   if (placement.relativeShift >= 1) {
     const parent = getParentKey(nodes, placement.id);
-    const isFirst = parent && nodes[parent].children && nodes[parent].children[0] === placement.id;
+    let isFirst = false;
+    if (parent) {
+      const children = nodes[parent].children;
+      if (children) {
+        isFirst = children[0] === placement.id;
+      }
+    }
     return {
       ...placement,
-      relativeShift: placement.highlightPlacement === "PLACE_BEFORE" && isFirst ? 0 : 1
+      relativeShift:
+        placement.highlightPlacement === "PLACE_BEFORE" && isFirst ? 0 : 1
     };
   }
 
@@ -34,4 +41,13 @@ export const getParentKey = (
 //Array utils
 function contains<T>(array: T[] | undefined, item: T): boolean {
   return !!array && array.indexOf(item) >= 0;
+}
+
+export function areEqualShallow(a: any, b: any) {
+  for (var key in a) {
+    if (a[key] !== b[key]) {
+      return false;
+    }
+  }
+  return true;
 }
