@@ -15,11 +15,10 @@ export default DropTarget(
         id: ""
       });
     },
-    hover(props, monitor, component, foo) {
+    hover(props, monitor, component) {
       if (!component) {
         return null;
       }
-      // node = HTML Div element from imperative API
       const node = component.getNode();
       if (!node) {
         return null;

@@ -27,8 +27,8 @@ export const AddNewNodeItem = styled.div`
 export const Highlighted = styled.div`
   margin-left: ${props =>
     marginOffset +
-    (props.highlightShift
-      ? props.highlightShift * (itemMargin + bulletMargin)
+    (props.relativeShift
+      ? props.relativeShift * (itemMargin + bulletMargin)
       : 0)}px;
   position: absolute;
   left: 0;

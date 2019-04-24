@@ -1,4 +1,4 @@
-import React, {useImperativeHandle, useRef} from "react";
+import React, { useImperativeHandle, useRef } from "react";
 import DragSource from "./DragSource";
 import {
   AddNewNodeItem,
@@ -10,51 +10,56 @@ import {
 } from "./components/components";
 import DropTarget from "./DropTarget";
 
-const Node =  React.forwardRef(({
-  text,
-  style,
-  children,
-  highlightPlacement,
-  highlightShift,
-  connectDragSource,
-  connectDropTarget
-}, ref) => {
-  const elementRef = useRef(null);
+const Node = React.forwardRef(
+  (
+    {
+      text,
+      style,
+      children,
+      highlightPlacement,
+      relativeShift,
+      connectDragSource,
+      connectDropTarget
+    },
+    ref
+  ) => {
+    const elementRef = useRef(null);
 
-  useImperativeHandle(ref, () => ({
-    getNode: () => elementRef.current,
-  }));
+    useImperativeHandle(ref, () => ({
+      getNode: () => elementRef.current
+    }));
 
-  return (
-    <NodeContainer style={style}>
-      {connectDropTarget(
-        <div ref={elementRef}>
-          <NodeHeader>
-            {highlightPlacement && (
-              <Highlighted
-                highlightPlacement={highlightPlacement}
-                highlightShift={highlightShift}
-              />
-            )}
-            {connectDragSource(
-              <div>
-                <Bullet />
-              </div>
-            )}
-            <span>{text}</span>
-          </NodeHeader>
-        </div>
-      )}
-      {children && (
-        <ChildrenSpace>
-          {children}
-          <AddNewNodeItem />
-        </ChildrenSpace>
-      )}
-    </NodeContainer>
-  );
-});
+    return (
+      <NodeContainer style={style}>
+        {connectDropTarget(
+          <div ref={elementRef}>
+            <NodeHeader>
+              {highlightPlacement && (
+                <Highlighted
+                  highlightPlacement={highlightPlacement}
+                  relativeShift={relativeShift}
+                />
+              )}
+              {connectDragSource(
+                <div>
+                  <Bullet />
+                </div>
+              )}
+              <span>{text}</span>
+            </NodeHeader>
+          </div>
+        )}
+        {children && (
+          <ChildrenSpace>
+            {children}
+            <AddNewNodeItem />
+          </ChildrenSpace>
+        )}
+      </NodeContainer>
+    );
+  }
+);
 
-Node.displayName = 'Node';
+Node.displayName = "Node";
 
 export default DropTarget(DragSource(Node));

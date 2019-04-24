@@ -4,7 +4,7 @@ export default DragSource(
   "CARD",
   {
     beginDrag: props => ({
-      id: props.id
+      id: props.id || props.text
     }),
     endDrag: (props, monitor) => {
       const didDrop = monitor.didDrop();
