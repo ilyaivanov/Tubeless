@@ -5,7 +5,7 @@ import DragDropContext from "../tree/DragDropContext";
 
 storiesOf("Dragging Tree", module).add("dragafter", () => <SampleTree />);
 
-const SampleTree = ({ beautifulArgs, somethingArgs }: any) => (
+const SampleTree = ({ beautifulArgs, somethingArgs }) => (
   <div>
     <DragDropContext>
       <Node text="Item 1">

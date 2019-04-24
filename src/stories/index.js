@@ -33,7 +33,7 @@ storiesOf("Tree", module)
     />
   ));
 
-const SampleTree = ({ beautifulArgs, somethingArgs }: any) => (
+const SampleTree = ({ beautifulArgs, somethingArgs }) => (
   <div>
     <Node text="Item 1">
       <Node text="Something" {...somethingArgs}>
