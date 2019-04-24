@@ -20,17 +20,17 @@ storiesOf("Tree", module)
   ))
   .add("something before with shift -1", () => (
     <SampleTree
-      somethingArgs={{ highlightPlacement: 'PLACE_BEFORE', highlightShift: -1 }}
+      somethingArgs={{ highlightPlacement: 'PLACE_BEFORE', relativeShift: -1 }}
     />
   ))
   .add("beautiful after plus 1", () => (
     <SampleTree
-      beautifulArgs={{ highlightPlacement: 'PLACE_AFTER', highlightShift: +1 }}
+      beautifulArgs={{ highlightPlacement: 'PLACE_AFTER', relativeShift: +1 }}
     />
   ))
   .add("beautiful after minus 1", () => (
     <SampleTree
-      beautifulArgs={{ highlightPlacement: 'PLACE_AFTER', highlightShift: -1 }}
+      beautifulArgs={{ highlightPlacement: 'PLACE_AFTER', relativeShift: -1 }}
     />
   ));
 
