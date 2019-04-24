@@ -18,3 +18,17 @@ export const convertPlacement = (
 
   return placement;
 };
+
+export const findRoots = (nodes: Nodes): string[] =>
+  Object.keys(nodes).filter(id => !getParentKey(nodes, id));
+
+export const getParentKey = (
+  nodes: Nodes,
+  nodeId: string
+): string | undefined =>
+  Object.keys(nodes).find(key => contains(nodes[key].children, nodeId));
+
+//Array utils
+function contains<T>(array: T[] | undefined, item: T): boolean {
+  return !!array && array.indexOf(item) >= 0;
+}
