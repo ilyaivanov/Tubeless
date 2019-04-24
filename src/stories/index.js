@@ -1,6 +1,8 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { Node } from "../tree/Node";
+import Node from "../tree/Node";
+
+import './tree-drag';
 
 storiesOf("Tree", module)
   .add("beautiful after", () => (
