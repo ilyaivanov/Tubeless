@@ -5,7 +5,16 @@ export default DragSource(
   {
     beginDrag: props => ({
       id: props.id
-    })
+    }),
+    endDrag: (props, monitor) => {
+      const didDrop = monitor.didDrop();
+      if (!didDrop) {
+        props.setPlacement({
+          id: ""
+        });
+      }
+
+    }
   },
   (connect, monitor) => ({
     connectDragSource: connect.dragSource(),

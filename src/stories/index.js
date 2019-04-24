@@ -3,38 +3,39 @@ import { storiesOf } from "@storybook/react";
 import Node from "../tree/Node";
 
 import './tree-drag';
+import DragDropContext from '../tree/DragDropContext';
 
 storiesOf("Tree", module)
   .add("beautiful after", () => (
-    <SampleTree beautifulArgs={{ isHighlightedAfter: true }} />
+    <SampleTree beautifulArgs={{ highlightPlacement: 'PLACE_AFTER' }} />
   ))
   .add("beautiful before", () => (
-    <SampleTree beautifulArgs={{ isHighlightedBefore: true }} />
+    <SampleTree beautifulArgs={{ highlightPlacement: 'PLACE_BEFORE' }} />
   ))
   .add("something after", () => (
-    <SampleTree somethingArgs={{ isHighlightedAfter: true }} />
+    <SampleTree somethingArgs={{ highlightPlacement: 'PLACE_AFTER' }} />
   ))
   .add("something before", () => (
-    <SampleTree somethingArgs={{ isHighlightedBefore: true }} />
+    <SampleTree somethingArgs={{ highlightPlacement: 'PLACE_BEFORE' }} />
   ))
   .add("something before with shift -1", () => (
     <SampleTree
-      somethingArgs={{ isHighlightedBefore: true, highlightShift: -1 }}
+      somethingArgs={{ highlightPlacement: 'PLACE_BEFORE', highlightShift: -1 }}
     />
   ))
   .add("beautiful after plus 1", () => (
     <SampleTree
-      beautifulArgs={{ isHighlightedAfter: true, highlightShift: +1 }}
+      beautifulArgs={{ highlightPlacement: 'PLACE_AFTER', highlightShift: +1 }}
     />
   ))
   .add("beautiful after minus 1", () => (
     <SampleTree
-      beautifulArgs={{ isHighlightedAfter: true, highlightShift: -1 }}
+      beautifulArgs={{ highlightPlacement: 'PLACE_AFTER', highlightShift: -1 }}
     />
   ));
 
 const SampleTree = ({ beautifulArgs, somethingArgs }) => (
-  <div>
+  <DragDropContext>
     <Node text="Item 1">
       <Node text="Something" {...somethingArgs}>
         <Node text="beautiful" {...beautifulArgs} />
@@ -46,5 +47,5 @@ const SampleTree = ({ beautifulArgs, somethingArgs }) => (
     </Node>
     <Node text="goo" />
     <Node text="Item 2" />
-  </div>
+  </DragDropContext>
 );

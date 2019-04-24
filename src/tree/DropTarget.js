@@ -11,8 +11,9 @@ export default DropTarget(
   "CARD",
   {
     drop(props, monitor) {
-      // @ts-ignore
-      // props.onDrop(monitor.getItem().id)
+      props.setPlacement({
+        id: ""
+      });
     },
     hover(props, monitor, component) {
       if (!component) {
@@ -21,7 +22,6 @@ export default DropTarget(
       // node = HTML Div element from imperative API
       const node = component.getNode();
       if (!node) {
-        // if (!node || !props.canMove(monitor.getItem().id, props.id)) {
         return null;
       }
 
@@ -34,29 +34,20 @@ export default DropTarget(
         x: 0
       };
       const diff = differenceFromInitialOffset.x;
-      let placementLevel = Math.floor((diff - circleWidth / 2) / itemMargin);
-
-      //thresholds are business logic
-      const levelThreshsold =
-        (props.placement == "PLACE_BEFORE" && props.isFirst) ||
-        (props.placement == "PLACE_AFTER" && monitor.getItem().id == props.id)
-          ? props.level
-          : props.level + 1;
-
-      if (placementLevel > levelThreshsold) {
-        placementLevel = levelThreshsold;
-      }
+      let placementLevel = Math.floor(diff / itemMargin);
 
       if (
         props.placement != placement ||
         props.placementLevel != placementLevel
       ) {
-        // props.updatePlacement(props.id, placement, placementLevel, placementLevel > props.level);
+        props.setPlacement({
+          id: props.text,
+          highlightPlacement: placement,
+          highlightShift: placementLevel - props.level
+        });
         console.log(
-          props.text,
-          placement,
-          placementLevel,
-          placementLevel > props.level
+          differenceFromInitialOffset.x,
+          placementLevel - props.level
         );
       }
     }
