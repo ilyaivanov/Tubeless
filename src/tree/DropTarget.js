@@ -1,12 +1,7 @@
-import { DropTarget, DropTargetConnector, DropTargetMonitor } from "react-dnd";
+import { DropTarget } from "react-dnd";
 import { circleWidth, itemMargin } from "./constants";
 
-type PLACE_POSITION = "PLACE_BEFORE" | "PLACE_AFTER";
-
-export const getVerticalPlacement = (
-  rect: ClientRect,
-  yPosition: number
-): PLACE_POSITION => {
+export const getVerticalPlacement = (rect, yPosition) => {
   const middlePoint = (rect.bottom + rect.top) / 2;
   if (middlePoint >= yPosition) return "PLACE_BEFORE";
   else return "PLACE_AFTER";
@@ -15,11 +10,11 @@ export const getVerticalPlacement = (
 export default DropTarget(
   "CARD",
   {
-    drop(props: any, monitor: DropTargetMonitor) {
+    drop(props, monitor) {
       // @ts-ignore
       // props.onDrop(monitor.getItem().id)
     },
-    hover(props: any, monitor: DropTargetMonitor, component: any) {
+    hover(props, monitor, component) {
       if (!component) {
         return null;
       }
@@ -31,7 +26,7 @@ export default DropTarget(
       }
 
       const hoverBoundingRect = node.getBoundingClientRect();
-      const clientOffset = monitor.getClientOffset() as { y: number };
+      const clientOffset = monitor.getClientOffset();
 
       const placement = getVerticalPlacement(hoverBoundingRect, clientOffset.y);
 
@@ -40,7 +35,6 @@ export default DropTarget(
       };
       const diff = differenceFromInitialOffset.x;
       let placementLevel = Math.floor((diff - circleWidth / 2) / itemMargin);
-
 
       //thresholds are business logic
       const levelThreshsold =
@@ -67,7 +61,7 @@ export default DropTarget(
       }
     }
   },
-  (connect: DropTargetConnector, monitor: DropTargetMonitor) => ({
+  (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver()
   })

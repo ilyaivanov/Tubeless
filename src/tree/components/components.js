@@ -24,8 +24,8 @@ export const AddNewNodeItem = styled.div`
   }
 `;
 
-export const Highlighted: any = styled.div`
-  margin-left: ${(props: any) =>
+export const Highlighted = styled.div`
+  margin-left: ${props =>
     marginOffset +
     (props.highlightShift
       ? props.highlightShift * (itemMargin + bulletMargin)
@@ -36,10 +36,8 @@ export const Highlighted: any = styled.div`
 
   height: ${highlighHeight}px;
   background-color: grey;
-  ${(props: any) =>
-    props.isHighlightedAfter && `bottom: ${-highlighHeight / 2}px`}
-  ${(props: any) =>
-    props.isHighlightedBefore && `top: ${-highlighHeight / 2}px`}
+  ${props => props.isHighlightedAfter && `bottom: ${-highlighHeight / 2}px`}
+  ${props => props.isHighlightedBefore && `top: ${-highlighHeight / 2}px`}
 `;
 
 export const Bullet = styled.div`
