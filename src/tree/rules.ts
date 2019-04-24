@@ -13,12 +13,12 @@ export const convertPlacement = (
     const isFirst = parent && nodes[parent].children && nodes[parent].children[0] === placement.id;
     return {
       ...placement,
-      //TODO: check if items is first
       relativeShift: placement.highlightPlacement === "PLACE_BEFORE" && isFirst ? 0 : 1
     };
   }
 
   //TODO: handle when placing an items before with previous item having a very deep nesting area
+  //TODO: handle case when item is being place inside itself
   return placement;
 };
 
