@@ -51,9 +51,13 @@ export const Bullet = styled.div`
   border-radius: ${circleWidth}px;
   margin-left: ${bulletMargin}px;
   margin-right: ${bulletMargin}px;
-  &:hover {
+
+  ${props => props.isDragging && `transform: scale(0);`}
+  ${props =>
+    !props.isDragging &&
+    `&:hover {
     transform: scale(1.8);
-  }
+  }`}
 `;
 
 export const ChildrenSpace = styled.div`
