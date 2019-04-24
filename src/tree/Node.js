@@ -19,7 +19,8 @@ const Node = React.forwardRef(
       highlightPlacement,
       relativeShift,
       connectDragSource,
-      connectDropTarget
+      connectDropTarget,
+      isDragging
     },
     ref
   ) => {
@@ -42,7 +43,7 @@ const Node = React.forwardRef(
               )}
               {connectDragSource(
                 <div>
-                  <Bullet />
+                  <Bullet isDragging={isDragging} />
                 </div>
               )}
               <span>{text}</span>
