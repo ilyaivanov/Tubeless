@@ -55,3 +55,12 @@ export function areEqualShallow(a: any, b: any) {
 export function except<T>(items: T[], item: T): T[]{
   return items.filter(i => i !== item);
 }
+
+export function moveItemIntoIndex<T>(items: T[], itemToMove: T, targetIndex: number): T[] {
+  const itemIndex = items.indexOf(itemToMove);
+  const copy = [...items];
+  copy.splice(targetIndex, 0, itemToMove);
+  const indexToRemove = itemIndex < targetIndex ? itemIndex : itemIndex + 1;
+  copy.splice(indexToRemove, 1);
+  return copy;
+}
