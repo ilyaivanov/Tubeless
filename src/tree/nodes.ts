@@ -1,6 +1,6 @@
 import { Nodes } from "./types";
 
-export const createTwoFlatNodes = (): Nodes => ({
+export const createFlatNodes = (): Nodes => ({
   "1": {
     id: "1",
     text: "Item 1"
@@ -8,6 +8,10 @@ export const createTwoFlatNodes = (): Nodes => ({
   "2": {
     id: "2",
     text: "Item 2"
+  },
+  "3": {
+    id: "3",
+    text: "Item 3"
   }
 });
 

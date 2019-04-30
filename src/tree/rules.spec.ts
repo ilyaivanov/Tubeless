@@ -1,6 +1,6 @@
 import {canDragOver} from "./rules";
 import {Placement} from "./types";
-import {createTwoFlatNodes} from "./nodes";
+import {createFlatNodes} from "./nodes";
 
 describe("having a two nodes", () => {
   it("should be possible to place Item 2 before Item 1", () => {
@@ -10,6 +10,6 @@ describe("having a two nodes", () => {
       id: "Item 1",
       itemBeingDragged: "Item 2"
     };
-    expect(canDragOver(createTwoFlatNodes(), placement)).toBe(true);
+    expect(canDragOver(createFlatNodes(), placement)).toBe(true);
   });
 });

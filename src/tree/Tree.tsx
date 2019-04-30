@@ -1,14 +1,20 @@
 import React, { Fragment, useState } from "react";
 import { canDragOver, convertPlacement, areEqualShallow } from "./rules";
-import { createInitialNodes } from "./nodes";
 import Node from "./Node";
 import DragDropContext from "./DragDropContext";
 import { NodeType, Placement, Tree } from "./types";
 
-export default ({ tree }: { tree: Tree }) => {
+export default ({ tree, onDropAction }: { tree: Tree, onDropAction: any }) => {
   const [placement, setPlacement] = useState({
     id: ""
   });
+
+  const onDrop = () => {
+    onDropAction(placement);
+    setPlacement({
+      id: ""
+    });
+  }
 
   const updatePlacement = (newPlacement: Placement) => {
     if (canDragOver(tree.nodes, newPlacement)) {
@@ -23,17 +29,18 @@ export default ({ tree }: { tree: Tree }) => {
     <div>
       <DragDropContext>
         <TreeUI
-          tree={createInitialNodes()}
+          tree={tree.nodes}
           nodes={tree.roots}
           placement={placement}
           setPlacement={updatePlacement}
+          onDrop={onDrop}
         />
       </DragDropContext>
     </div>
   );
 };
 
-const TreeUI = ({ tree, nodes, placement, level = 1, setPlacement }: any) => {
+const TreeUI = ({ tree, nodes, placement, level = 1, setPlacement, onDrop }: any) => {
   return (
     <Fragment>
       {nodes.map((id: string) => (
@@ -44,6 +51,7 @@ const TreeUI = ({ tree, nodes, placement, level = 1, setPlacement }: any) => {
           text={tree[id].text}
           level={level}
           setPlacement={setPlacement}
+          onDrop={onDrop}
           {...getPlacementProps(tree[id], placement)}
         >
           {tree[id].children && (
@@ -53,6 +61,7 @@ const TreeUI = ({ tree, nodes, placement, level = 1, setPlacement }: any) => {
               placement={placement}
               level={level + 1}
               setPlacement={setPlacement}
+              onDrop={onDrop}
             />
           )}
         </Node>

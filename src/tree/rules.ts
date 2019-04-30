@@ -51,3 +51,7 @@ export function areEqualShallow(a: any, b: any) {
   }
   return true;
 }
+
+export function except<T>(items: T[], item: T): T[]{
+  return items.filter(i => i !== item);
+}

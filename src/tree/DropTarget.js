@@ -11,9 +11,7 @@ export default DropTarget(
   "CARD",
   {
     drop(props) {
-      props.setPlacement({
-        id: ""
-      });
+      props.onDrop();
     },
     hover(props, monitor, component) {
       if (!component) {
