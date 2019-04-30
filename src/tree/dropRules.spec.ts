@@ -19,13 +19,27 @@ const threeNodes: Tree = {
     roots: ['1', '2', '3']
 };
 
-it('when droping second item before first it should place second item at the beggining', () => {
-    const action: Placement = {
+const createBeforePlacement = (placememt: Partial<Placement>): Placement => ({
+    relativeShift: 0,
+    highlightPlacement: 'PLACE_BEFORE',
+    id: '',
+    itemBeingDragged: '',
+    ...placememt,
+});
+
+const createAfterPlacement = (placememt: Partial<Placement>): Placement => ({
+    relativeShift: 0,
+    highlightPlacement: 'PLACE_AFTER',
+    id: '',
+    itemBeingDragged: '',
+    ...placememt,
+})
+
+it('droping second item before first', () => {
+    const action: Placement = createBeforePlacement({
         itemBeingDragged: '2',
-        highlightPlacement: 'PLACE_BEFORE',
         id: '1',
-        relativeShift: 0
-    };
+    });
     const expectedTree = {
         nodes: threeNodes.nodes,
         roots: ['2', '1', '3']
@@ -34,15 +48,45 @@ it('when droping second item before first it should place second item at the beg
 })
 
 
-it('when droping third item before second it should place third item between second and first', () => {
-    const action: Placement = {
+it('droping third item before second', () => {
+    const action: Placement = createBeforePlacement({
         itemBeingDragged: '3',
-        highlightPlacement: 'PLACE_BEFORE',
         id: '2',
-        relativeShift: 0
-    };
+    });
     const expectedRoots = ['1', '3', '2'];
 
     expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
+
 })
 
+it('droping first item before second', () => {
+    const action: Placement = createBeforePlacement({
+        itemBeingDragged: '1',
+        id: '2',
+    });
+    const expectedRoots = ['1', '2', '3'];
+
+    expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
+});
+
+
+it('droping first item before third', () => {
+    const action: Placement = createBeforePlacement({
+        itemBeingDragged: '1',
+        id: '3',
+    });
+    const expectedRoots = ['2', '1', '3'];
+
+    expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
+});
+
+
+it('droping first item after second', () => {
+    const action: Placement = createAfterPlacement({
+        itemBeingDragged: '1',
+        id: '2',
+    });
+    const expectedRoots = ['2', '1', '3'];
+
+    expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
+});

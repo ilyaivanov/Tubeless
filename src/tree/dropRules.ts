@@ -1,22 +1,16 @@
-import { Nodes, Placement, Tree } from "./types";
-import { except } from "./rules";
+import { Placement, Tree } from "./types";
+import { moveItemIntoIndex } from "./rules";
 
 
 export function handleDrop(tree: Tree, action: Placement): Tree {
     const nodes = {
         ...tree.nodes
     }
-    const index = tree.roots.indexOf(action.id);
-    //place itemBeingDragged into index position
+    let index = tree.roots.indexOf(action.id);
+    const targetIndex = action.highlightPlacement === 'PLACE_AFTER' ? index + 1 : index;
     return {
         nodes,
-        roots: moveItemIntoIndex(tree.roots, action.itemBeingDragged, index)
+        roots: moveItemIntoIndex(tree.roots, action.itemBeingDragged, targetIndex)
     };
 }
 
-//TODO: handle case when moving item forward or backward
-function moveItemIntoIndex<T>(items: T[], itemToMove: T, targetIndex: number): T[] {
-    const removed = except([...items], itemToMove);
-    removed.splice(targetIndex, 0, itemToMove);
-    return removed;
-}
