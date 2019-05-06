@@ -1,5 +1,6 @@
 import { Placement, Tree } from "./types";
 import { handleDrop } from "./dropRules";
+import { findRoots } from "./rules";
 
 const threeNodes: Tree = {
     nodes: {
@@ -33,60 +34,104 @@ const createAfterPlacement = (placememt: Partial<Placement>): Placement => ({
     id: '',
     itemBeingDragged: '',
     ...placememt,
-})
+});
 
-it('droping second item before first', () => {
-    const action: Placement = createBeforePlacement({
-        itemBeingDragged: '2',
-        id: '1',
+describe('Having a flat three nodes', () => {
+    it('droping second item before first', () => {
+        const action: Placement = createBeforePlacement({
+            itemBeingDragged: '2',
+            id: '1',
+        });
+        const expectedTree = {
+            nodes: threeNodes.nodes,
+            roots: ['2', '1', '3']
+        };
+        expect(handleDrop(threeNodes, action)).toEqual(expectedTree);
+    })
+
+
+    it('droping third item before second', () => {
+        const action: Placement = createBeforePlacement({
+            itemBeingDragged: '3',
+            id: '2',
+        });
+        const expectedRoots = ['1', '3', '2'];
+
+        expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
+
+    })
+
+    it('droping first item before second', () => {
+        const action: Placement = createBeforePlacement({
+            itemBeingDragged: '1',
+            id: '2',
+        });
+        const expectedRoots = ['1', '2', '3'];
+
+        expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
     });
-    const expectedTree = {
-        nodes: threeNodes.nodes,
-        roots: ['2', '1', '3']
+
+
+    it('droping first item before third', () => {
+        const action: Placement = createBeforePlacement({
+            itemBeingDragged: '1',
+            id: '3',
+        });
+        const expectedRoots = ['2', '1', '3'];
+
+        expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
+    });
+
+
+    it('droping first item after second', () => {
+        const action: Placement = createAfterPlacement({
+            itemBeingDragged: '1',
+            id: '2',
+        });
+        const expectedRoots = ['2', '1', '3'];
+
+        expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
+    });
+});
+
+
+describe('Having a flat list nested', () => {
+    const tree: Tree = {
+        nodes: {
+            'Root Node': {
+                id: '1',
+                text: 'First',
+                children: ['2', '3', '4']
+            },
+            ...threeNodes.nodes,
+        },
+        roots: ['Root Node']
     };
-    expect(handleDrop(threeNodes, action)).toEqual(expectedTree);
-})
-
-
-it('droping third item before second', () => {
-    const action: Placement = createBeforePlacement({
+    const action = createBeforePlacement({
         itemBeingDragged: '3',
-        id: '2',
+        id: '2'
     });
-    const expectedRoots = ['1', '3', '2'];
-
-    expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
-
+    const expectedRootChildren = ['3', '2', '4'];
+    expect(handleDrop(tree, action).nodes['Root Node'].children).toEqual(expectedRootChildren);
 })
 
-it('droping first item before second', () => {
-    const action: Placement = createBeforePlacement({
-        itemBeingDragged: '1',
-        id: '2',
+
+describe('Placing first item as a subchild of a second item', () => {
+    let tree: Tree;
+    beforeEach(() => {
+        const placememt = createAfterPlacement({
+            itemBeingDragged: '1',
+            id: '2',
+            relativeShift: 1
+        })
+        tree = handleDrop(threeNodes, placememt);
     });
-    const expectedRoots = ['1', '2', '3'];
 
-    expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
-});
-
-
-it('droping first item before third', () => {
-    const action: Placement = createBeforePlacement({
-        itemBeingDragged: '1',
-        id: '3',
+    it('it should remove first item from the roots', () => {
+        expect(tree.roots).toEqual(['1', '3']);
     });
-    const expectedRoots = ['2', '1', '3'];
 
-    expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
-});
+    it('it should insert first item as a first child', () => {
 
-
-it('droping first item after second', () => {
-    const action: Placement = createAfterPlacement({
-        itemBeingDragged: '1',
-        id: '2',
-    });
-    const expectedRoots = ['2', '1', '3'];
-
-    expect(handleDrop(threeNodes, action).roots).toEqual(expectedRoots);
+    })
 });
