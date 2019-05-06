@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from "react";
+import Tree from "./Tree";
+import {createFlatNodes, createInitialNodes} from "./sampleNodes";
+import {findRoots} from "./rules/rules";
+import {Nodes, Placement} from "./types";
+import {handleDrop} from "./rules/dropRules";
 
-const App: React.FC = () => {
+export default () => {
+  const initialNodes = createInitialNodes();
+  const [tree, setTree] = useState({
+    nodes: initialNodes,
+    roots: findRoots(initialNodes)
+  });
+
+  const handleDropAction = (action: Placement) => {
+    console.log('Drop action', action);
+    setTree(handleDrop(tree, action));
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App;
+    <Tree
+      tree={tree}
+      onDropAction={handleDropAction}
+    />
+  )
+};
