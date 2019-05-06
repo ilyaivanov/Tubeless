@@ -1,4 +1,5 @@
 {
+  "homepage": "https://ilyaivanov.github.io/Tubeless",
   "name": "tubeless",
   "version": "0.1.0",
   "private": true,
@@ -7,16 +8,21 @@
     "@types/node": "12.0.0",
     "@types/react": "16.8.16",
     "@types/react-dom": "16.8.4",
+    "gh-pages": "^2.0.1",
     "react": "^16.8.6",
+    "react-dnd": "^7.4.5",
+    "react-dnd-html5-backend": "^7.4.4",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.0",
+    "styled-components": "^4.2.0",
     "typescript": "3.4.5"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
