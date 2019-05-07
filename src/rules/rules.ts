@@ -1,4 +1,4 @@
-import {Nodes, Placement} from "../types";
+import { Nodes, Placement } from "../types";
 
 export const canDragOver = (nodes: Nodes, placement: Placement) => {
   return true;
@@ -56,7 +56,11 @@ export function except<T>(items: T[], item: T): T[] {
   return items.filter(i => i !== item);
 }
 
-export function moveItemIntoIndex<T>(items: T[], itemToMove: T, targetIndex: number): T[] {
+export function moveItemIntoIndex<T>(
+  items: T[],
+  itemToMove: T,
+  targetIndex: number
+): T[] {
   const itemIndex = items.indexOf(itemToMove);
   const copy = [...items];
   copy.splice(targetIndex, 0, itemToMove);

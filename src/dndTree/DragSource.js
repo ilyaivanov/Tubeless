@@ -13,7 +13,6 @@ export default DragSource(
           id: ""
         });
       }
-
     }
   },
   (connect, monitor) => ({

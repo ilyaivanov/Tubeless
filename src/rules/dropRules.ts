@@ -7,8 +7,10 @@ export function handleDrop(tree: Tree, action: Placement): Tree {
   if (action.relativeShift === 1) {
     return insertAsSubchild(tree, action);
   } else if (dropTargetParent)
-    return updateChildren(removeChild(tree, action.itemBeingDragged), dropTargetParent, children =>
-      moveItemInContext(children, action)
+    return updateChildren(
+      removeChild(tree, action.itemBeingDragged),
+      dropTargetParent,
+      children => moveItemInContext(children, action)
     );
   else {
     return updateRoots(tree, roots => moveItemInContext(roots, action));
