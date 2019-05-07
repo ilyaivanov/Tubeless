@@ -13,8 +13,8 @@ export default () => {
   });
 
   const handleDropAction = (action: Placement) => {
-    console.log('Drop action', action);
     setTree(handleDrop(tree, action));
+    console.log('Drop action', action, handleDrop(tree, action));
   }
 
   return (
