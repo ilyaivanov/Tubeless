@@ -1,7 +1,7 @@
-import {Placement, Tree} from "../types";
-import {handleDrop} from "./dropRules";
-import {createInitialNodes} from "../sampleNodes";
-import {findRoots} from "./rules";
+import { Placement, Tree } from "../types";
+import { handleDrop } from "./dropRules";
+import { createInitialNodes } from "../sampleNodes";
+import { findRoots } from "./rules";
 
 const threeNodes: Tree = {
   nodes: {
@@ -179,6 +179,6 @@ it("12", () => {
   });
   const res = handleDrop(tree, action);
 
-  expect(res.nodes['3'].children).toEqual(['6', '4']);
-  expect(res.roots).toEqual(['1', '7']);
+  expect(res.nodes["3"].children).toEqual(["6", "4"]);
+  expect(res.roots).toEqual(["1", "7"]);
 });

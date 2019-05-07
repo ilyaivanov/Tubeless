@@ -4,7 +4,7 @@ import Node from "./nodes/TextNode";
 import DragDropContext from "./dndTree/DragDropContext";
 import { NodeType, Placement, Tree } from "./types";
 
-export default ({ tree, onDropAction }: { tree: Tree, onDropAction: any }) => {
+export default ({ tree, onDropAction }: { tree: Tree; onDropAction: any }) => {
   const [placement, setPlacement] = useState({
     id: ""
   });
@@ -14,7 +14,7 @@ export default ({ tree, onDropAction }: { tree: Tree, onDropAction: any }) => {
     setPlacement({
       id: ""
     });
-  }
+  };
 
   const updatePlacement = (newPlacement: Placement) => {
     if (canDragOver(tree.nodes, newPlacement)) {
@@ -40,7 +40,14 @@ export default ({ tree, onDropAction }: { tree: Tree, onDropAction: any }) => {
   );
 };
 
-const TreeUI = ({ tree, nodes, placement, level = 1, setPlacement, onDrop }: any) => {
+const TreeUI = ({
+  tree,
+  nodes,
+  placement,
+  level = 1,
+  setPlacement,
+  onDrop
+}: any) => {
   return (
     <Fragment>
       {nodes.map((id: string) => (

@@ -26,21 +26,21 @@ export const AddNewNodeItem = styled.div`
 
 export const Highlighted = styled.div`
   margin-left: ${props =>
-  marginOffset +
-  (props.relativeShift
-    ? props.relativeShift * (itemMargin + bulletMargin)
-    : 0)}px;
+    marginOffset +
+    (props.relativeShift
+      ? props.relativeShift * (itemMargin + bulletMargin)
+      : 0)}px;
   position: absolute;
   left: 0;
   right: 0;
   height: ${highlighHeight}px;
   background-color: grey;
   ${props =>
-  props.highlightPlacement === "PLACE_AFTER" &&
-  `bottom: ${-highlighHeight / 2}px`}
+    props.highlightPlacement === "PLACE_AFTER" &&
+    `bottom: ${-highlighHeight / 2}px`}
   ${props =>
-  props.highlightPlacement === "PLACE_BEFORE" &&
-  `top: ${-highlighHeight / 2}px`}
+    props.highlightPlacement === "PLACE_BEFORE" &&
+    `top: ${-highlighHeight / 2}px`}
 `;
 
 export const Bullet = styled.div`
@@ -52,8 +52,8 @@ export const Bullet = styled.div`
   margin-right: ${bulletMargin}px;
   ${props => props.isDragging && `transform: scale(0);`}
   ${props =>
-  !props.isDragging &&
-  `&:hover {
+    !props.isDragging &&
+    `&:hover {
     transform: scale(1.8);
   }`}
 `;

@@ -2,11 +2,10 @@ export interface Nodes {
   [id: string]: NodeType;
 }
 
-export interface Tree{
+export interface Tree {
   nodes: Nodes;
   roots: string[];
 }
-
 
 export interface NodeType {
   text: string;

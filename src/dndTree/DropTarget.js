@@ -1,5 +1,5 @@
 import { DropTarget } from "react-dnd";
-import {bulletMargin, itemMargin} from "../constants";
+import { bulletMargin, itemMargin } from "../constants";
 
 export const getVerticalPlacement = (rect, yPosition) => {
   const middlePoint = (rect.bottom + rect.top) / 2;
@@ -31,7 +31,7 @@ export default DropTarget(
         x: 0
       };
       const diff = differenceFromInitialOffset.x;
-      const divider = itemMargin  + bulletMargin;
+      const divider = itemMargin + bulletMargin;
       let placementLevel = Math.floor((itemMargin + diff) / divider);
       props.setPlacement({
         itemBeingDragged: monitor.getItem().id,

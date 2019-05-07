@@ -1,6 +1,6 @@
-import {canDragOver} from "./rules";
-import {Placement} from "../types";
-import {createFlatNodes} from "../sampleNodes";
+import { canDragOver } from "./rules";
+import { Placement } from "../types";
+import { createFlatNodes } from "../sampleNodes";
 
 describe("having a two nodes", () => {
   it("should be possible to place Item 2 before Item 1", () => {
