@@ -1,4 +1,4 @@
-import { Nodes, Placement } from "../types";
+import {Nodes, Placement} from "../types";
 
 export const canDragOver = (nodes: Nodes, placement: Placement) => {
   return true;
@@ -52,7 +52,7 @@ export function areEqualShallow(a: any, b: any) {
   return true;
 }
 
-export function except<T>(items: T[], item: T): T[]{
+export function except<T>(items: T[], item: T): T[] {
   return items.filter(i => i !== item);
 }
 
@@ -60,7 +60,10 @@ export function moveItemIntoIndex<T>(items: T[], itemToMove: T, targetIndex: num
   const itemIndex = items.indexOf(itemToMove);
   const copy = [...items];
   copy.splice(targetIndex, 0, itemToMove);
-  const indexToRemove = itemIndex < targetIndex ? itemIndex : itemIndex + 1;
-  copy.splice(indexToRemove, 1);
+
+  if (itemIndex >= 0) {
+    const indexToRemove = itemIndex < targetIndex ? itemIndex : itemIndex + 1;
+    copy.splice(indexToRemove, 1);
+  }
   return copy;
 }

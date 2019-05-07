@@ -54,7 +54,7 @@ const TreeUI = ({ tree, nodes, placement, level = 1, setPlacement, onDrop }: any
           onDrop={onDrop}
           {...getPlacementProps(tree[id], placement)}
         >
-          {tree[id].children && (
+          {tree[id].children && tree[id].children.length > 0 && (
             <TreeUI
               tree={tree}
               nodes={tree[id].children}
