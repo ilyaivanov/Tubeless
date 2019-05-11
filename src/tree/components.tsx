@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
+const ARROW_SIZE = 15;
+
+const LEVEL_SHIFT = 20;
+
 export const CircleContainer = styled.div`
-  margin-left: 2px;
   margin-right: 5px;
-`;
+` as any;
 
 export const Circle = styled.div`
   border-radius: 10px;
@@ -24,37 +27,29 @@ export const Circle = styled.div`
 ` as any;
 
 export const NodeContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   height: 24px;
-  margin-left: ${(props: any) => props.level * 20}px;
+  padding-left: ${(props: any) => props.level * LEVEL_SHIFT}px;
 ` as any;
 
 export const Text = styled.span``;
 
-const getStyleForOrientation = (orientation: "right" | "down") => {
-  const width = 8;
-  const side = width / 2;
-  const smallSide = (side * 1.73205).toFixed(1);
-  const color = "rgb(75, 81, 85)";
-  if (orientation === "right") {
-    return `
-    border-width: ${side}px 0 ${side}px ${smallSide}px;
-    border-color: transparent transparent transparent ${color};
-  `;
-  } else
-    return `  
-    border-width: ${smallSide}px ${side}px 0 ${side}px;
-    border-color: ${color} transparent transparent transparent;
-    `;
-};
+export const Border = styled.div`
+  height: 2px;
+  background-color: grey;
+  position: absolute;
+  left: 0;
+  right: 0;
+  ${(props: any) =>
+    props.position === "AFTER" ? "bottom: -1px" : "top: -1px"};
+  margin-left: ${(props: any) => ARROW_SIZE + props.level * LEVEL_SHIFT}px;
+` as any;
 
 export const Arrow = (props: any) => (
-  <ArrowContainer
-    data-testid="arrow"
-    onClick={props.onClick}
-  >
+  <ArrowContainer data-testid="arrow" onClick={props.onClick}>
     <ArrowP orientation={props.orientation} />
   </ArrowContainer>
 );
@@ -77,6 +72,23 @@ const Center = styled.div`
 `;
 
 const ArrowContainer = styled(Center)`
-  height: 15px;
-  width: 15px;
+  height: ${ARROW_SIZE}px;
+  width: ${ARROW_SIZE}px;
 `;
+
+const getStyleForOrientation = (orientation: "right" | "down") => {
+  const width = 8;
+  const side = width / 2;
+  const smallSide = (side * 1.73205).toFixed(1);
+  const color = "rgb(75, 81, 85)";
+  if (orientation === "right") {
+    return `
+    border-width: ${side}px 0 ${side}px ${smallSide}px;
+    border-color: transparent transparent transparent ${color};
+  `;
+  } else
+    return `  
+    border-width: ${smallSide}px ${side}px 0 ${side}px;
+    border-color: ${color} transparent transparent transparent;
+    `;
+};

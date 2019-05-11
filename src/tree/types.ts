@@ -13,3 +13,11 @@ export interface TreeInfo {
   nodes: Nodes;
   roots: string[];
 }
+
+
+export type PlacementOrientation = "BEFORE" | "AFTER";
+
+export type Placement = {
+  id: string;
+  orientation: PlacementOrientation;
+};
