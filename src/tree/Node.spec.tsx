@@ -4,7 +4,7 @@ import Tree from "./Tree";
 import "jest-styled-components";
 import {DragContext} from "./dnd";
 
-describe("should render without errors", () => {
+describe("Having a simple Tree", () => {
   let rendered: RenderResult;
   afterEach(cleanup);
 
@@ -34,11 +34,11 @@ describe("should render without errors", () => {
       fireEvent.click(await getFirstArrow());
     });
 
-    it("there should be only 1 node", async () => {
+    it("there should be only 1 node (one child hidden)", async () => {
       expect(await getNodes()).toHaveLength(1);
     }, 200);
 
-    it("arrow should point right", async () => {
+    it("arrow should point to the right", async () => {
       expect(await getFirstArrow()).toHaveStyleRule(
         "border-width",
         "4px 0 4px 6.9px"
