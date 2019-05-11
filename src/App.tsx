@@ -1,5 +1,5 @@
 import React from 'react';
-import {Tree} from './tree/TextNode';
+import Tree from './tree/Tree';
 
 const App: React.FC = () => {
   return (

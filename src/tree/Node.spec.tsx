@@ -1,12 +1,6 @@
-import {
-  cleanup,
-  fireEvent,
-  render,
-  RenderResult,
-  waitForElement
-} from "react-testing-library";
+import {cleanup, fireEvent, render, RenderResult, waitForElement} from "react-testing-library";
 import * as React from "react";
-import { Tree } from "./TextNode";
+import Tree from "./Tree";
 import "jest-styled-components";
 
 describe("should render without errors", () => {
@@ -14,7 +8,7 @@ describe("should render without errors", () => {
   afterEach(cleanup);
 
   beforeEach(() => {
-    rendered = render(<Tree />);
+    rendered = render(<Tree/>);
   });
 
   const getNodes = async () =>
