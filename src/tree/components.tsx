@@ -51,19 +51,12 @@ const getStyleForOrientation = (orientation: "right" | "down") => {
 };
 
 export const Arrow = (props: any) => (
-  <div
+  <ArrowContainer
     data-testid="arrow"
     onClick={props.onClick}
-    style={{
-      height: 15,
-      width: 15,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center"
-    }}
   >
     <ArrowP orientation={props.orientation} />
-  </div>
+  </ArrowContainer>
 );
 
 export const ArrowP = styled.div`
@@ -76,3 +69,14 @@ export const ArrowP = styled.div`
     visibility: visible;
   }
 ` as any;
+
+const Center = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ArrowContainer = styled(Center)`
+  height: 15px;
+  width: 15px;
+`;
