@@ -5,7 +5,7 @@ import {Arrow, Circle, CircleContainer, NodeContainer, Text} from "./components"
 const NodeElement = ({children, node, level, onToggleCollapse}: { children: any, level: number, node: Node, onToggleCollapse: any }) => (
   <div>
     <NodeContainer data-testid="node" level={level}>
-      <Arrow orientation={node.isHidden ? 'down' : 'right'} data-testid="arrow"
+      <Arrow orientation={node.isHidden ? 'right' : 'down'} data-testid="arrow"
              onClick={() => onToggleCollapse(node.id)}/>
       <Bullet/>
 

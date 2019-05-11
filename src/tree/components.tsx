@@ -38,7 +38,7 @@ const getStyleForOrientation = (orientation: "right" | "down") => {
   const side = width / 2;
   const smallSide = (side * 1.73205).toFixed(1);
   const color = "rgb(75, 81, 85)";
-  if (orientation === "down") {
+  if (orientation === "right") {
     return `
     border-width: ${side}px 0 ${side}px ${smallSide}px;
     border-color: transparent transparent transparent ${color};
