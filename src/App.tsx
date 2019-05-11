@@ -1,12 +1,15 @@
-import React from 'react';
-import Tree from './tree/Tree';
+import React from "react";
+import Tree from "./tree/Tree";
+import { DragContext } from "./tree/dnd";
 
 const App: React.FC = () => {
   return (
     <div>
-      <Tree/>
+      <DragContext>
+        <Tree />
+      </DragContext>
     </div>
   );
-}
+};
 
 export default App;

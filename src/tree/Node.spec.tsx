@@ -2,17 +2,18 @@ import {cleanup, fireEvent, render, RenderResult, waitForElement} from "react-te
 import * as React from "react";
 import Tree from "./Tree";
 import "jest-styled-components";
+import {DragContext} from "./dnd";
 
 describe("should render without errors", () => {
   let rendered: RenderResult;
   afterEach(cleanup);
 
   beforeEach(() => {
-    rendered = render(<Tree/>);
+    rendered = render(<DragContext><Tree/></DragContext>);
   });
 
   const getNodes = async () =>
-    await waitForElement(() => rendered.getAllByTestId("node"));
+    await waitForElement(() => rendered.getAllByTestId(node => node.startsWith("node-")));
 
   const getFirstArrow = async () =>
     await waitForElement(() => rendered.getAllByTestId("arrow")[0].children[0]);
