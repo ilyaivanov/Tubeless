@@ -1,7 +1,8 @@
 import React, {Fragment} from "react";
 import {DragDropContext, DragSource, DropTarget} from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import {Placement, PlacementOrientation} from "./types";
+import {PlacementOrientation} from "./types";
+import {getBoundingClientRect, getClientOffset} from "./offsetHandler";
 
 const Context = ({children}: any) => <Fragment>{children}</Fragment>;
 
@@ -25,10 +26,8 @@ export const TreeDragSource = DragSource(
       }
     }
   },
-  (connect, monitor) => ({
-    connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview(),
-    isDragging: monitor.isDragging()
+  (connect) => ({
+    connectDragSource: connect.dragSource()
   })
 );
 
@@ -54,27 +53,20 @@ export const TreeDropTarget = DropTarget(
         return null;
       }
 
-      const hoverBoundingRect = node.getBoundingClientRect();
-      const clientOffset = monitor.getClientOffset();
+      const hoverBoundingRect = getBoundingClientRect(node);
+
+      const clientOffset = getClientOffset(monitor);
 
       const placement = getVerticalPlacement(hoverBoundingRect, clientOffset.y);
 
-      let differenceFromInitialOffset = monitor.getSourceClientOffset() || {
-        x: 0
-      };
-      const diff = differenceFromInitialOffset.x;
-      const divider = 20;
-      // let placementLevel = Math.floor((itemMargin + diff) / divider);
       props.setPlacement({
         itemBeingDragged: monitor.getItem().id,
         id: props.node.id,
         orientation: placement,
-        // relativeShift: placementLevel - props.level
       });
     }
   },
-  (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+  (connect) => ({
+    connectDropTarget: connect.dropTarget()
   })
 );
