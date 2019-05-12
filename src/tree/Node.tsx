@@ -1,13 +1,6 @@
-import React, { Ref, RefObject, useImperativeHandle, useRef } from "react";
+import React, { Ref, useImperativeHandle, useRef } from "react";
 import { Node, Placement } from "./types";
-import {
-  Arrow,
-  Border,
-  Circle,
-  CircleContainer,
-  NodeContainer,
-  Text
-} from "./components";
+import { Arrow, Border, Bullet, NodeContainer, NodeText } from "./components";
 import { TreeDragSource, TreeDropTarget } from "./dnd";
 
 export interface NodeProps {
@@ -58,7 +51,7 @@ const NodeElement = React.forwardRef(
             onClick={() => onToggleCollapse(node.id)}
           />
           <Bullet itemId={node.id} ref={connectDragSource} />
-          <Text>{node.text}</Text>
+          <NodeText>{node.text}</NodeText>
           {node.id === placement.id && (
             <Border
               placement={placement}
@@ -71,24 +64,6 @@ const NodeElement = React.forwardRef(
       </div>
     );
   }
-);
-
-interface BulletProps {
-  itemId: string;
-}
-
-const Bullet = React.forwardRef(
-  ({ itemId }: BulletProps, ref: Ref<HTMLDivElement>) => (
-    <CircleContainer ref={ref} data-testid={"drag-handle-" + itemId}>
-      <Circle
-        width={18}
-        color="rgb(220, 224, 226)"
-        hoverColor={"rgb(183, 188, 191)"}
-      >
-        <Circle width={8} color="rgb(75, 81, 85)" />
-      </Circle>
-    </CircleContainer>
-  )
 );
 
 export default TreeDropTarget(TreeDragSource(NodeElement));
