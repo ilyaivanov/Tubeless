@@ -6,14 +6,14 @@ import { getBoundingClientRect, getClientOffset } from "./offsetHandler";
 import { ARROW_SIZE } from "./components";
 import { NodeProps } from "./Node";
 
-const Context = ({ children }: any) => <Fragment>{children}</Fragment>;
+const Context = ({ children }: {children: JSX.Element}) => <Fragment>{children}</Fragment>;
 
 export const DragContext = DragDropContext(HTML5Backend)(Context);
 
 export const TreeDragSource = DragSource(
   "NODE",
   {
-    beginDrag: (props: any) => {
+    beginDrag: (props: NodeProps) => {
       return {
         id: props.node.id
       };
@@ -33,7 +33,7 @@ export const TreeDragSource = DragSource(
 );
 
 function getVerticalPlacement(
-  rect: any,
+  rect: DOMRectReadOnly,
   yPosition: number
 ): PlacementOrientation {
   const middlePoint = (rect.bottom + rect.top) / 2;
@@ -43,7 +43,7 @@ function getVerticalPlacement(
 export const TreeDropTarget = DropTarget(
   "NODE",
   {
-    drop(props: any) {
+    drop(props: NodeProps) {
       props.onDrop();
     },
     hover(props: NodeProps, monitor: any, component: any) {

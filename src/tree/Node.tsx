@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useRef } from "react";
+import React, { Ref, RefObject, useImperativeHandle, useRef } from "react";
 import { Node, Placement } from "./types";
 import {
   Arrow,
@@ -11,12 +11,13 @@ import {
 import { TreeDragSource, TreeDropTarget } from "./dnd";
 
 export interface NodeProps {
-  children: any;
+  children: JSX.Element;
   level: number;
   node: Node;
   placement: Placement;
   setPlacement: (placement: Partial<Placement>) => void;
-  onToggleCollapse: any;
+  onToggleCollapse: (id: string) => void;
+  onDrop: () => void;
   connectDragSource: any;
   connectDropTarget: any;
 }
@@ -32,10 +33,11 @@ const NodeElement = React.forwardRef(
       connectDropTarget,
       placement
     }: NodeProps,
-    ref: any
+    ref: Ref<HTMLDivElement>
   ) => {
-    const elementRef = useRef(null);
+    const elementRef = useRef<HTMLDivElement>(null);
 
+    // @ts-ignore
     useImperativeHandle(ref, () => {
       connectDropTarget(elementRef);
       return {
@@ -71,20 +73,22 @@ const NodeElement = React.forwardRef(
   }
 );
 
-const Bullet = React.forwardRef(({ onClick, myRef, itemId }: any, ref: any) => (
-  <CircleContainer
-    onClick={onClick}
-    ref={ref}
-    data-testid={"drag-handle-" + itemId}
-  >
-    <Circle
-      width={18}
-      color="rgb(220, 224, 226)"
-      hoverColor={"rgb(183, 188, 191)"}
-    >
-      <Circle width={8} color="rgb(75, 81, 85)" />
-    </Circle>
-  </CircleContainer>
-));
+interface BulletProps {
+  itemId: string;
+}
+
+const Bullet = React.forwardRef(
+  ({ itemId }: BulletProps, ref: Ref<HTMLDivElement>) => (
+    <CircleContainer ref={ref} data-testid={"drag-handle-" + itemId}>
+      <Circle
+        width={18}
+        color="rgb(220, 224, 226)"
+        hoverColor={"rgb(183, 188, 191)"}
+      >
+        <Circle width={8} color="rgb(75, 81, 85)" />
+      </Circle>
+    </CircleContainer>
+  )
+);
 
 export default TreeDropTarget(TreeDragSource(NodeElement));
