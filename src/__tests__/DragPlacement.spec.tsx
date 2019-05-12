@@ -5,13 +5,12 @@ import {
   render,
   RenderResult
 } from "react-testing-library";
-import Tree from "./Tree";
 import "jest-styled-components";
-import { DragContext } from "./dnd";
+import App from "../App";
 
-const { getClientOffset, getBoundingClientRect } = require("./offsetHandler");
+const { getClientOffset, getBoundingClientRect } = require("../tree/offsetHandler");
 
-jest.mock("./offsetHandler", () => ({
+jest.mock("../tree/offsetHandler", () => ({
   getClientOffset: jest.fn(),
   getBoundingClientRect: jest.fn()
 }));
@@ -23,11 +22,7 @@ const createDragScenario = (
 ) => {
   getClientOffset.mockImplementation(() => clientOffset);
   getBoundingClientRect.mockImplementation(() => ({ bottom: 0, top: 10 }));
-  const rendered = render(
-    <DragContext>
-      <Tree />
-    </DragContext>
-  );
+  const rendered = render(<App />);
   const res = rendered.getByTestId(elementBeingDragged);
   fireEvent.dragStart(res);
 
