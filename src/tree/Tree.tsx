@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { twoNestedNodes } from "./sampleTrees";
-import { Nodes, Placement } from "./types";
+import { Nodes, Placement, Node } from "./types";
 import NodeElement from "./Node";
 import { updateNode } from "./treeUtils";
 
@@ -48,20 +48,23 @@ interface Props {
 
 const TreeImp = (props: Props) => {
   const { nodes, ids, level } = props;
-  const renderChildren = (id: string) => {
-    const { children } = nodes[id];
-    if (children && !nodes[id].isHidden)
-      return <TreeImp {...props} ids={children} level={level + 1} />;
-  };
   return (
     <Fragment>
       {ids.map(id => (
         <NodeElement {...props} key={id} node={nodes[id]} level={level}>
-          {renderChildren(id)}
+          {hasChildren(nodes[id]) && (
+            <TreeImp
+              {...props}
+              ids={nodes[id].children as string[]}
+              level={level + 1}
+            />
+          )}
         </NodeElement>
       ))}
     </Fragment>
   );
 };
+
+const hasChildren = (node: Node) => node.children && !node.isHidden;
 
 export default Tree;
