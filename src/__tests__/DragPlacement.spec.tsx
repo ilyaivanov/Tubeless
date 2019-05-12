@@ -38,6 +38,19 @@ describe("Having a tree with two nodes Node 2 being child of Node 1", () => {
   let rendered: RenderResult;
   afterEach(cleanup);
 
+  describe('when dragging a Node 2 above the middle of Node 1 and too far in x shift', () => {
+    beforeEach(() => {
+      rendered = createDragScenario("drag-handle-2", "node-1", { x: 100, y: 5 });
+    });
+
+    it('boundary should be still with zero shift', () => {
+      expect(rendered.getByTestId("border-1")).toHaveStyleRule(
+        "left",
+        '15px'
+      );
+    });
+  });
+
   describe("when dragging a Node 2 above the middle Node 1", () => {
     beforeEach(() => {
       rendered = createDragScenario("drag-handle-2", "node-1", { x: 0, y: 5 });
@@ -109,6 +122,16 @@ describe("Having a tree with two nodes Node 2 being child of Node 1", () => {
       simulateAnOffsetScenario(55, 6, "35px"));
 
     it("when dragging above of the middle restrictions should be less 1", () =>
-      simulateAnOffsetScenario(54, 5, "15px"));
+      simulateAnOffsetScenario(54, 2, "15px"));
+  });
+
+  describe('dragging 2 over the top of 1.2 with far right shift', () => {
+    it('should create a 1-level boundary shift (because previous element is on the same level)', () => {
+      const rendered = createDragScenario('drag-handle-2', 'node-1.2', {x: 100, y: 5});
+      expect(rendered.getByTestId("border-1.2")).toHaveStyleRule(
+        "left",
+        '55px'
+      );
+    });
   });
 });

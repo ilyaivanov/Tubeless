@@ -2,11 +2,15 @@ import {
   cleanup,
   fireEvent,
   render,
-  RenderResult,
+  RenderResult
 } from "react-testing-library";
 import * as React from "react";
 import "jest-styled-components";
 import App from "../App";
+
+jest.mock("../tree/sampleTrees", () => ({
+  sampleNodes: jest.requireActual('../tree/sampleTrees').twoNestedNodes
+}));
 
 describe("Having a simple Tree", () => {
   let rendered: RenderResult;

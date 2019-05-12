@@ -1,13 +1,12 @@
 import { Nodes, Placement, TreeInfo, Node } from "../tree/types";
 
 export const drop = (tree: TreeInfo, placement: Placement): TreeInfo => {
-  if(placement.itemBeingDragged === placement.id)
-    return tree;
+  if (placement.itemBeingDragged === placement.id) return tree;
   return insertNode(removeNode(tree, placement.itemBeingDragged), placement);
 };
 
 const insertNode = (tree: TreeInfo, placement: Placement) => {
-  const parent = getParentKey(tree.nodes, placement.itemBeingDragged);
+  const parent = getParentKey(tree.nodes, placement.id);
   if (parent)
     return updateNode(tree, parent, node => ({
       children: insertDragItemAtPlacement(node.children as string[], placement)
@@ -28,7 +27,7 @@ const removeNode = (tree: TreeInfo, nodeId: string) => {
   else return updateRoots(tree, roots => except(roots, nodeId));
 };
 
-const getParentKey = (nodes: Nodes, nodeId: string): string | undefined =>
+export const getParentKey = (nodes: Nodes, nodeId: string): string | undefined =>
   Object.keys(nodes).find(key => contains(nodes[key].children, nodeId));
 
 const updateRoots = (
