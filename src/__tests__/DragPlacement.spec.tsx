@@ -63,6 +63,10 @@ describe("Having a tree with two nodes Node 2 being child of Node 1", () => {
       it("boundary should disappear", () => {
         expect(rendered.queryByTestId("border-1")).toBeNull();
       });
+      it('two nodes should be on the same level', () => {
+        expect(rendered.getByTestId("node-1")).toHaveStyleRule("padding-left", "0px");
+        expect(rendered.getByTestId("node-2")).toHaveStyleRule("padding-left", "0px");
+      });
     });
   });
 
