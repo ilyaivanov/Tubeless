@@ -20,4 +20,6 @@ export type PlacementOrientation = "BEFORE" | "AFTER";
 export type Placement = {
   id: string;
   orientation: PlacementOrientation;
+  dragLevel: number;
+  itemBeingDragged: string;
 };

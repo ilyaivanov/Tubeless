@@ -4,12 +4,10 @@ import { Nodes, Placement } from "./types";
 import NodeElement from "./Node";
 import { updateNode } from "./treeUtils";
 
-
 const Tree = () => {
   const [tree, setTree] = useState(twoNestedNodes);
 
-  const [placement, setPlacement] = useState({
-  } as Partial<Placement>);
+  const [placement, setPlacement] = useState({} as Partial<Placement>);
 
   const onToggleCollapse = (id: string) => {
     setTree(
@@ -42,49 +40,23 @@ interface Props {
   nodes: Nodes;
   ids: string[];
   level: number;
-  onToggleCollapse: any;
-  setPlacement: any;
-  onDrop: any;
-  placement: any;
+  onToggleCollapse: (id: string) => void;
+  placement: Partial<Placement>;
+  setPlacement: (placement: Partial<Placement>) => void;
+  onDrop: () => void;
 }
 
-const TreeImp = ({
-  nodes,
-  ids,
-  level,
-  onToggleCollapse,
-  setPlacement,
-  onDrop,
-  placement
-}: Props) => {
+const TreeImp = (props: Props) => {
+  const { nodes, ids, level } = props;
   const renderChildren = (id: string) => {
     const { children } = nodes[id];
     if (children && !nodes[id].isHidden)
-      return (
-        <TreeImp
-          nodes={nodes}
-          placement={placement}
-          setPlacement={setPlacement}
-          onToggleCollapse={onToggleCollapse}
-          onDrop={onDrop}
-
-          ids={children}
-          level={level + 1}
-        />
-      );
+      return <TreeImp {...props} ids={children} level={level + 1} />;
   };
   return (
     <Fragment>
       {ids.map(id => (
-        <NodeElement
-          key={id}
-          onToggleCollapse={onToggleCollapse}
-          node={nodes[id]}
-          level={level}
-          placement={placement}
-          setPlacement={setPlacement}
-          onDrop={onDrop}
-        >
+        <NodeElement {...props} key={id} node={nodes[id]} level={level}>
           {renderChildren(id)}
         </NodeElement>
       ))}

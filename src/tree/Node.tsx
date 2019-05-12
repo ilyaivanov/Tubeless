@@ -1,5 +1,5 @@
 import React, { useImperativeHandle, useRef } from "react";
-import { Node } from "./types";
+import { Node, Placement } from "./types";
 import {
   Arrow,
   Border,
@@ -10,11 +10,12 @@ import {
 } from "./components";
 import { TreeDragSource, TreeDropTarget } from "./dnd";
 
-interface Props {
+export interface NodeProps {
   children: any;
   level: number;
   node: Node;
-  placement: any;
+  placement: Placement;
+  setPlacement: (placement: Partial<Placement>) => void;
   onToggleCollapse: any;
   connectDragSource: any;
   connectDropTarget: any;
@@ -30,7 +31,7 @@ const NodeElement = React.forwardRef(
       connectDragSource,
       connectDropTarget,
       placement
-    }: Props,
+    }: NodeProps,
     ref: any
   ) => {
     const elementRef = useRef(null);
@@ -57,7 +58,11 @@ const NodeElement = React.forwardRef(
           <Bullet itemId={node.id} ref={connectDragSource} />
           <Text>{node.text}</Text>
           {node.id === placement.id && (
-            <Border level={level} position={placement.orientation} data-testid={"border-"+node.id} />
+            <Border
+              placement={placement}
+              level={level}
+              data-testid={"border-" + node.id}
+            />
           )}
         </NodeContainer>
         {children}
