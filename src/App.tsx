@@ -19,6 +19,10 @@ const App: React.FC = () => {
     );
   };
 
+  const updatePlacementOptimized = (newPlacement: Partial<Placement>) => {
+    if (!shallowEqual(newPlacement, placement)) setPlacement(newPlacement);
+  };
+
   const onDrop = () => {
     setTree(drop(tree, placement as Placement));
     setPlacement({});
@@ -31,7 +35,7 @@ const App: React.FC = () => {
           ids={tree.roots}
           level={0}
           onToggleCollapse={onToggleCollapse}
-          setPlacement={setPlacement}
+          setPlacement={updatePlacementOptimized}
           onDrop={onDrop}
           placement={placement}
         />
