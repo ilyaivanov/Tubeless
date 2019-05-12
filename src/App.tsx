@@ -1,13 +1,14 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Tree from "./tree/Tree";
 import { DragContext } from "./tree/dnd";
-import {twoNestedNodes} from "./tree/sampleTrees";
-import {Placement} from "./tree/types";
-import {updateNode} from "./domain/dropRules";
-import {drop} from "./domain/dropRules";
+import { sampleNodes } from "./tree/sampleTrees";
+import { Placement } from "./tree/types";
+import { updateNode } from "./domain/dropRules";
+import { drop } from "./domain/dropRules";
+import { shallowEqual } from "./domain/shallowCompare";
 
 const App: React.FC = () => {
-  const [tree, setTree] = useState(twoNestedNodes);
+  const [tree, setTree] = useState(sampleNodes);
 
   const [placement, setPlacement] = useState({} as Partial<Placement>);
 
@@ -31,7 +32,7 @@ const App: React.FC = () => {
     <div>
       <DragContext>
         <Tree
-          nodes={tree.nodes}
+          tree={tree}
           ids={tree.roots}
           level={0}
           onToggleCollapse={onToggleCollapse}

@@ -1,9 +1,9 @@
 import React, {Fragment} from "react";
-import {Node, Nodes, Placement} from "./types";
+import {Node, Nodes, Placement, TreeInfo} from "./types";
 import NodeElement from "./Node";
 
 interface Props {
-  nodes: Nodes;
+  tree: TreeInfo;
   ids: string[];
   level: number;
   onToggleCollapse: (id: string) => void;
@@ -13,15 +13,15 @@ interface Props {
 }
 
 const Tree = (props: Props) => {
-  const {nodes, ids, level} = props;
+  const {tree, ids, level} = props;
   return (
     <Fragment>
       {ids.map(id => (
-        <NodeElement {...props} key={id} node={nodes[id]} level={level}>
-          {hasChildren(nodes[id]) && (
+        <NodeElement {...props} key={id} node={tree.nodes[id]} level={level}>
+          {hasChildren(tree.nodes[id]) && (
             <Tree
               {...props}
-              ids={nodes[id].children as string[]}
+              ids={tree.nodes[id].children as string[]}
               level={level + 1}
             />
           )}
