@@ -11,8 +11,8 @@ module.exports = function(wallaby) {
 
   return {
     files: [
-      { pattern: 'src/serviceWorker.ts', instrument: false },
-      { pattern: 'src/index.tsx', instrument: false },
+      { pattern: "src/serviceWorker.ts", instrument: false },
+      { pattern: "src/index.tsx", instrument: false },
       "src/**/*.+(ts|tsx|jsx|json|snap|css|less|sass|scss|jpg|jpeg|gif|png|svg)",
       "!src/**/*.spec.ts?(x)"
     ],
