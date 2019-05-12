@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-const ARROW_SIZE = 15;
+export const ARROW_SIZE = 15;
 
-const LEVEL_SHIFT = 20;
+export const LEVEL_SHIFT = 20;
 
 export const CircleContainer = styled.div`
   margin-right: 5px;
@@ -41,11 +41,10 @@ export const Border = styled.div`
   height: 2px;
   background-color: grey;
   position: absolute;
-  left: 0;
+  left: ${(props:any) => (ARROW_SIZE + props.placement.dragLevel * LEVEL_SHIFT)}px;
   right: 0;
   ${(props: any) =>
-    props.position === "AFTER" ? "bottom: -1px" : "top: -1px"};
-  margin-left: ${(props: any) => ARROW_SIZE + props.level * LEVEL_SHIFT}px;
+    props.placement.orientation === "AFTER" ? "bottom: -1px" : "top: -1px"};
 ` as any;
 
 export const Arrow = (props: any) => (
