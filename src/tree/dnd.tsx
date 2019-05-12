@@ -1,12 +1,14 @@
 import React, { Fragment } from "react";
 import { DragDropContext, DragSource, DropTarget } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import { PlacementOrientation } from "./types";
+import { Placement, PlacementOrientation } from "./types";
 import { getBoundingClientRect, getClientOffset } from "./offsetHandler";
 import { ARROW_SIZE } from "./components";
 import { NodeProps } from "./Node";
 
-const Context = ({ children }: {children: JSX.Element}) => <Fragment>{children}</Fragment>;
+const Context = ({ children }: { children: JSX.Element }) => (
+  <Fragment>{children}</Fragment>
+);
 
 export const DragContext = DragDropContext(HTML5Backend)(Context);
 
@@ -61,12 +63,25 @@ export const TreeDropTarget = DropTarget(
       const placement = getVerticalPlacement(hoverBoundingRect, clientOffset.y);
 
       const offsetWithoutArrow = Math.max(clientOffset.x - ARROW_SIZE, 0);
-      props.setPlacement({
+
+      const dragLevel = Math.floor(offsetWithoutArrow / 20);
+
+      //TODO: consider if previous node is it's parent
+      const maxDragLevel =
+        placement === "BEFORE"
+          ? props.level
+          : props.level + 1;
+
+      const desiredDragLevel =
+        dragLevel > maxDragLevel ? maxDragLevel : dragLevel;
+
+      const desiredPlacement: Placement = {
         itemBeingDragged: monitor.getItem().id,
         id: props.node.id,
         orientation: placement,
-        dragLevel: Math.floor(offsetWithoutArrow / 20)
-      });
+        dragLevel: desiredDragLevel
+      };
+      props.setPlacement(desiredPlacement);
     }
   },
   connect => ({

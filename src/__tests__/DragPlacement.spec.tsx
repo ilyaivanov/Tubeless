@@ -8,7 +8,10 @@ import {
 import "jest-styled-components";
 import App from "../App";
 
-const { getClientOffset, getBoundingClientRect } = require("../tree/offsetHandler");
+const {
+  getClientOffset,
+  getBoundingClientRect
+} = require("../tree/offsetHandler");
 
 jest.mock("../tree/offsetHandler", () => ({
   getClientOffset: jest.fn(),
@@ -78,9 +81,10 @@ describe("Having a tree with two nodes Node 2 being child of Node 1", () => {
   describe("checking boundary left position for having a client offset of", () => {
     const simulateAnOffsetScenario = (
       xOffset: number,
+      yOffset: number,
       leftPosition: string
     ) => {
-      const clientOffset = { x: xOffset, y: 6 };
+      const clientOffset = { x: xOffset, y: yOffset };
       rendered = createDragScenario("drag-handle-2", "node-1", clientOffset);
       expect(rendered.getByTestId("border-1")).toHaveStyleRule(
         "left",
@@ -89,15 +93,18 @@ describe("Having a tree with two nodes Node 2 being child of Node 1", () => {
     };
 
     it("34 left position should be 0px", () =>
-      simulateAnOffsetScenario(34, "15px"));
+      simulateAnOffsetScenario(34, 6, "15px"));
 
-    it("35 left position should be 20", () =>
-      simulateAnOffsetScenario(35, "35px"));
+    it("35 left position should be 35px", () =>
+      simulateAnOffsetScenario(35, 6, "35px"));
 
-    it("54 left position should be 20", () =>
-      simulateAnOffsetScenario(54, "35px"));
+    it("54 left position should be 35px", () =>
+      simulateAnOffsetScenario(54, 6, "35px"));
 
-    it("55 left position should be 40", () =>
-      simulateAnOffsetScenario(55, "55px"));
+    it("55 left position should be 35px (restricted because Node 1 is level 0)", () =>
+      simulateAnOffsetScenario(55, 6, "35px"));
+
+    it("when dragging above of the middle restrictions should be less 1", () =>
+      simulateAnOffsetScenario(54, 5, "15px"));
   });
 });
