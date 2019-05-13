@@ -25,6 +25,7 @@ const App: React.FC = () => {
   };
 
   const onDrop = () => {
+    console.log('DROP', tree, placement);
     setTree(drop(tree, placement as Placement));
     setPlacement({});
   };

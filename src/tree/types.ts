@@ -2,7 +2,11 @@ export interface Node {
   id: string;
   text: string;
   children?: string[];
-  isHidden?:boolean;
+  isHidden?: boolean;
+
+  type: "generic" | "video";
+  videoUrl?: string;
+  imageUrl?: string;
 }
 
 export interface Nodes {
@@ -13,7 +17,6 @@ export interface TreeInfo {
   nodes: Nodes;
   roots: string[];
 }
-
 
 export type PlacementOrientation = "BEFORE" | "AFTER";
 
