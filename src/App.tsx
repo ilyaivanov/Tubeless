@@ -1,13 +1,26 @@
 import React, { useState } from "react";
 import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
-import { Node } from "./tree/types";
+import { Node, TreeInfo } from "./tree/types";
 import Player from "./player";
 import TreeUpdatesHandler from "./TreeUpdatesHandler";
+import { getRoots } from "./domain/dropRules";
 
 const App: React.FC = () => {
-  const [tree, setTree] = useState(sampleNodes);
+  const [nodes, setNodes] = useState(sampleNodes.nodes);
+  const [favoritesRoots, setFavoritesRoots] = useState(
+    getRoots(sampleNodes.nodes)
+  );
   const [nodeBeingPlayed, setNodeBeingPlayer] = useState({} as Node);
+
+  const favoritesTree = {
+    nodes,
+    roots: favoritesRoots
+  };
+  const updateFavorites = (tree: TreeInfo) => {
+    setNodes(tree.nodes);
+    setFavoritesRoots(tree.roots);
+  };
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
@@ -16,7 +29,11 @@ const App: React.FC = () => {
       <DragContext>
         <LayoutManager
           renderRight={() => (
-            <TreeUpdatesHandler tree={tree} setTree={setTree} onPlay={onPlay} />
+            <TreeUpdatesHandler
+              tree={favoritesTree}
+              setTree={updateFavorites}
+              onPlay={onPlay}
+            />
           )}
         />
       </DragContext>
@@ -25,7 +42,7 @@ const App: React.FC = () => {
   );
 };
 
-const LayoutManager = ({renderRight}:any) => {
+const LayoutManager = ({ renderRight }: any) => {
   const [seachVisible, setSearchVisibility] = useState(false);
   const style = seachVisible
     ? { flex: 1 }
@@ -46,9 +63,7 @@ const LayoutManager = ({renderRight}:any) => {
         />
       </div>
 
-      <div style={{ flex: 1 }}>
-        {renderRight()}
-      </div>
+      <div style={{ flex: 1 }}>{renderRight()}</div>
     </div>
   );
 };
