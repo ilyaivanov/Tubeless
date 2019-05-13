@@ -24,4 +24,4 @@ export function shallowEqual(objA: any, objB: any) {
   }
 
   return true;
-};
+}

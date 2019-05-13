@@ -1,4 +1,4 @@
-import {Node, Nodes, Placement, TreeInfo} from "../tree/types";
+import { Node, Nodes, Placement, TreeInfo } from "../tree/types";
 
 export const drop = (tree: TreeInfo, placement: Placement): TreeInfo => {
   if (placement.itemBeingDragged === placement.id) return tree;
@@ -6,7 +6,6 @@ export const drop = (tree: TreeInfo, placement: Placement): TreeInfo => {
 };
 
 const insertNode = (tree: TreeInfo, placement: Placement) => {
-
   if (placement.dragLevel !== 0) {
     const nodeLevel = getItemLevel(tree, placement.id);
     if (placement.dragLevel > nodeLevel) {
@@ -42,7 +41,7 @@ const getItemLevel = (tree: TreeInfo, nodeId: string) => {
   let parent = getParentKey(tree.nodes, nodeId);
   while (parent) {
     level += 1;
-    parent = getParentKey(tree.nodes, parent)
+    parent = getParentKey(tree.nodes, parent);
   }
   return level;
 };

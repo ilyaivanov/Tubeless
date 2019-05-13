@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {LEVEL_SHIFT} from "./constants";
+import { LEVEL_SHIFT } from "./constants";
 
 interface NodeContainerProps {
   level: number;

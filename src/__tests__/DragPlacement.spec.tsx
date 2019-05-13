@@ -85,8 +85,13 @@ describe("Having a tree with two nodes Node 2 being child of Node 1", () => {
       simulateAnOffsetScenario(54, 2, "15px"));
 
     it("boundary should take into account bounding rectangle", () => {
-      app.dragNodeOverOtherNode("2", "1", { x: 64, y: 6 }, {bottom:0, top: 10, x: 40});
-      expect(app.getBorder("1")).toHaveStyleRule("left", '15px');
+      app.dragNodeOverOtherNode(
+        "2",
+        "1",
+        { x: 64, y: 6 },
+        { bottom: 0, top: 10, x: 40 }
+      );
+      expect(app.getBorder("1")).toHaveStyleRule("left", "15px");
     });
   });
 

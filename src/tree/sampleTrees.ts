@@ -23,7 +23,10 @@ export const mediumSizedTree: TreeInfo = {
 };
 
 const videoNodes: Nodes = {
-  ...node("Ambient", ["Carbon Based Lifeforms Album 1", "Carbon Based Lifeforms Album 2"]),
+  ...node("Ambient", [
+    "Carbon Based Lifeforms Album 1",
+    "Carbon Based Lifeforms Album 2"
+  ]),
   ...video(
     "Carbon Based Lifeforms Album 1",
     "f5ddAAYasgM",
@@ -35,7 +38,7 @@ const videoNodes: Nodes = {
     "https://picsum.photos/id/191/132/132?grayscale"
   ),
   ...node("1", ["1.1"]),
-  ...node("1.1"),
+  ...node("1.1")
 };
 
 export const twoVideos: TreeInfo = {
