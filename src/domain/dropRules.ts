@@ -28,7 +28,7 @@ const insertNode = (tree: TreeInfo, placement: Placement) => {
 };
 
 //Tree utils
-const removeNode = (tree: TreeInfo, nodeId: string) => {
+export const removeNode = (tree: TreeInfo, nodeId: string) => {
   const parent = getParentKey(tree.nodes, nodeId);
   if (parent)
     return updateNode(tree, parent, node => ({

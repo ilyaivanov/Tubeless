@@ -1,6 +1,6 @@
 import React, { Ref, useImperativeHandle, useRef } from "react";
 import { Node, Placement, TreeInfo } from "./types";
-import { Arrow, Border, Bullet, NodeContainer, NodeText } from "./components";
+import { Arrow, Border, Bullet, NodeContainer, NodeText, NodeIcons } from "./components";
 import { TreeDragSource, TreeDropTarget } from "./dnd";
 
 export interface NodeProps {
@@ -12,6 +12,7 @@ export interface NodeProps {
   setPlacement: (placement: Partial<Placement>) => void;
   onToggleCollapse: (id: string) => void;
   onPlay: (nodeId: Node) => void;
+  onDelete: (nodeId: Node) => void;
   onDrop: () => void;
   connectDragSource: any;
   connectDropTarget: any;
@@ -27,7 +28,8 @@ const NodeElement = React.forwardRef(
       connectDragSource,
       connectDropTarget,
       placement,
-      onPlay
+      onPlay,
+      onDelete,
     }: NodeProps,
     ref: Ref<HTMLDivElement>
   ) => {
@@ -59,6 +61,7 @@ const NodeElement = React.forwardRef(
             <Bullet itemId={node.id} ref={connectDragSource} />
           )}
           <NodeText>{node.text}</NodeText>
+          <NodeIcons nodeId={node.id} onEdit={() => 42} onDelete={() => onDelete(node)}/>
           {node.id === placement.id && (
             <Border
               placement={placement}
@@ -72,5 +75,6 @@ const NodeElement = React.forwardRef(
     );
   }
 );
+
 
 export default TreeDropTarget(TreeDragSource(NodeElement));
