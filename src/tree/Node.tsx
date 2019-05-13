@@ -1,7 +1,8 @@
 import React, { Ref, useImperativeHandle, useRef } from "react";
 import { Node, Placement, TreeInfo } from "./types";
-import { Arrow, Border, Bullet, NodeContainer, NodeText, NodeIcons } from "./components";
+import { Arrow, Border, Bullet, NodeContainer } from "./components";
 import { TreeDragSource, TreeDropTarget } from "./dnd";
+import NodeTitle from "./NodeTitle";
 
 export interface NodeProps {
   children: JSX.Element;
@@ -13,6 +14,7 @@ export interface NodeProps {
   onToggleCollapse: (id: string) => void;
   onPlay: (nodeId: Node) => void;
   onDelete: (nodeId: Node) => void;
+  onUpdate: (nodeId: Partial<Node>) => void;
   onDrop: () => void;
   connectDragSource: any;
   connectDropTarget: any;
@@ -30,6 +32,7 @@ const NodeElement = React.forwardRef(
       placement,
       onPlay,
       onDelete,
+      onUpdate
     }: NodeProps,
     ref: Ref<HTMLDivElement>
   ) => {
@@ -56,12 +59,18 @@ const NodeElement = React.forwardRef(
             onClick={() => onToggleCollapse(node.id)}
           />
           {node.type === "video" ? (
-            <img onClick={() => onPlay(node)} data-testid={`video-image-${node.id}`} src={node.imageUrl} alt="Cover image" style={{height: 18, width: 18, paddingRight: 5}} ref={connectDragSource}/>
+            <img
+              onClick={() => onPlay(node)}
+              data-testid={`video-image-${node.id}`}
+              src={node.imageUrl}
+              alt="Cover image"
+              style={{ height: 18, width: 18, paddingRight: 5 }}
+              ref={connectDragSource}
+            />
           ) : (
             <Bullet itemId={node.id} ref={connectDragSource} />
           )}
-          <NodeText>{node.text}</NodeText>
-          <NodeIcons nodeId={node.id} onEdit={() => 42} onDelete={() => onDelete(node)}/>
+          <NodeTitle node={node} onDelete={onDelete} onUpdate={onUpdate} />
           {node.id === placement.id && (
             <Border
               placement={placement}
@@ -75,6 +84,5 @@ const NodeElement = React.forwardRef(
     );
   }
 );
-
 
 export default TreeDropTarget(TreeDragSource(NodeElement));

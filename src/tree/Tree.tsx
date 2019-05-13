@@ -12,6 +12,7 @@ interface Props {
   onDrop: () => void;
   onPlay: (node: Node) => void;
   onDelete: (node: Node) => void;
+  onUpdate: (node: Partial<Node>) => void;
 }
 
 const Tree = (props: Props) => {

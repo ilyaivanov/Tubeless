@@ -19,8 +19,34 @@ export default class AppPage {
     fireEvent.click(this.app.getByTestId("delete-" + nodeId));
   }
 
-  clickArrow(nodeId:string){
+  clickEditButton(nodeId: string) {
+    fireEvent.click(this.app.getByTestId("edit-" + nodeId));
+  }
+
+  enterTextIntoInput(nodeId: string, newText: string) {
+    fireEvent.change(this.app.getByTestId("input-" + nodeId), {
+      target: { value: newText }
+    });
+  }
+
+  stopEditingTextViaBlur(nodeId: string) {
+    fireEvent.blur(this.app.getByTestId("input-" + nodeId));
+  }
+
+  clickArrow(nodeId: string) {
     fireEvent.click(this.getArrowForNode(nodeId));
+  }
+
+  getArrowForNode(nodeId: string) {
+    return this.app.getByTestId("arrow-" + nodeId);
+  }
+
+  getAllNodes() {
+    return this.app.getAllByTestId(node => node.startsWith("node-"));
+  }
+
+  getNodeTitle(nodeId: string): string {
+    return this.app.getByTestId("title-" + nodeId).innerHTML;
   }
 
   expectNodeToExist(nodeId: string) {
@@ -31,12 +57,12 @@ export default class AppPage {
     expect(this.app.queryByTestId("node-" + nodeId)).toBeNull();
   }
 
-  getArrowForNode(nodeId:string){
-    return this.app.getByTestId("arrow-"+nodeId);
-  }
-
-  getAllNodes(){
-    return this.app.getAllByTestId(node => node.startsWith("node-"));
+  simulateEnterKeypress(nodeId: string) {
+    fireEvent.keyPress(this.app.getByTestId("input-" + nodeId), {
+      key: "Enter",
+      code: 13,
+      charCode: 13
+    });
   }
 
   cleanup = () => {

@@ -32,8 +32,14 @@ const App: React.FC = () => {
     setPlacement({});
   };
 
-  const onDelete = (node: Node) =>
-    setTree(removeNode(tree, node.id));
+  const onUpdate = (newNode: Partial<Node>) => {
+    if (!newNode.id) return;
+    setTree(
+      updateNode(tree, newNode.id, node => Object.assign({}, node, newNode))
+    );
+  };
+
+  const onDelete = (node: Node) => setTree(removeNode(tree, node.id));
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
@@ -49,6 +55,7 @@ const App: React.FC = () => {
           onDrop={onDrop}
           onPlay={onPlay}
           onDelete={onDelete}
+          onUpdate={onUpdate}
           placement={placement}
         />
       </DragContext>
