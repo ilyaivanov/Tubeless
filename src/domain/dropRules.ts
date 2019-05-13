@@ -1,4 +1,4 @@
-import { Nodes, Placement, TreeInfo, Node } from "../tree/types";
+import {Node, Nodes, Placement, TreeInfo} from "../tree/types";
 
 export const drop = (tree: TreeInfo, placement: Placement): TreeInfo => {
   if (placement.itemBeingDragged === placement.id) return tree;
@@ -6,6 +6,16 @@ export const drop = (tree: TreeInfo, placement: Placement): TreeInfo => {
 };
 
 const insertNode = (tree: TreeInfo, placement: Placement) => {
+
+  if (placement.dragLevel !== 0) {
+    const nodeLevel = getItemLevel(tree, placement.id);
+    if (placement.dragLevel > nodeLevel) {
+      return updateNode(tree, placement.id, node => ({
+        children: [placement.itemBeingDragged].concat(node.children || [])
+      }));
+    }
+  }
+
   const parent = getParentKey(tree.nodes, placement.id);
   if (parent)
     return updateNode(tree, parent, node => ({
@@ -27,7 +37,20 @@ const removeNode = (tree: TreeInfo, nodeId: string) => {
   else return updateRoots(tree, roots => except(roots, nodeId));
 };
 
-export const getParentKey = (nodes: Nodes, nodeId: string): string | undefined =>
+const getItemLevel = (tree: TreeInfo, nodeId: string) => {
+  let level = 0;
+  let parent = getParentKey(tree.nodes, nodeId);
+  while (parent) {
+    level += 1;
+    parent = getParentKey(tree.nodes, parent)
+  }
+  return level;
+};
+
+export const getParentKey = (
+  nodes: Nodes,
+  nodeId: string
+): string | undefined =>
   Object.keys(nodes).find(key => contains(nodes[key].children, nodeId));
 
 const updateRoots = (
@@ -54,6 +77,9 @@ export const updateNode = (
     }
   };
 };
+
+export const getRoots = (nodes: Nodes) =>
+  Object.keys(nodes).filter(nodeId => !getParentKey(nodes, nodeId));
 
 function insertDragItemAtPlacement(
   context: string[],
