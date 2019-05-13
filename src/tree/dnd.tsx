@@ -3,7 +3,7 @@ import { DragDropContext, DragSource, DropTarget } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { Placement, PlacementOrientation } from "./types";
 import { getBoundingClientRect, getClientOffset } from "./offsetHandler";
-import { ARROW_SIZE } from "./components";
+import {ARROW_SIZE, LEVEL_SHIFT} from "./components";
 import { NodeProps } from "./Node";
 import { getParentKey } from "../domain/dropRules";
 
@@ -68,7 +68,7 @@ export const TreeDropTarget = DropTarget(
         0
       );
 
-      const dragLevel = Math.floor(offsetWithoutArrow / 20);
+      const dragLevel = Math.floor(offsetWithoutArrow / LEVEL_SHIFT);
 
       const parent = getParentKey(props.tree.nodes, props.node.id);
 
