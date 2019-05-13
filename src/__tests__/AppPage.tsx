@@ -8,6 +8,18 @@ import {
 import "jest-styled-components";
 import App from "../App";
 
+const {
+  getClientOffset,
+  getBoundingClientRect
+} = require("../tree/offsetHandler");
+
+jest.mock("../tree/offsetHandler", () => ({
+  getClientOffset: jest.fn(),
+  getBoundingClientRect: jest.fn()
+}));
+
+type Point = { x: number; y: number };
+
 export default class AppPage {
   app: RenderResult;
 
@@ -30,7 +42,7 @@ export default class AppPage {
   }
 
   stopEditingTextViaBlur(nodeId: string) {
-    fireEvent.blur(this.app.getByTestId("input-" + nodeId));
+    fireEvent.blur(this.getInputForNode(nodeId));
   }
 
   clickArrow(nodeId: string) {
@@ -39,10 +51,6 @@ export default class AppPage {
 
   getArrowForNode(nodeId: string) {
     return this.app.getByTestId("arrow-" + nodeId);
-  }
-
-  getAllNodes() {
-    return this.app.getAllByTestId(node => node.startsWith("node-"));
   }
 
   getNodeTitle(nodeId: string): string {
@@ -54,7 +62,7 @@ export default class AppPage {
   }
 
   expectNodeToExist(nodeId: string) {
-    expect(this.app.getByTestId("node-" + nodeId)).toBeDefined();
+    expect(this.getNode(nodeId)).toBeDefined();
   }
 
   expectNodeNotToExist(nodeId: string) {
@@ -62,11 +70,55 @@ export default class AppPage {
   }
 
   simulateEnterKeypress(nodeId: string) {
-    fireEvent.keyPress(this.app.getByTestId("input-" + nodeId), {
+    fireEvent.keyPress(this.getInputForNode(nodeId), {
       key: "Enter",
       code: 13,
       charCode: 13
     });
+  }
+
+  dragNodeOverOtherNode(
+    nodeBeingDraggedId: string,
+    nodeOverWhichToDragId: string,
+    dragCoordiates: Point
+  ) {
+    getClientOffset.mockImplementation(() => dragCoordiates);
+    getBoundingClientRect.mockImplementation(() => ({ bottom: 0, top: 10 }));
+
+    fireEvent.dragStart(this.getDragHandle(nodeBeingDraggedId));
+
+    fireEvent.dragOver(this.getNode(nodeOverWhichToDragId));
+  }
+
+  endDragAtNode(nodeId: string) {
+    fireEvent.dragEnd(this.getNode(nodeId));
+  }
+
+  dropAtNode(nodeId: string) {
+    fireEvent.drop(this.getNode(nodeId));
+  }
+
+  getBorder(nodeId: string) {
+    return this.app.getByTestId("border-" + nodeId);
+  }
+  queryBorder(nodeId: string) {
+    return this.app.queryByTestId("border-" + nodeId);
+  }
+
+  getNode(nodeId: string) {
+    return this.app.getByTestId("node-" + nodeId);
+  }
+
+  getInputForNode(nodeId: string) {
+    return this.app.getByTestId("input-" + nodeId);
+  }
+
+  getDragHandle(nodeId: string) {
+    return this.app.getByTestId("drag-handle-" + nodeId);
+  }
+
+  getAllNodes() {
+    return this.app.getAllByTestId(node => node.startsWith("node-"));
   }
 
   cleanup = () => {
