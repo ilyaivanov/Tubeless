@@ -21,10 +21,14 @@ jest.mock("../tree/offsetHandler", () => ({
 type Point = { x: number; y: number };
 
 export default class AppPage {
+  // @ts-ignore
   app: RenderResult;
 
   constructor() {
-    this.app = render(<App />);
+    beforeEach(() => {
+      this.app = render(<App />);
+    });
+    afterEach(cleanup);
   }
 
   clickRemoveButton(nodeId: string) {
@@ -120,9 +124,4 @@ export default class AppPage {
   getAllNodes() {
     return this.app.getAllByTestId(node => node.startsWith("node-"));
   }
-
-  cleanup = () => {
-    cleanup();
-    this.app = render(<App />);
-  };
 }

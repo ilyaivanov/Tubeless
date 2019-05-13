@@ -1,5 +1,5 @@
 import * as React from "react";
-import AppPage from "./AppPage";
+import AppPage from "../testUtils/AppPageObject";
 
 jest.mock("../tree/sampleTrees", () => ({
   sampleNodes: jest.requireActual("../tree/sampleTrees").mediumSizedTree
@@ -7,7 +7,6 @@ jest.mock("../tree/sampleTrees", () => ({
 
 describe("Having a tree with nodes ", () => {
   const app = new AppPage();
-  afterEach(app.cleanup);
 
   it("when clicking remove Node 2 that node should be removed", () => {
     app.expectNodeToExist("2");
