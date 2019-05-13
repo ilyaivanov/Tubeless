@@ -3,7 +3,7 @@ import Tree from "./tree/Tree";
 import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
 import { Placement, Node } from "./tree/types";
-import { updateNode } from "./domain/dropRules";
+import { removeNode, updateNode } from "./domain/dropRules";
 import { drop } from "./domain/dropRules";
 import { shallowEqual } from "./domain/shallowCompare";
 import Player from "./player";
@@ -32,8 +32,10 @@ const App: React.FC = () => {
     setPlacement({});
   };
 
-  const onPlay = (node: Node) =>
-    setNodeBeingPlayer(node);
+  const onDelete = (node: Node) =>
+    setTree(removeNode(tree, node.id));
+
+  const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
   return (
     <div>
@@ -46,6 +48,7 @@ const App: React.FC = () => {
           setPlacement={updatePlacementOptimized}
           onDrop={onDrop}
           onPlay={onPlay}
+          onDelete={onDelete}
           placement={placement}
         />
       </DragContext>
