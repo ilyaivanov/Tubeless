@@ -32,6 +32,7 @@ const TreeUpdatesHandler = ({ setTree, tree, onPlay }: any) => {
   };
 
   const addNewNode = () => {
+    //TODO: consider extract specific node creation logic
     const id = Math.random() + "";
     const node: Node = {
       text: "New Node",
