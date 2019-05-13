@@ -124,4 +124,12 @@ export default class AppPage {
   getAllNodes() {
     return this.app.getAllByTestId(node => node.startsWith("node-"));
   }
+
+  clickOnImage(nodeId: string) {
+    fireEvent.click(this.app.getByTestId("video-image-" + nodeId));
+  }
+
+  getPlayer(){
+    return this.app.getByTestId("player");
+  }
 }
