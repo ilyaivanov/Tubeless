@@ -55,5 +55,4 @@ const NodeTitle = ({ onDelete, onUpdate, node }: Props) => {
   );
 };
 
-
 export default NodeTitle;

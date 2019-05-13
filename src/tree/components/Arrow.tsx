@@ -14,7 +14,10 @@ interface ArrowProps {
 
 export const Arrow = (props: ArrowProps) => (
   <ArrowContainer onClick={props.onClick}>
-    <ArrowIcon data-testid={"arrow-" + props.nodeId} orientation={props.orientation} />
+    <ArrowIcon
+      data-testid={"arrow-" + props.nodeId}
+      orientation={props.orientation}
+    />
   </ArrowContainer>
 );
 

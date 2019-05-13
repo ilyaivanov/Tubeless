@@ -1,5 +1,5 @@
-import React, {Fragment} from "react";
-import {Node, Nodes, Placement, TreeInfo} from "./types";
+import React, { Fragment } from "react";
+import { Node, Nodes, Placement, TreeInfo } from "./types";
 import NodeElement from "./Node";
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const Tree = (props: Props) => {
-  const {tree, ids, level} = props;
+  const { tree, ids, level } = props;
   return (
     <Fragment>
       {ids.map(id => (

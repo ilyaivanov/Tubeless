@@ -32,7 +32,7 @@ describe("Having a tree with nodes ", () => {
     });
   });
 
-  it('when clicking add video a new video should be added', () => {
+  it("when clicking add video a new video should be added", () => {
     app.clickAddNewVideo();
     expect(app.getAllNodes()).toHaveLength(8);
   });

@@ -85,10 +85,12 @@ export default class AppPage {
     nodeBeingDraggedId: string,
     nodeOverWhichToDragId: string,
     dragCoordiates: Point,
-    boundingRect?:Partial<DOMRect>
+    boundingRect?: Partial<DOMRect>
   ) {
     getClientOffset.mockImplementation(() => dragCoordiates);
-    getBoundingClientRect.mockImplementation(() => (boundingRect || { x:0, bottom: 0, top: 10 }));
+    getBoundingClientRect.mockImplementation(
+      () => boundingRect || { x: 0, bottom: 0, top: 10 }
+    );
 
     fireEvent.dragStart(this.getDragHandle(nodeBeingDraggedId));
 
@@ -130,7 +132,7 @@ export default class AppPage {
     fireEvent.click(this.app.getByTestId("video-image-" + nodeId));
   }
 
-  getPlayer(){
+  getPlayer() {
     return this.app.getByTestId("player");
   }
 }
