@@ -8,19 +8,20 @@ interface Props {
 const Player = ({ videoId }: Props) => {
   const [player, setPlayer] = useState();
 
-  if (!videoId) return null;
-
   // useEffect(() => {
   //   if (player) {
+  //     console.log("playing video");
   //     player.playVideo();
   //   }
   // }, [player]);
 
+  if (!videoId) return null;
+
   return <YoutubePlayerWrapper onReady={setPlayer} videoId={videoId} />;
 };
 
-const YoutubePlayerWrapper = React.memo((props: any) => (
-  <div style={getStyle(props.visible)}>
+const YoutubePlayerWrapper = (props: any) => (
+  <div style={style}>
     <Youtube
       {...props}
       onReady={e => props.onReady(e.target)}
@@ -35,14 +36,12 @@ const YoutubePlayerWrapper = React.memo((props: any) => (
       }}
     />
   </div>
-));
+);
 
-const getStyle = (visible: boolean) =>
-  ({
-    position: "absolute",
-    right: 15,
-    bottom: 15,
-    display: visible ? undefined : "none"
-  } as {});
+const style = {
+  position: "absolute",
+  right: 15,
+  bottom: 15
+} as {};
 
 export default Player;
