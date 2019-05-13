@@ -1,84 +1,70 @@
 import React, { useState } from "react";
-import Tree from "./tree/Tree";
 import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
-import { Placement, Node } from "./tree/types";
-import { removeNode, updateNode } from "./domain/dropRules";
-import { drop } from "./domain/dropRules";
-import { shallowEqual } from "./domain/shallowCompare";
+import { Node } from "./tree/types";
 import Player from "./player";
+import TreeUpdatesHandler from "./TreeUpdatesHandler";
 
 const App: React.FC = () => {
   const [tree, setTree] = useState(sampleNodes);
-
-  const [placement, setPlacement] = useState({} as Partial<Placement>);
-
   const [nodeBeingPlayed, setNodeBeingPlayer] = useState({} as Node);
-
-  const onToggleCollapse = (id: string) => {
-    setTree(
-      updateNode(tree, id, node => ({
-        isHidden: !node.isHidden
-      }))
-    );
-  };
-
-  const updatePlacementOptimized = (newPlacement: Partial<Placement>) => {
-    if (!shallowEqual(newPlacement, placement)) setPlacement(newPlacement);
-  };
-
-  const onDrop = () => {
-    setTree(drop(tree, placement as Placement));
-    setPlacement({});
-  };
-
-  const onUpdate = (newNode: Partial<Node>) => {
-    if (!newNode.id) return;
-    setTree(
-      updateNode(tree, newNode.id, node => Object.assign({}, node, newNode))
-    );
-  };
-
-  const addNewNode = () => {
-    const id = Math.random() + "";
-    const node: Node = {
-      text: "New Node",
-      type: "generic",
-      id
-    };
-    setTree({
-      nodes: {
-        ...tree.nodes,
-        [id]: node
-      },
-      roots: tree.roots.concat([id])
-    });
-  };
-
-  const onDelete = (node: Node) => setTree(removeNode(tree, node.id));
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
   return (
     <div>
       <DragContext>
-        <Tree
-          tree={tree}
-          ids={tree.roots}
-          level={0}
-          onToggleCollapse={onToggleCollapse}
-          setPlacement={updatePlacementOptimized}
-          onDrop={onDrop}
-          onPlay={onPlay}
-          onDelete={onDelete}
-          onUpdate={onUpdate}
-          placement={placement}
+        <LayoutManager
+          renderRight={() => (
+            <TreeUpdatesHandler tree={tree} setTree={setTree} onPlay={onPlay} />
+          )}
         />
       </DragContext>
-      <button data-testid="add-new-node" onClick={addNewNode}>
-        add
-      </button>
       <Player videoId={nodeBeingPlayed.videoUrl} />
+    </div>
+  );
+};
+
+const LayoutManager = ({renderRight}:any) => {
+  const [seachVisible, setSearchVisibility] = useState(false);
+  const style = seachVisible
+    ? { flex: 1 }
+    : { width: 40, backgroundColor: "lightGrey" };
+  return (
+    <div
+      style={{
+        flexDirection: "row",
+        display: "flex",
+        alignItems: "stretch",
+        height: "100vh"
+      }}
+    >
+      <div style={style}>
+        <Search
+          isVisible={seachVisible}
+          onClick={() => setSearchVisibility(!seachVisible)}
+        />
+      </div>
+
+      <div style={{ flex: 1 }}>
+        {renderRight()}
+      </div>
+    </div>
+  );
+};
+
+const Search = ({ isVisible, onClick }: any) => {
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: isVisible ? "flex-end" : "center",
+          paddingRight: isVisible ? 20 : 0
+        }}
+      >
+        <button onClick={onClick}>{isVisible ? "<" : "+"}</button>
+      </div>
     </div>
   );
 };
