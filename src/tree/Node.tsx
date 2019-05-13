@@ -11,6 +11,7 @@ export interface NodeProps {
   placement: Placement;
   setPlacement: (placement: Partial<Placement>) => void;
   onToggleCollapse: (id: string) => void;
+  onPlay: (nodeId: Node) => void;
   onDrop: () => void;
   connectDragSource: any;
   connectDropTarget: any;
@@ -25,7 +26,8 @@ const NodeElement = React.forwardRef(
       onToggleCollapse,
       connectDragSource,
       connectDropTarget,
-      placement
+      placement,
+      onPlay
     }: NodeProps,
     ref: Ref<HTMLDivElement>
   ) => {
@@ -52,7 +54,7 @@ const NodeElement = React.forwardRef(
             onClick={() => onToggleCollapse(node.id)}
           />
           {node.type === "video" ? (
-            <img src={node.imageUrl} alt="Cover image" style={{height: 18, width: 18, paddingRight: 5}} ref={connectDragSource}/>
+            <img onClick={() => onPlay(node)} data-testid={`video-image-${node.id}`} src={node.imageUrl} alt="Cover image" style={{height: 18, width: 18, paddingRight: 5}} ref={connectDragSource}/>
           ) : (
             <Bullet itemId={node.id} ref={connectDragSource} />
           )}

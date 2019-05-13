@@ -18,6 +18,10 @@ jest.mock("../tree/offsetHandler", () => ({
   getBoundingClientRect: jest.fn()
 }));
 
+jest.mock("../tree/sampleTrees", () => ({
+  sampleNodes: jest.requireActual('../tree/sampleTrees').mediumSizedTree
+}));
+
 const createDragScenario = (
   elementBeingDragged: string,
   hoverElement: string,

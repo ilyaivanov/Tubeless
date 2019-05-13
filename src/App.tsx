@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import Tree from "./tree/Tree";
 import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
-import { Placement } from "./tree/types";
+import { Placement, Node } from "./tree/types";
 import { updateNode } from "./domain/dropRules";
 import { drop } from "./domain/dropRules";
 import { shallowEqual } from "./domain/shallowCompare";
+import Player from "./player";
 
 const App: React.FC = () => {
   const [tree, setTree] = useState(sampleNodes);
 
   const [placement, setPlacement] = useState({} as Partial<Placement>);
+
+  const [nodeBeingPlayed, setNodeBeingPlayer] = useState({} as Node);
 
   const onToggleCollapse = (id: string) => {
     setTree(
@@ -25,10 +28,13 @@ const App: React.FC = () => {
   };
 
   const onDrop = () => {
-    console.log('DROP', tree, placement);
     setTree(drop(tree, placement as Placement));
     setPlacement({});
   };
+
+  const onPlay = (node: Node) =>
+    setNodeBeingPlayer(node);
+
   return (
     <div>
       <DragContext>
@@ -39,9 +45,11 @@ const App: React.FC = () => {
           onToggleCollapse={onToggleCollapse}
           setPlacement={updatePlacementOptimized}
           onDrop={onDrop}
+          onPlay={onPlay}
           placement={placement}
         />
       </DragContext>
+      <Player videoId={nodeBeingPlayed.videoUrl} />
     </div>
   );
 };

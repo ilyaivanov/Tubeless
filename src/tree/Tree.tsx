@@ -10,6 +10,7 @@ interface Props {
   placement: Partial<Placement>;
   setPlacement: (placement: Partial<Placement>) => void;
   onDrop: () => void;
+  onPlay: (node: Node) => void;
 }
 
 const Tree = (props: Props) => {
