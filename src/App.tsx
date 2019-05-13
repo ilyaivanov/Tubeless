@@ -39,6 +39,22 @@ const App: React.FC = () => {
     );
   };
 
+  const addNewNode = () => {
+    const id = Math.random() + "";
+    const node: Node = {
+      text: "New Node",
+      type: "generic",
+      id
+    };
+    setTree({
+      nodes: {
+        ...tree.nodes,
+        [id]: node
+      },
+      roots: tree.roots.concat([id])
+    });
+  };
+
   const onDelete = (node: Node) => setTree(removeNode(tree, node.id));
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
@@ -59,6 +75,9 @@ const App: React.FC = () => {
           placement={placement}
         />
       </DragContext>
+      <button data-testid="add-new-node" onClick={addNewNode}>
+        add
+      </button>
       <Player videoId={nodeBeingPlayed.videoUrl} />
     </div>
   );

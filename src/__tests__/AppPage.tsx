@@ -49,6 +49,10 @@ export default class AppPage {
     return this.app.getByTestId("title-" + nodeId).innerHTML;
   }
 
+  clickAddNewVideo() {
+    fireEvent.click(this.app.getByTestId("add-new-node"));
+  }
+
   expectNodeToExist(nodeId: string) {
     expect(this.app.getByTestId("node-" + nodeId)).toBeDefined();
   }

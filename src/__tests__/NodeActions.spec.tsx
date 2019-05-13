@@ -32,4 +32,9 @@ describe("Having a tree with nodes ", () => {
       expect(app.getNodeTitle("2")).toEqual("New Text");
     });
   });
+
+  it('when clicking add video a new video should be added', () => {
+    app.clickAddNewVideo();
+    expect(app.getAllNodes()).toHaveLength(8);
+  });
 });
