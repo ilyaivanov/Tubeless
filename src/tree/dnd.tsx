@@ -5,7 +5,7 @@ import { Placement, PlacementOrientation } from "./types";
 import { getBoundingClientRect, getClientOffset } from "./offsetHandler";
 import { ARROW_SIZE } from "./components";
 import { NodeProps } from "./Node";
-import {getParentKey} from "../domain/dropRules";
+import { getParentKey } from "../domain/dropRules";
 
 const Context = ({ children }: { children: JSX.Element }) => (
   <Fragment>{children}</Fragment>
@@ -63,19 +63,22 @@ export const TreeDropTarget = DropTarget(
 
       const placement = getVerticalPlacement(hoverBoundingRect, clientOffset.y);
 
-      const offsetWithoutArrow = Math.max(clientOffset.x - ARROW_SIZE, 0);
+      const offsetWithoutArrow = Math.max(
+        clientOffset.x - ARROW_SIZE - hoverBoundingRect.x,
+        0
+      );
 
       const dragLevel = Math.floor(offsetWithoutArrow / 20);
 
       const parent = getParentKey(props.tree.nodes, props.node.id);
 
-      const context = !parent ? props.tree.roots : props.tree.nodes[parent].children as string[];
+      const context = !parent
+        ? props.tree.roots
+        : (props.tree.nodes[parent].children as string[]);
       const isFirst = context.indexOf(props.node.id) === 0;
 
       const maxDragLevel =
-        (placement === "BEFORE" && isFirst)
-          ? props.level
-          : props.level + 1;
+        placement === "BEFORE" && isFirst ? props.level : props.level + 1;
 
       const desiredDragLevel =
         dragLevel > maxDragLevel ? maxDragLevel : dragLevel;

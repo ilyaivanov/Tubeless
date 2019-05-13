@@ -83,6 +83,11 @@ describe("Having a tree with two nodes Node 2 being child of Node 1", () => {
 
     it("when dragging above of the middle restrictions should be less 1", () =>
       simulateAnOffsetScenario(54, 2, "15px"));
+
+    it("boundary should take into account bounding rectangle", () => {
+      app.dragNodeOverOtherNode("2", "1", { x: 64, y: 6 }, {bottom:0, top: 10, x: 40});
+      expect(app.getBorder("1")).toHaveStyleRule("left", '15px');
+    });
   });
 
   describe("dragging 2 over the top of 1.2 with far right shift", () => {
