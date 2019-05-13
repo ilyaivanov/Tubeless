@@ -52,7 +52,7 @@ const NodeElement = React.forwardRef(
         >
           <Arrow
             orientation={node.isHidden ? "right" : "down"}
-            data-testid="arrow"
+            nodeId={node.id}
             onClick={() => onToggleCollapse(node.id)}
           />
           {node.type === "video" ? (
