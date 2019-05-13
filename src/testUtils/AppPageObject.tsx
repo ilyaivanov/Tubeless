@@ -84,10 +84,11 @@ export default class AppPage {
   dragNodeOverOtherNode(
     nodeBeingDraggedId: string,
     nodeOverWhichToDragId: string,
-    dragCoordiates: Point
+    dragCoordiates: Point,
+    boundingRect?:Partial<DOMRect>
   ) {
     getClientOffset.mockImplementation(() => dragCoordiates);
-    getBoundingClientRect.mockImplementation(() => ({ bottom: 0, top: 10 }));
+    getBoundingClientRect.mockImplementation(() => (boundingRect || { x:0, bottom: 0, top: 10 }));
 
     fireEvent.dragStart(this.getDragHandle(nodeBeingDraggedId));
 
