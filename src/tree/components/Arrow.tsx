@@ -1,19 +1,20 @@
 import styled from "styled-components";
-import React, {MouseEventHandler} from "react";
+import React, { MouseEventHandler } from "react";
 import { ARROW_SIZE } from "./constants";
 import { NodeContainer } from "./NodeContainer";
 import { Center } from "./Common";
 
-type ArrowIconOrientation = 'right' | 'down';
+type ArrowIconOrientation = "right" | "down";
 
 interface ArrowProps {
+  nodeId: string;
   onClick: MouseEventHandler;
   orientation: ArrowIconOrientation;
 }
 
 export const Arrow = (props: ArrowProps) => (
-  <ArrowContainer data-testid="arrow" onClick={props.onClick}>
-    <ArrowIcon orientation={props.orientation} />
+  <ArrowContainer onClick={props.onClick}>
+    <ArrowIcon data-testid={"arrow-" + props.nodeId} orientation={props.orientation} />
   </ArrowContainer>
 );
 

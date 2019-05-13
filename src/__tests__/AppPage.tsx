@@ -19,6 +19,10 @@ export default class AppPage {
     fireEvent.click(this.app.getByTestId("delete-" + nodeId));
   }
 
+  clickArrow(nodeId:string){
+    fireEvent.click(this.getArrowForNode(nodeId));
+  }
+
   expectNodeToExist(nodeId: string) {
     expect(this.app.getByTestId("node-" + nodeId)).toBeDefined();
   }
@@ -27,8 +31,16 @@ export default class AppPage {
     expect(this.app.queryByTestId("node-" + nodeId)).toBeNull();
   }
 
-  cleanup() {
+  getArrowForNode(nodeId:string){
+    return this.app.getByTestId("arrow-"+nodeId);
+  }
+
+  getAllNodes(){
+    return this.app.getAllByTestId(node => node.startsWith("node-"));
+  }
+
+  cleanup = () => {
     cleanup();
     this.app = render(<App />);
-  }
+  };
 }
