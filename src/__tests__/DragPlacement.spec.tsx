@@ -1,6 +1,6 @@
 import * as React from "react";
 import "jest-styled-components";
-import AppPage from "./AppPage";
+import AppPage from "../testUtils/AppPageObject";
 
 jest.mock("../tree/sampleTrees", () => ({
   sampleNodes: jest.requireActual("../tree/sampleTrees").mediumSizedTree
@@ -8,7 +8,6 @@ jest.mock("../tree/sampleTrees", () => ({
 
 describe("Having a tree with two nodes Node 2 being child of Node 1", () => {
   const app = new AppPage();
-  afterEach(app.cleanup);
 
   describe("when dragging a Node 2 above the middle of Node 1 and too far in x shift", () => {
     beforeEach(() => {
