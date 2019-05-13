@@ -10,7 +10,7 @@ interface Props {
 
 const NodeIcons = ({ onEdit, onDelete, nodeId }: Props) => (
   <IconsContainer>
-    <button onClick={onEdit}>E</button>
+    <button data-testid={"edit-" + nodeId} onClick={onEdit}>E</button>
     <button data-testid={"delete-" + nodeId} onClick={onDelete}>
       X
     </button>
