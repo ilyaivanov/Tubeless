@@ -1,5 +1,5 @@
 import React, { Ref, useImperativeHandle, useRef } from "react";
-import {Node, Placement, TreeInfo} from "./types";
+import { Node, Placement, TreeInfo } from "./types";
 import { Arrow, Border, Bullet, NodeContainer, NodeText } from "./components";
 import { TreeDragSource, TreeDropTarget } from "./dnd";
 
@@ -51,7 +51,11 @@ const NodeElement = React.forwardRef(
             data-testid="arrow"
             onClick={() => onToggleCollapse(node.id)}
           />
-          <Bullet itemId={node.id} ref={connectDragSource} />
+          {node.type === "video" ? (
+            <img src={node.imageUrl} alt="Cover image" style={{height: 18, width: 18, paddingRight: 5}} ref={connectDragSource}/>
+          ) : (
+            <Bullet itemId={node.id} ref={connectDragSource} />
+          )}
           <NodeText>{node.text}</NodeText>
           {node.id === placement.id && (
             <Border
