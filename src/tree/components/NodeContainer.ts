@@ -10,6 +10,7 @@ export const NodeContainer = styled.div<NodeContainerProps>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 24px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   padding-left: ${(props: NodeContainerProps) => props.level * LEVEL_SHIFT}px;
 `;

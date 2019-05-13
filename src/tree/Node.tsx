@@ -64,7 +64,7 @@ const NodeElement = React.forwardRef(
               data-testid={`video-image-${node.id}`}
               src={node.imageUrl}
               alt="Cover image"
-              style={{ height: 18, width: 18, paddingRight: 5 }}
+              style={{ height: 32, width: 32, paddingRight: 5 }}
               ref={connectDragSource}
             />
           ) : (
