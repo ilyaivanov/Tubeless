@@ -26,19 +26,19 @@ const videoNodes: Nodes = {
   ...node("Ambient", ["Carbon Based Lifeforms Album 1", "Carbon Based Lifeforms Album 2"]),
   ...video(
     "Carbon Based Lifeforms Album 1",
-    "https://www.youtube.com/watch?v=f5ddAAYasgM",
+    "f5ddAAYasgM",
     "https://picsum.photos/id/190/132/132?grayscale"
   ),
   ...video(
     "Carbon Based Lifeforms Album 2",
-    "https://www.youtube.com/watch?v=KQE29az48gM",
+    "KQE29az48gM",
     "https://picsum.photos/id/191/132/132?grayscale"
   ),
   ...node("1", ["1.1"]),
   ...node("1.1"),
 };
 
-const twoVideos: TreeInfo = {
+export const twoVideos: TreeInfo = {
   nodes: videoNodes,
   roots: getRoots(videoNodes)
 };
