@@ -128,6 +128,11 @@ export default class AppPage {
     return this.app.getAllByTestId(node => node.startsWith("node-"));
   }
 
+
+  getNodeByText(title: string) {
+    return this.app.getByText(title);
+  }
+
   clickOnImage(nodeId: string) {
     fireEvent.click(this.app.getByTestId("video-image-" + nodeId));
   }

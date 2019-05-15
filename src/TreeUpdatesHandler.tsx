@@ -44,8 +44,11 @@ const TreeUpdatesHandler = ({
       type: "generic",
       id
     };
+    const withChild = updateNode(nodes, zone, node => ({
+      children: (node.children as string[]).concat([id])
+    }));
     setNodes({
-      ...nodes,
+      ...withChild,
       [id]: node
     });
   };

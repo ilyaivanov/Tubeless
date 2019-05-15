@@ -30,6 +30,7 @@ describe("Having a tree with nodes ", () => {
 
   it("when clicking add video a new video should be added", () => {
     app.clickAddNewVideo();
-    expect(app.getAllNodes()).toHaveLength(3);
+    expect(app.getNodeByText('New Node')).toBeDefined();
+    expect(app.getAllNodes()).toHaveLength(4);
   });
 });
