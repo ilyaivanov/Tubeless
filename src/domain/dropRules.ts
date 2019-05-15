@@ -55,7 +55,8 @@ export const getParentKey = (
 const updateRoots = (
   tree: TreeInfo,
   updater: (roots: string[]) => string[]
-) => ({
+): TreeInfo => ({
+  ...tree,
   roots: updater(tree.roots),
   nodes: tree.nodes
 });

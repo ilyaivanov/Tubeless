@@ -2,15 +2,11 @@ import * as React from "react";
 import "jest-styled-components";
 import AppPage from "../testUtils/AppPageObject";
 
-jest.mock("../tree/sampleTrees", () => ({
-  sampleNodes: jest.requireActual("../tree/sampleTrees").twoNestedNodes
-}));
-
 describe("Having a simple Tree", () => {
-  const app = new AppPage();
+  const app = new AppPage(["1"]);
 
   it("should render two nodes", () => {
-    expect(app.getAllNodes()).toHaveLength(2);
+    expect(app.getAllNodes()).toHaveLength(4);
   });
 
   it("should render right arrow", () => {

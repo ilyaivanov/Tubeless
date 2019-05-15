@@ -2,10 +2,6 @@ import * as React from "react";
 import "jest-styled-components";
 import AppPage from "../testUtils/AppPageObject";
 
-jest.mock("../tree/sampleTrees", () => ({
-  sampleNodes: jest.requireActual("../tree/sampleTrees").mediumSizedTree
-}));
-
 describe("Having a tree with two nodes Node 2 being child of Node 1", () => {
   const app = new AppPage();
 

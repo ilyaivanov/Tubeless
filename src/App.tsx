@@ -1,25 +1,36 @@
 import React, { useState } from "react";
 import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
-import { Node, TreeInfo } from "./tree/types";
+import { Node, Placement, TreeInfo } from "./tree/types";
 import Player from "./player";
 import TreeUpdatesHandler from "./TreeUpdatesHandler";
-import { getRoots } from "./domain/dropRules";
 
-const App: React.FC = () => {
-  const [nodes, setNodes] = useState(sampleNodes.nodes);
+interface Props {
+  favoriteNodes?: string[];
+}
+
+const App: React.FC<Props> = ({ favoriteNodes }: any) => {
+  const [nodes, setNodes] = useState(sampleNodes);
+  const [placement, setPlacement] = useState({} as Partial<Placement>);
+
   const [favoritesRoots, setFavoritesRoots] = useState(
-    getRoots(sampleNodes.nodes)
+    favoriteNodes || ["1", "2"]
   );
   const [nodeBeingPlayed, setNodeBeingPlayer] = useState({} as Node);
 
   const favoritesTree = {
-    nodes,
-    roots: favoritesRoots
-  };
+      nodes,
+      roots: favoritesRoots
+    } /*?*/;
+
   const updateFavorites = (tree: TreeInfo) => {
     setNodes(tree.nodes);
     setFavoritesRoots(tree.roots);
+  };
+
+  const searchTree = {
+    nodes: nodes,
+    roots: ["1"]
   };
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
@@ -30,7 +41,18 @@ const App: React.FC = () => {
         <LayoutManager
           renderRight={() => (
             <TreeUpdatesHandler
+              placement={placement}
+              setPlacement={setPlacement}
               tree={favoritesTree}
+              setTree={updateFavorites}
+              onPlay={onPlay}
+            />
+          )}
+          renderLeft={() => (
+            <TreeUpdatesHandler
+              placement={placement}
+              setPlacement={setPlacement}
+              tree={searchTree}
               setTree={updateFavorites}
               onPlay={onPlay}
             />
@@ -42,7 +64,7 @@ const App: React.FC = () => {
   );
 };
 
-const LayoutManager = ({ renderRight }: any) => {
+const LayoutManager = ({ renderRight, renderLeft }: any) => {
   const [seachVisible, setSearchVisibility] = useState(false);
   const style = seachVisible
     ? { flex: 1 }
@@ -56,14 +78,17 @@ const LayoutManager = ({ renderRight }: any) => {
         height: "100vh"
       }}
     >
-      <div style={style}>
+      <div style={style} data-testid="search-zone">
         <Search
           isVisible={seachVisible}
           onClick={() => setSearchVisibility(!seachVisible)}
         />
+        {seachVisible && renderLeft()}
       </div>
 
-      <div style={{ flex: 1 }}>{renderRight()}</div>
+      <div style={{ flex: 1 }} data-testid="favorites-zone">
+        {renderRight()}
+      </div>
     </div>
   );
 };
@@ -78,7 +103,9 @@ const Search = ({ isVisible, onClick }: any) => {
           paddingRight: isVisible ? 20 : 0
         }}
       >
-        <button onClick={onClick}>{isVisible ? "<" : "+"}</button>
+        <button data-testid="toggle-sidebar" onClick={onClick}>
+          {isVisible ? "<" : "+"}
+        </button>
       </div>
     </div>
   );
