@@ -8,6 +8,7 @@ import {
 } from "react-testing-library";
 import "jest-styled-components";
 import App from "../App";
+import { Nodes, Roots } from "../tree/types";
 
 const {
   getClientOffset,
@@ -21,13 +22,31 @@ jest.mock("../tree/offsetHandler", () => ({
 
 type Point = { x: number; y: number };
 
+type CtorProps = {
+  favoriteFirstNodes?: string[];
+  searchFirstNodes?: string[];
+};
+
 export default class AppPage {
   // @ts-ignore
   app: RenderResult;
 
-  constructor(favoriteNodes?: string[]) {
+  conf: CtorProps;
+
+  setFirstNodes = (nodes: Nodes) => {
+    if (this.conf.favoriteFirstNodes) {
+      nodes[Roots.FAVORITES].children = this.conf.favoriteFirstNodes;
+    }
+    if (this.conf.searchFirstNodes) {
+      nodes[Roots.SEARCH].children = this.conf.searchFirstNodes;
+    }
+    return nodes;
+  };
+
+  constructor(props?: CtorProps) {
+    this.conf = props || {};
     beforeEach(() => {
-      this.app = render(<App favoriteNodes={favoriteNodes} />);
+      this.app = render(<App processDefaultNodes={this.setFirstNodes} />);
     });
     afterEach(cleanup);
   }
@@ -93,7 +112,7 @@ export default class AppPage {
     return this.app.queryByTestId("border-" + nodeId);
   }
 
-  getNode(nodeId: string, zone?: Zone) {
+  getNode(nodeId: string, zone?: UIZone) {
     return this.getElementInZone("node-" + nodeId, zone);
   }
 
@@ -101,7 +120,7 @@ export default class AppPage {
     return this.app.getByTestId("input-" + nodeId);
   }
 
-  getDragHandle(nodeId: string, zone?: Zone) {
+  getDragHandle(nodeId: string, zone?: UIZone) {
     return this.getElementInZone("drag-handle-" + nodeId, zone);
   }
 
@@ -147,28 +166,30 @@ export default class AppPage {
     }));
   }
 
-  startDraggingNode(nodeId: string, zone?: Zone) {
+  startDraggingNode(nodeId: string, zone?: UIZone) {
     fireEvent.dragStart(this.getDragHandle(nodeId, zone));
   }
 
-  dragOverNode(nodeId: string, zone?: Zone) {
+  dragOverNode(nodeId: string, zone?: UIZone) {
     fireEvent.dragOver(this.getDragHandle(nodeId, zone));
   }
 
-  dropAtNode(nodeId: string, zone?: Zone) {
+  dropAtNode(nodeId: string, zone?: UIZone) {
     fireEvent.drop(this.getNode(nodeId, zone));
   }
 
-  cancelDrag(nodeId: string, zone?: Zone) {
+  cancelDrag(nodeId: string, zone?: UIZone) {
     fireEvent.dragEnd(this.getDragHandle(nodeId, zone));
   }
 
   //GENERIC HELPERS
 
-  getElementInZone(elemId: string, zone: Zone = "favorites") {
+  getElementInZone(elemId: string, zone: UIZone = "favorites") {
     const zoneElement = this.app.getByTestId(zone + "-zone");
     return getByTestId(zoneElement, elemId);
   }
 }
 
-type Zone = "search" | "favorites";
+//refers to testid
+//consider to extract all test ids to constants
+type UIZone = "search" | "favorites";

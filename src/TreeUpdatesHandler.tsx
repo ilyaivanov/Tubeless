@@ -4,10 +4,17 @@ import { drop, removeNode, updateNode } from "./domain/dropRules";
 import { shallowEqual } from "./domain/shallowCompare";
 import Tree from "./tree/Tree";
 
-const TreeUpdatesHandler = ({ setTree, tree, placement, setPlacement, onPlay }: any) => {
+const TreeUpdatesHandler = ({
+  setNodes,
+  zone,
+  nodes,
+  placement,
+  setPlacement,
+  onPlay
+}: any) => {
   const onToggleCollapse = (id: string) => {
-    setTree(
-      updateNode(tree, id, node => ({
+    setNodes(
+      updateNode(nodes, id, node => ({
         isHidden: !node.isHidden
       }))
     );
@@ -18,14 +25,14 @@ const TreeUpdatesHandler = ({ setTree, tree, placement, setPlacement, onPlay }: 
   };
 
   const onDrop = () => {
-    setTree(drop(tree, placement as Placement));
+    setNodes(drop(nodes, placement as Placement));
     setPlacement({});
   };
 
   const onUpdate = (newNode: Partial<Node>) => {
     if (!newNode.id) return;
-    setTree(
-      updateNode(tree, newNode.id, node => Object.assign({}, node, newNode))
+    setNodes(
+      updateNode(nodes, newNode.id, node => Object.assign({}, node, newNode))
     );
   };
 
@@ -37,21 +44,18 @@ const TreeUpdatesHandler = ({ setTree, tree, placement, setPlacement, onPlay }: 
       type: "generic",
       id
     };
-    setTree({
-      nodes: {
-        ...tree.nodes,
-        [id]: node
-      },
-      roots: tree.roots.concat([id])
+    setNodes({
+      ...nodes,
+      [id]: node
     });
   };
 
-  const onDelete = (node: Node) => setTree(removeNode(tree, node.id));
+  const onDelete = (node: Node) => setNodes(removeNode(nodes, node.id));
   return (
     <Fragment>
       <Tree
-        tree={tree}
-        ids={tree.roots}
+        nodes={nodes}
+        ids={nodes[zone].children}
         level={0}
         onToggleCollapse={onToggleCollapse}
         setPlacement={updatePlacementOptimized}
