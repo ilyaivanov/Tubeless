@@ -23,7 +23,7 @@ const sampleNodes: Nodes = {
     "https://picsum.photos/id/191/132/132?grayscale"
   ),
   ...root(["1", "2"], Roots.FAVORITES),
-  ...root([], Roots.SEARCH)
+  ...root(['Ambient'], Roots.SEARCH)
 };
 
 export { sampleNodes };
