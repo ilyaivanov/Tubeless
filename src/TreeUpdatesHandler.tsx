@@ -4,9 +4,7 @@ import { drop, removeNode, updateNode } from "./domain/dropRules";
 import { shallowEqual } from "./domain/shallowCompare";
 import Tree from "./tree/Tree";
 
-const TreeUpdatesHandler = ({ setTree, tree, onPlay }: any) => {
-  const [placement, setPlacement] = useState({} as Partial<Placement>);
-
+const TreeUpdatesHandler = ({ setTree, tree, placement, setPlacement, onPlay }: any) => {
   const onToggleCollapse = (id: string) => {
     setTree(
       updateNode(tree, id, node => ({

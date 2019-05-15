@@ -3,7 +3,8 @@ import {
   cleanup,
   fireEvent,
   render,
-  RenderResult
+  RenderResult,
+  getByTestId
 } from "react-testing-library";
 import "jest-styled-components";
 import App from "../App";
@@ -24,9 +25,9 @@ export default class AppPage {
   // @ts-ignore
   app: RenderResult;
 
-  constructor() {
+  constructor(favoriteNodes?: string[]) {
     beforeEach(() => {
-      this.app = render(<App />);
+      this.app = render(<App favoriteNodes={favoriteNodes} />);
     });
     afterEach(cleanup);
   }
@@ -81,6 +82,50 @@ export default class AppPage {
     });
   }
 
+  endDragAtNode(nodeId: string) {
+    fireEvent.dragEnd(this.getNode(nodeId));
+  }
+
+  dropAtNode(nodeId: string) {
+    fireEvent.drop(this.getNode(nodeId));
+  }
+
+  getBorder(nodeId: string) {
+    return this.app.getByTestId("border-" + nodeId);
+  }
+  queryBorder(nodeId: string) {
+    return this.app.queryByTestId("border-" + nodeId);
+  }
+
+  getNode(nodeId: string, zone?: Zone) {
+    return this.getElementInZone("node-" + nodeId, zone);
+  }
+
+  getInputForNode(nodeId: string) {
+    return this.app.getByTestId("input-" + nodeId);
+  }
+
+  getDragHandle(nodeId: string, zone?: Zone) {
+    return this.getElementInZone("drag-handle-" + nodeId, zone);
+  }
+
+  getAllNodes() {
+    return this.app.getAllByTestId(node => node.startsWith("node-"));
+  }
+
+  clickOnImage(nodeId: string) {
+    fireEvent.click(this.app.getByTestId("video-image-" + nodeId));
+  }
+
+  openSearch() {
+    fireEvent.click(this.app.getByTestId("toggle-sidebar"));
+  }
+
+  getPlayer() {
+    return this.app.getByTestId("player");
+  }
+
+  //Drag'n'Drop scenarious
   dragNodeOverOtherNode(
     nodeBeingDraggedId: string,
     nodeOverWhichToDragId: string,
@@ -97,42 +142,37 @@ export default class AppPage {
     fireEvent.dragOver(this.getNode(nodeOverWhichToDragId));
   }
 
-  endDragAtNode(nodeId: string) {
-    fireEvent.dragEnd(this.getNode(nodeId));
+  setDragSpecificCoordinates() {
+    getClientOffset.mockImplementation(() => ({ x: 0, y: 0 }));
+    getBoundingClientRect.mockImplementation(() => ({
+      x: 0,
+      bottom: 0,
+      top: 10
+    }));
   }
 
-  dropAtNode(nodeId: string) {
-    fireEvent.drop(this.getNode(nodeId));
+  startDraggingNode(nodeId: string, zone?: Zone) {
+    fireEvent.dragStart(this.getDragHandle(nodeId, zone));
   }
 
-  getBorder(nodeId: string) {
-    return this.app.getByTestId("border-" + nodeId);
-  }
-  queryBorder(nodeId: string) {
-    return this.app.queryByTestId("border-" + nodeId);
+  dragOverNode(nodeId: string, zone?: Zone) {
+    fireEvent.dragOver(this.getDragHandle(nodeId, zone));
   }
 
-  getNode(nodeId: string) {
-    return this.app.getByTestId("node-" + nodeId);
+  dropOverNode(nodeId: string, zone?: Zone) {
+    fireEvent.drop(this.getDragHandle(nodeId, zone));
   }
 
-  getInputForNode(nodeId: string) {
-    return this.app.getByTestId("input-" + nodeId);
+  cancelDrag(nodeId: string, zone?: Zone) {
+    fireEvent.dragEnd(this.getDragHandle(nodeId, zone));
   }
 
-  getDragHandle(nodeId: string) {
-    return this.app.getByTestId("drag-handle-" + nodeId);
-  }
+  //GENERIC HELPERS
 
-  getAllNodes() {
-    return this.app.getAllByTestId(node => node.startsWith("node-"));
-  }
-
-  clickOnImage(nodeId: string) {
-    fireEvent.click(this.app.getByTestId("video-image-" + nodeId));
-  }
-
-  getPlayer() {
-    return this.app.getByTestId("player");
+  getElementInZone(elemId: string, zone: Zone = "favorites") {
+    const zoneElement = this.app.getByTestId(zone + "-zone");
+    return getByTestId(zoneElement, elemId);
   }
 }
+
+type Zone = "search" | "favorites";

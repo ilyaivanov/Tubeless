@@ -1,28 +1,13 @@
-import { TreeInfo, Node, Nodes } from "./types";
-import { getRoots } from "../domain/dropRules";
+import { Node, Nodes } from "./types";
 
-export const twoNestedNodes: TreeInfo = {
-  nodes: {
-    ...node("1", ["2"]),
-    ...node("2")
-  },
-  roots: ["1"]
-};
-
-export const mediumSizedTree: TreeInfo = {
-  nodes: {
-    ...node("1", ["1.1", "1.2"]),
-    ...node("1.1"),
-    ...node("1.2", ["1.2.1"]),
-    ...node("1.2.1"),
-    ...node("2", ["2.1"]),
-    ...node("2.1", ["2.1.1"]),
-    ...node("2.1.1")
-  },
-  roots: ["1", "2"]
-};
-
-const videoNodes: Nodes = {
+const sampleNodes: Nodes = {
+  ...node("1", ["1.1", "1.2"]),
+  ...node("1.1"),
+  ...node("1.2", ["1.2.1"]),
+  ...node("1.2.1"),
+  ...node("2", ["2.1"]),
+  ...node("2.1", ["2.1.1"]),
+  ...node("2.1.1"),
   ...node("Ambient", [
     "Carbon Based Lifeforms Album 1",
     "Carbon Based Lifeforms Album 2"
@@ -36,17 +21,10 @@ const videoNodes: Nodes = {
     "Carbon Based Lifeforms Album 2",
     "KQE29az48gM",
     "https://picsum.photos/id/191/132/132?grayscale"
-  ),
-  ...node("1", ["1.1"]),
-  ...node("1.1")
+  )
 };
 
-export const twoVideos: TreeInfo = {
-  nodes: videoNodes,
-  roots: getRoots(videoNodes)
-};
-
-export const sampleNodes = twoVideos;
+export { sampleNodes };
 
 function node(id: string, children?: string[]) {
   const node: Node = {

@@ -16,6 +16,7 @@ export interface Nodes {
 export interface TreeInfo {
   nodes: Nodes;
   roots: string[];
+  searchRoots: string[];
 }
 
 export type PlacementOrientation = "BEFORE" | "AFTER";
