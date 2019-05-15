@@ -21,7 +21,7 @@ const App: React.FC<Props> = ({ favoriteNodes }: any) => {
   const favoritesTree = {
       nodes,
       roots: favoritesRoots
-    } /*?*/;
+    };
 
   const updateFavorites = (tree: TreeInfo) => {
     setNodes(tree.nodes);
