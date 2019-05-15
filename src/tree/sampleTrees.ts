@@ -1,4 +1,4 @@
-import { Node, Nodes } from "./types";
+import {Node, Nodes, Roots} from "./types";
 
 const sampleNodes: Nodes = {
   ...node("1", ["1.1", "1.2"]),
@@ -21,7 +21,9 @@ const sampleNodes: Nodes = {
     "Carbon Based Lifeforms Album 2",
     "KQE29az48gM",
     "https://picsum.photos/id/191/132/132?grayscale"
-  )
+  ),
+  ...root(["1", "2"], Roots.FAVORITES),
+  ...root([], Roots.SEARCH)
 };
 
 export { sampleNodes };
@@ -48,5 +50,17 @@ function video(label: string, videoUrl: string, imageUrl: string) {
   };
   return {
     [label]: node
+  };
+}
+
+function root(nodes: string[], rootType: Roots) {
+  const node: Node = {
+    id: rootType,
+    text: rootType,
+    children: nodes,
+    type: "root"
+  };
+  return {
+    [rootType]: node
   };
 }

@@ -7,7 +7,9 @@ jest.mock("react-youtube", () => (props: any) => {
 });
 
 describe("Having two youtube videos", () => {
-  const app = new AppPage(['Carbon Based Lifeforms Album 1']);
+  const app = new AppPage({
+    favoriteFirstNodes: ["Carbon Based Lifeforms Album 1"]
+  });
 
   describe("clicking on a play button in one of those videos", () => {
     it("should render a Youtube video with that id", () => {

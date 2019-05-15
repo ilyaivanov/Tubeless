@@ -4,7 +4,7 @@ export interface Node {
   children?: string[];
   isHidden?: boolean;
 
-  type: "generic" | "video";
+  type: "root" | "generic" | "video";
   videoUrl?: string;
   imageUrl?: string;
 }
@@ -27,3 +27,8 @@ export type Placement = {
   dragLevel: number;
   itemBeingDragged: string;
 };
+
+export enum Roots {
+  FAVORITES = "ROOT.favorites",
+  SEARCH = "ROOT.search",
+}

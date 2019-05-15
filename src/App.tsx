@@ -1,37 +1,21 @@
 import React, { useState } from "react";
 import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
-import { Node, Placement, TreeInfo } from "./tree/types";
+import {Node, Nodes, Placement, Roots} from "./tree/types";
 import Player from "./player";
 import TreeUpdatesHandler from "./TreeUpdatesHandler";
 
 interface Props {
-  favoriteNodes?: string[];
+  processDefaultNodes?: (nodes: Nodes) => Nodes;
 }
 
-const App: React.FC<Props> = ({ favoriteNodes }: any) => {
-  const [nodes, setNodes] = useState(sampleNodes);
+const App: React.FC<Props> = ({ processDefaultNodes }) => {
+  const [nodes, setNodes] = useState(
+    processDefaultNodes ? processDefaultNodes(sampleNodes) : sampleNodes
+  );
   const [placement, setPlacement] = useState({} as Partial<Placement>);
 
-  const [favoritesRoots, setFavoritesRoots] = useState(
-    favoriteNodes || ["1", "2"]
-  );
   const [nodeBeingPlayed, setNodeBeingPlayer] = useState({} as Node);
-
-  const favoritesTree = {
-      nodes,
-      roots: favoritesRoots
-    };
-
-  const updateFavorites = (tree: TreeInfo) => {
-    setNodes(tree.nodes);
-    setFavoritesRoots(tree.roots);
-  };
-
-  const searchTree = {
-    nodes: nodes,
-    roots: ["1"]
-  };
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
@@ -41,19 +25,21 @@ const App: React.FC<Props> = ({ favoriteNodes }: any) => {
         <LayoutManager
           renderRight={() => (
             <TreeUpdatesHandler
+              zone={Roots.FAVORITES}
               placement={placement}
               setPlacement={setPlacement}
-              tree={favoritesTree}
-              setTree={updateFavorites}
+              nodes={nodes}
+              setNodes={setNodes}
               onPlay={onPlay}
             />
           )}
           renderLeft={() => (
             <TreeUpdatesHandler
+              zone={Roots.SEARCH}
               placement={placement}
               setPlacement={setPlacement}
-              tree={searchTree}
-              setTree={updateFavorites}
+              nodes={nodes}
+              setNodes={setNodes}
               onPlay={onPlay}
             />
           )}
