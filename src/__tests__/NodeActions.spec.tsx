@@ -2,7 +2,7 @@ import * as React from "react";
 import AppPage from "../testUtils/AppPageObject";
 
 describe("Having a tree with nodes ", () => {
-  const app = new AppPage(['2']);
+  const app = new AppPage({favoriteFirstNodes: ['2']});
 
   it("when clicking remove Node 2 that node should be removed", () => {
     app.expectNodeToExist("2");
@@ -30,6 +30,6 @@ describe("Having a tree with nodes ", () => {
 
   it("when clicking add video a new video should be added", () => {
     app.clickAddNewVideo();
-    expect(app.getAllNodes()).toHaveLength(4);
+    expect(app.getAllNodes()).toHaveLength(3);
   });
 });

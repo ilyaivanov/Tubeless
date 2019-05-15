@@ -3,7 +3,7 @@ import "jest-styled-components";
 import AppPage from "../testUtils/AppPageObject";
 
 describe("Having a simple Tree", () => {
-  const app = new AppPage(["1"]);
+  const app = new AppPage({favoriteFirstNodes: ["1"]});
 
   it("should render two nodes", () => {
     expect(app.getAllNodes()).toHaveLength(4);

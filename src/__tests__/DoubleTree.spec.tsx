@@ -13,7 +13,7 @@ describe("Having two trees: search results and favorites", () => {
 });
 
 describe("Having two trees: search results and favorites", () => {
-  const page = new AppPageObject();
+  const page = new AppPageObject({ searchFirstNodes: ["1"] });
 
   beforeEach(() => {
     page.openSearch();

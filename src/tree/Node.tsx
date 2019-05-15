@@ -1,14 +1,14 @@
 import React, { Ref, useImperativeHandle, useRef } from "react";
-import { Node, Placement, TreeInfo } from "./types";
+import { Node, Placement } from "./types";
 import { Arrow, Border, Bullet, NodeContainer } from "./components";
 import { TreeDragSource, TreeDropTarget } from "./dnd";
 import NodeTitle from "./NodeTitle";
+import {TreeProps} from "./Tree";
 
-export interface NodeProps {
+export interface NodeProps extends TreeProps{
   children: JSX.Element;
   level: number;
   node: Node;
-  tree: TreeInfo;
   placement: Placement;
   setPlacement: (placement: Partial<Placement>) => void;
   onToggleCollapse: (id: string) => void;

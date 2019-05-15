@@ -1,9 +1,9 @@
-import React, { Fragment } from "react";
-import { Node, Nodes, Placement, TreeInfo } from "./types";
+import React, {Fragment} from "react";
+import { Node, Nodes, Placement} from "./types";
 import NodeElement from "./Node";
 
-interface Props {
-  tree: TreeInfo;
+export interface TreeProps {
+  nodes: Nodes;
   ids: string[];
   level: number;
   onToggleCollapse: (id: string) => void;
@@ -15,16 +15,16 @@ interface Props {
   onUpdate: (node: Partial<Node>) => void;
 }
 
-const Tree = (props: Props) => {
-  const { tree, ids, level } = props;
+const Tree = (props: TreeProps) => {
+  const { nodes, ids, level } = props;
   return (
     <Fragment>
       {ids.map(id => (
-        <NodeElement {...props} key={id} node={tree.nodes[id]} level={level}>
-          {hasChildren(tree.nodes[id]) && (
+        <NodeElement {...props} key={id} node={nodes[id]} level={level}>
+          {hasChildren(nodes[id]) && (
             <Tree
               {...props}
-              ids={tree.nodes[id].children as string[]}
+              ids={nodes[id].children as string[]}
               level={level + 1}
             />
           )}
