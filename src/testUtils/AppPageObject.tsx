@@ -86,10 +86,6 @@ export default class AppPage {
     fireEvent.dragEnd(this.getNode(nodeId));
   }
 
-  dropAtNode(nodeId: string) {
-    fireEvent.drop(this.getNode(nodeId));
-  }
-
   getBorder(nodeId: string) {
     return this.app.getByTestId("border-" + nodeId);
   }
@@ -159,8 +155,8 @@ export default class AppPage {
     fireEvent.dragOver(this.getDragHandle(nodeId, zone));
   }
 
-  dropOverNode(nodeId: string, zone?: Zone) {
-    fireEvent.drop(this.getDragHandle(nodeId, zone));
+  dropAtNode(nodeId: string, zone?: Zone) {
+    fireEvent.drop(this.getNode(nodeId, zone));
   }
 
   cancelDrag(nodeId: string, zone?: Zone) {
