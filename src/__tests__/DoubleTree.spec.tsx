@@ -1,19 +1,10 @@
 import AppPageObject from "../testUtils/AppPageObject";
 
 describe("Having two trees: search results and favorites", () => {
-  const page = new AppPageObject();
-
-  it("", () => {
-    page.openSearch();
-    //type something in search
-    //verify mocked backend is called
-    //verify nodes are shown at search
-    // expect(page.)
+  const page = new AppPageObject({
+    searchFirstNodes: ["1"],
+    favoriteFirstNodes: ["2"]
   });
-});
-
-describe("Having two trees: search results and favorites", () => {
-  const page = new AppPageObject({ searchFirstNodes: ["1"] });
 
   beforeEach(() => {
     page.openSearch();
@@ -34,6 +25,7 @@ describe("Having two trees: search results and favorites", () => {
     beforeEach(() => {
       page.dropAtNode("2", "favorites");
     });
+
     it("should copy that item and assign new id", () => {
       //TODO: check that element has been created in favorites before 2
       //mock ID generation
