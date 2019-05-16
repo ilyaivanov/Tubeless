@@ -1,5 +1,5 @@
-import {Node, Nodes, Placement} from "../tree/types";
-import {except, contains, first} from "./array.utils";
+import { Node, Nodes, Placement } from "../tree/types";
+import { except, contains, first } from "./array.utils";
 
 export const removeNode = (nodes: Nodes, nodeId: string) => {
   const parent = validateParent(getParentKey(nodes, nodeId), nodeId);
@@ -34,12 +34,13 @@ export const copyNode = (
     [newNodeId]: {
       ...newNodes[nodeId],
       children: newNodes[newNodeId] ? newNodes[newNodeId].children : undefined,
-      id: newNodeId,
+      id: newNodeId
     }
   };
 };
 
-export const getItemLevel = (nodes: Nodes, nodeId: string) => getNodePath(nodes, nodeId).length - 2;
+export const getItemLevel = (nodes: Nodes, nodeId: string) =>
+  getNodePath(nodes, nodeId).length - 2;
 
 export const getRootKey = (nodes: Nodes, nodeId: string): string =>
   first(getNodePath(nodes, nodeId));
@@ -96,7 +97,9 @@ export const validateParent = (
   return parentId;
 };
 
-
+export const createNode = (nodes: Nodes, node: Node): Nodes => {
+  return { ...nodes, [node.id]: node };
+};
 
 //ID utils
 export const createId = (): string => {
