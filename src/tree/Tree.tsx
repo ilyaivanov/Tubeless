@@ -1,6 +1,7 @@
-import React, {Fragment} from "react";
-import { Node, Nodes, Placement} from "./types";
+import React, { Fragment } from "react";
+import { Node, Nodes, Placement } from "./types";
 import NodeElement from "./Node";
+import { getParentKey } from "../domain/dropRules";
 
 export interface TreeProps {
   nodes: Nodes;
@@ -17,6 +18,7 @@ export interface TreeProps {
 
 const Tree = (props: TreeProps) => {
   const { nodes, ids, level } = props;
+  validateChildren(nodes, ids);
   return (
     <Fragment>
       {ids.map(id => (
@@ -32,6 +34,17 @@ const Tree = (props: TreeProps) => {
       ))}
     </Fragment>
   );
+};
+//check that all node children can be found in the Nodes tree
+const validateChildren = (nodes: Nodes, children: string[]) => {
+  children.forEach(node => {
+    if (!nodes[node]) {
+      const parent = getParentKey(nodes, node);
+      throw new Error(
+        `Node '${parent}' contains a non-existing child '${node}'. Check children of '${parent}'`
+      );
+    }
+  });
 };
 
 const hasChildren = (node: Node) => node.children && !node.isHidden;
