@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
-import {Node, Nodes, Placement, Roots} from "./tree/types";
+import { Node, Nodes, Placement, Roots } from "./tree/types";
 import Player from "./player";
 import TreeUpdatesHandler from "./TreeUpdatesHandler";
+import { searchVideos, YoutubeVideoResponse } from "./youtube/api";
+import { useThrottle } from "./hooks";
+import { createId, updateNode, createNode } from "./domain/nodes.utils";
 
 interface Props {
   processDefaultNodes?: (nodes: Nodes) => Nodes;
@@ -19,10 +22,28 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
+  const setSearchNodes = (videoNodes: YoutubeVideoResponse) => {
+    const children = videoNodes.videos.map(() => createId());
+    const some = updateNode(nodes, Roots.SEARCH, () => ({ children }));
+
+    const res = videoNodes.videos.reduce((state, video, index) => {
+      return createNode(state, {
+        text: video.title,
+        id: children[index],
+        type: "video",
+        videoUrl: video.videoId,
+        imageUrl: video.previewUrl,
+        isHidden: true
+      });
+    }, some);
+    setNodes(res);
+  };
+
   return (
     <div>
       <DragContext>
         <LayoutManager
+          onSearchDone={setSearchNodes}
           renderRight={() => (
             <TreeUpdatesHandler
               zone={Roots.FAVORITES}
@@ -50,7 +71,7 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
   );
 };
 
-const LayoutManager = ({ renderRight, renderLeft }: any) => {
+const LayoutManager = ({ renderRight, renderLeft, onSearchDone }: any) => {
   const [seachVisible, setSearchVisibility] = useState(false);
   const style = seachVisible
     ? { flex: 1 }
@@ -67,9 +88,10 @@ const LayoutManager = ({ renderRight, renderLeft }: any) => {
       <div style={style} data-testid="search-zone">
         <Search
           isVisible={seachVisible}
+          onSearchDone={onSearchDone}
           onClick={() => setSearchVisibility(!seachVisible)}
+          renderTree={renderLeft}
         />
-        {seachVisible && renderLeft()}
       </div>
 
       <div style={{ flex: 1 }} data-testid="favorites-zone">
@@ -79,7 +101,14 @@ const LayoutManager = ({ renderRight, renderLeft }: any) => {
   );
 };
 
-const Search = ({ isVisible, onClick }: any) => {
+const Search = ({ isVisible, onClick, renderTree, onSearchDone }: any) => {
+  const [value, setValue] = useState("");
+  //TODO: consider another implementation of useThrottle
+  //it has a redundant initial fire
+  const throttledValue = useThrottle(value, 4000);
+  useEffect(() => {
+    if (throttledValue) searchVideos(throttledValue).then(onSearchDone);
+  }, [throttledValue]);
   return (
     <div>
       <div
@@ -93,6 +122,13 @@ const Search = ({ isVisible, onClick }: any) => {
           {isVisible ? "<" : "+"}
         </button>
       </div>
+      <input
+        data-testid="search-input"
+        type="text"
+        value={value}
+        onChange={e => setValue(e.target.value)}
+      />
+      {isVisible && renderTree()}
     </div>
   );
 };

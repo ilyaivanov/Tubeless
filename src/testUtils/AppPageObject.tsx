@@ -4,7 +4,8 @@ import {
   fireEvent,
   render,
   RenderResult,
-  getByTestId
+  getByTestId,
+  waitForElement
 } from "react-testing-library";
 import "jest-styled-components";
 import App from "../App";
@@ -53,6 +54,9 @@ export default class AppPage {
     this.app = render(<App processDefaultNodes={this.setFirstNodes} />);
   };
 
+  async waitForElement(nodeId: string, zone?: UIZone) {
+    return waitForElement(() => this.getNode(nodeId, zone), {timeout: 200});
+  }
   clickRemoveButton(nodeId: string) {
     fireEvent.click(this.app.getByTestId("delete-" + nodeId));
   }
@@ -140,6 +144,12 @@ export default class AppPage {
 
   openSearch() {
     fireEvent.click(this.app.getByTestId("toggle-sidebar"));
+  }
+
+  enterSearch(value: string) {
+    fireEvent.change(this.app.getByTestId("search-input"), {
+      target: { value }
+    });
   }
 
   getPlayer() {

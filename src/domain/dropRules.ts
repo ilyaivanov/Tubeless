@@ -46,6 +46,7 @@ const insertNode = (nodes: Nodes, placement: Placement): Nodes => {
   }));
 };
 
+
 const isDraggingFromDifferentScopes = (nodes: Nodes, placement: Placement) =>
   getRootKey(nodes, placement.id) !==
   getRootKey(nodes, placement.itemBeingDragged);
