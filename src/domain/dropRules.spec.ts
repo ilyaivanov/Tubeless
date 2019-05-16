@@ -2,7 +2,7 @@ import { sampleNodes } from "../tree/sampleTrees";
 import { drop } from "./dropRules";
 import { Roots } from "../tree/types";
 
-fdescribe("for medium sized tree", () => {
+describe("for medium sized tree", () => {
   it("when dragging a 1.2.1 node before 1.2 it should place 1.2.1 before 1.2", () => {
     const results = drop(sampleNodes, {
       id: "1.2",

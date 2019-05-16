@@ -2,7 +2,7 @@ import AppPageObject from "../testUtils/AppPageObject";
 import { Roots } from "../tree/types";
 
 describe("When rendering a non-existing tree (usually set as children) a meaningful error should be thrown ", () => {
-  fit("sample", () => {
+  it("sample", () => {
     expect(() => {
       const page = new AppPageObject({
         favoriteFirstNodes: ["non-existing1"]
