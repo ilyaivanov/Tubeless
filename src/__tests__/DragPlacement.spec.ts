@@ -1,4 +1,3 @@
-import * as React from "react";
 import "jest-styled-components";
 import AppPage from "../testUtils/AppPageObject";
 
