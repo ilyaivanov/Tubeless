@@ -28,7 +28,7 @@ const sampleNodes: Nodes = {
 
 export { sampleNodes };
 
-function node(id: string, children?: string[]) {
+export function node(id: string, children?: string[]) {
   const node: Node = {
     id,
     text: "Node " + id,
@@ -53,7 +53,7 @@ function video(label: string, videoUrl: string, imageUrl: string) {
   };
 }
 
-function root(nodes: string[], rootType: Roots) {
+export function root(nodes: string[], rootType: Roots) {
   const node: Node = {
     id: rootType,
     text: rootType,

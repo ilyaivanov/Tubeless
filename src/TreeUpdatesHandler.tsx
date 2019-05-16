@@ -1,8 +1,9 @@
 import React, { Fragment, useState } from "react";
 import { Node, Placement } from "./tree/types";
-import { drop, removeNode, updateNode } from "./domain/dropRules";
+import { drop, } from "./domain/dropRules";
 import { shallowEqual } from "./domain/shallowCompare";
 import Tree from "./tree/Tree";
+import {updateNode, removeNode} from "./domain/nodes.utils";
 
 const TreeUpdatesHandler = ({
   setNodes,

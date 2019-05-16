@@ -27,6 +27,7 @@ describe("Having two trees: search results and favorites", () => {
     });
 
     it("should copy that item and assign new id", () => {
+      Math.random = () => 33333;
       //TODO: check that element has been created in favorites before 2
       //mock ID generation
     });

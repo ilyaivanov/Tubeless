@@ -1,13 +1,13 @@
-import { sampleNodes } from "../tree/sampleTrees";
+import { node, root, sampleNodes } from "../tree/sampleTrees";
 import { drop } from "./dropRules";
-import { Roots } from "../tree/types";
+import { Nodes, Roots } from "../tree/types";
 
 describe("for medium sized tree", () => {
   it("when dragging a 1.2.1 node before 1.2 it should place 1.2.1 before 1.2", () => {
     const results = drop(sampleNodes, {
       id: "1.2",
       itemBeingDragged: "1.2.1",
-      dragLevel: 0,
+      dragLevel: 2,
       orientation: "BEFORE"
     });
 
@@ -25,7 +25,7 @@ describe("for medium sized tree", () => {
     expect(results["1.2.1"].children).toEqual(["2"]);
   });
 
-  it("when dragging a 2 node after before 1", () => {
+  it("when dragging a 2 node over 1", () => {
     const results = drop(sampleNodes, {
       id: "1",
       itemBeingDragged: "2",
@@ -34,4 +34,29 @@ describe("for medium sized tree", () => {
     });
     expect(results[Roots.FAVORITES].children).toEqual(["2", "1"]);
   });
+});
+
+describe("when dropping a node from search to favorites", () => {
+  it("node should be copied, not moved", () => {
+    const nodes: Nodes = {
+      ...node("1"),
+      ...node("2"),
+      ...root(["1"], Roots.FAVORITES),
+      ...root(["2"], Roots.SEARCH)
+    };
+    const fn = jest.fn();
+    fn.mockReturnValueOnce("333");
+    Math.random = fn;
+    const results = drop(nodes, {
+      id: "1",
+      itemBeingDragged: "2",
+      dragLevel: 0,
+      orientation: "BEFORE"
+    });
+    expect(results[Roots.FAVORITES].children).toEqual(["333", "1"]);
+    expect(results["333"].text).toEqual("Node 2");
+    expect(results[Roots.SEARCH].children).toEqual(["2"]);
+  });
+
+
 });
