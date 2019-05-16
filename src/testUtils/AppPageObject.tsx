@@ -45,11 +45,13 @@ export default class AppPage {
 
   constructor(props?: CtorProps) {
     this.conf = props || {};
-    beforeEach(() => {
-      this.app = render(<App processDefaultNodes={this.setFirstNodes} />);
-    });
+    beforeEach(this.render);
     afterEach(cleanup);
   }
+
+  render = () => {
+    this.app = render(<App processDefaultNodes={this.setFirstNodes} />);
+  };
 
   clickRemoveButton(nodeId: string) {
     fireEvent.click(this.app.getByTestId("delete-" + nodeId));
@@ -127,7 +129,6 @@ export default class AppPage {
   getAllNodes() {
     return this.app.getAllByTestId(node => node.startsWith("node-"));
   }
-
 
   getNodeByText(title: string) {
     return this.app.getByText(title);
