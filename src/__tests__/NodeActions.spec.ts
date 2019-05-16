@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppPage from "../testUtils/AppPageObject";
 
 describe("Having a tree with nodes ", () => {
