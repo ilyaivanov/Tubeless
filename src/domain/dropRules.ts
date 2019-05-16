@@ -1,7 +1,29 @@
-import { Node, Nodes, Placement, TreeInfo } from "../tree/types";
+import { Nodes, Placement } from "../tree/types";
+import {
+  getRootKey,
+  copyNode,
+  getItemLevel,
+  validateParent,
+  updateNode,
+  removeNode,
+  getParentKey,
+  insertDragItemAtPlacement,
+  createId
+} from "./nodes.utils";
 
 export const drop = (nodes: Nodes, placement: Placement): Nodes => {
   if (placement.itemBeingDragged === placement.id) return nodes;
+  if (isDraggingFromDifferentScopes(nodes, placement)) {
+    const newId = createId();
+    const newPlacement = {
+      ...placement,
+      itemBeingDragged: newId
+    };
+    return insertNode(
+      copyNode(nodes, placement.itemBeingDragged, newId),
+      newPlacement
+    );
+  }
   return insertNode(removeNode(nodes, placement.itemBeingDragged), placement);
 };
 
@@ -24,72 +46,6 @@ const insertNode = (nodes: Nodes, placement: Placement): Nodes => {
   }));
 };
 
-//Tree utils
-export const removeNode = (nodes: Nodes, nodeId: string) => {
-  const parent = validateParent(getParentKey(nodes, nodeId), nodeId);
-  return updateNode(nodes, parent, node => ({
-    children: except(node.children, nodeId)
-  }));
-};
-
-const getItemLevel = (nodes: Nodes, nodeId: string) => {
-  let level = -1;
-  let parent = getParentKey(nodes, nodeId);
-  while (parent) {
-    level += 1;
-    parent = getParentKey(nodes, parent);
-  }
-  return level;
-};
-
-export const getParentKey = (
-  nodes: Nodes,
-  nodeId: string
-): string | undefined =>
-  Object.keys(nodes).find(key => contains(nodes[key].children, nodeId));
-
-export const updateNode = (
-  nodes: Nodes,
-  id: string,
-  updated: (node: Node) => Partial<Node>
-): Nodes => {
-  return {
-    ...nodes,
-    [id]: {
-      ...nodes[id],
-      ...updated(nodes[id])
-    }
-  };
-};
-
-function insertDragItemAtPlacement(
-  context: string[],
-  action: Placement
-): string[] {
-  let index = context.indexOf(action.id);
-  const targetIndex = action.orientation === "AFTER" ? index + 1 : index;
-  const copy = [...context];
-  copy.splice(targetIndex, 0, action.itemBeingDragged);
-  return copy;
-}
-
-//Array utils
-function contains<T>(array: T[] | undefined, item: T): boolean {
-  return !!array && array.indexOf(item) >= 0;
-}
-
-function except<T>(items: T[] | undefined, item: T): T[] {
-  if (!items) return [];
-  return items.filter(i => i !== item);
-}
-
-export const validateParent = (
-  parentId: string | undefined,
-  nodeId: string
-): string => {
-  if (!parentId)
-    throw new Error(
-      "Expected parent for node " + nodeId + ", but not " + parentId
-    );
-  return parentId;
-};
+const isDraggingFromDifferentScopes = (nodes: Nodes, placement: Placement) =>
+  getRootKey(nodes, placement.id) !==
+  getRootKey(nodes, placement.itemBeingDragged);
