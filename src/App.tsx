@@ -122,12 +122,14 @@ const Search = ({ isVisible, onClick, renderTree, onSearchDone }: any) => {
           {isVisible ? "<" : "+"}
         </button>
       </div>
-      <input
-        data-testid="search-input"
-        type="text"
-        value={value}
-        onChange={e => setValue(e.target.value)}
-      />
+      {isVisible && (
+        <input
+          data-testid="search-input"
+          type="text"
+          value={value}
+          onChange={e => setValue(e.target.value)}
+        />
+      )}
       {isVisible && renderTree()}
     </div>
   );
