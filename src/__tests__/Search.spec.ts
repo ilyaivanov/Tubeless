@@ -1,12 +1,12 @@
 import AppPageObject from "../testUtils/AppPageObject";
 import { searchVideos, YoutubeVideoResponse } from "../youtube/api";
-import { createId } from "../domain/nodes.utils";
+import { act } from "react-testing-library";
 
 jest.mock("../youtube/api", () => ({
   searchVideos: jest.fn()
 }));
 
-fit("when entering some search term it should display search results", async() => {
+it("when entering some search term it should display search results", async () => {
   const page = new AppPageObject();
   jest.useFakeTimers();
 
@@ -34,11 +34,14 @@ fit("when entering some search term it should display search results", async() =
 
   page.render();
   page.openSearch();
-  createId();
-  page.enterSearch("some term");
 
   Math.random = () => 33;
-  jest.runAllTimers();
+  act(() => {
+    page.enterSearch("some term");
+    jest.runAllTimers();
+  });
 
   expect(searchVideos).toHaveBeenCalled();
+
+  expect(page.getNode("33")).toBeDefined();
 }, 1000);

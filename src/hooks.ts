@@ -1,22 +1,20 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useState } from "react";
 
-//taken from https://github.com/bhaskarGyan/use-throttle/blob/master/src/index.js
-export const useThrottle = (value: any, limit: number) => {
-  const [throttledValue, setThrottledValue] = useState(value);
-  const lastRan = useRef(Date.now());
+export function useDebounce(value: any, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    const handler = setTimeout(function() {
-      if (Date.now() - lastRan.current >= limit) {
-        setThrottledValue(value);
-        lastRan.current = Date.now();
-      }
-    }, limit - (Date.now() - lastRan.current));
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
 
+    // Cancel the timeout if value changes (also on delay change or unmount)
+    // This is how we prevent debounced value from updating if value is changed ...
+    // .. within the delay period. Timeout gets cleared and restarted.
     return () => {
       clearTimeout(handler);
     };
-  }, [value, limit]);
+  }, [value, delay]);
 
-  return throttledValue;
-};
+  return debouncedValue;
+}
