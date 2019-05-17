@@ -1,12 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
 import { Node, Nodes, Placement, Roots } from "./tree/types";
 import Player from "./player";
 import TreeUpdatesHandler from "./TreeUpdatesHandler";
 import { searchVideos, YoutubeVideoResponse } from "./youtube/api";
-import { useThrottle } from "./hooks";
-import { createId, updateNode, createNode } from "./domain/nodes.utils";
+import { useDebounce } from "./hooks";
+import { createId, createNode, updateNode } from "./domain/nodes.utils";
 
 interface Props {
   processDefaultNodes?: (nodes: Nodes) => Nodes;
@@ -103,9 +103,7 @@ const LayoutManager = ({ renderRight, renderLeft, onSearchDone }: any) => {
 
 const Search = ({ isVisible, onClick, renderTree, onSearchDone }: any) => {
   const [value, setValue] = useState("");
-  //TODO: consider another implementation of useThrottle
-  //it has a redundant initial fire
-  const throttledValue = useThrottle(value, 4000);
+  const throttledValue = useDebounce(value, 500);
   useEffect(() => {
     if (throttledValue) searchVideos(throttledValue).then(onSearchDone);
   }, [throttledValue]);

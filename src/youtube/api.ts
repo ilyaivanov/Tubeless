@@ -28,7 +28,7 @@ export interface YoutubeVideoResponse {
 export const searchVideos = (term: string): Promise<YoutubeVideoResponse> =>
   fetch(
     `https://www.googleapis.com/youtube/v3/search?part=snippet&shart=mostPopular&maxResults=10&key=${YOUTUBE_KEY}&q=` +
-      term
+     logRequest(term)
   )
     .then(response => response.json())
     .then((data: SearchResponse) => ({
@@ -54,3 +54,9 @@ export const searchVideos = (term: string): Promise<YoutubeVideoResponse> =>
 //           return {text: s.snippet.title, id: s.id.videoId};
 //         })
 //     );
+
+
+const logRequest = (term: string) => {
+  console.log('Requesting Youtube for ', term);
+  return term;
+}
