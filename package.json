@@ -1,5 +1,6 @@
 {
   "name": "tubeless",
+  "homepage": "https://ilyaivanov.github.io/Tubeless",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -9,6 +10,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-youtube": "^7.6.1",
     "@types/styled-components": "^4.1.14",
+    "gh-pages": "^2.0.1",
     "jest-dom": "^3.2.2",
     "jest-styled-components": "^6.3.1",
     "prettier": "^1.17.0",
@@ -23,6 +25,8 @@
     "typescript": "3.4.5"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
