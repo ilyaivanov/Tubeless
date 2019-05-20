@@ -30,7 +30,6 @@ const NodeTitle = ({ onDelete, onUpdate, node }: Props) => {
     });
     setIsEditing(false);
   };
-
   return (
     <Fragment>
       {isEditing ? (
@@ -44,7 +43,12 @@ const NodeTitle = ({ onDelete, onUpdate, node }: Props) => {
           onChange={e => setText(e.target.value)}
         />
       ) : (
-        <NodeText data-testid={"title-" + node.id}>{node.text}</NodeText>
+        <Fragment>
+          <NodeText data-testid={"title-" + node.id}>{node.text}</NodeText>
+          {node.isLoading && (
+            <span data-testid={"loading-" + node.id}>Loading...</span>
+          )}
+        </Fragment>
       )}
       <NodeIcons
         nodeId={node.id}

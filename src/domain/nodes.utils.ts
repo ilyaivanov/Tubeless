@@ -1,5 +1,6 @@
-import { Node, Nodes, Placement } from "../tree/types";
+import { Node, Nodes, Placement, Roots } from "../tree/types";
 import { except, contains, first } from "./array.utils";
+import { YoutubeVideoResponse } from "../youtube/api";
 
 export const removeNode = (nodes: Nodes, nodeId: string) => {
   const parent = validateParent(getParentKey(nodes, nodeId), nodeId);
@@ -85,6 +86,23 @@ export function insertDragItemAtPlacement(
   copy.splice(targetIndex, 0, action.itemBeingDragged);
   return copy;
 }
+
+export const setVideosAsChildren = (nodes: Nodes, nodeId:string, videoNodes: YoutubeVideoResponse) => {
+  const children = videoNodes.videos.map(() => createId());
+  const some = updateNode(nodes, nodeId, () => ({ children }));
+
+  const res = videoNodes.videos.reduce((state, video, index) => {
+    return createNode(state, {
+      text: video.title,
+      id: children[index],
+      type: "video",
+      videoUrl: video.videoId,
+      imageUrl: video.previewUrl,
+      isHidden: true
+    });
+  }, some);
+  return res;
+};
 
 export const validateParent = (
   parentId: string | undefined,

@@ -3,6 +3,7 @@ export interface Node {
   text: string;
   children?: string[];
   isHidden?: boolean;
+  isLoading?: boolean;
 
   type: "root" | "generic" | "video";
   videoUrl?: string;

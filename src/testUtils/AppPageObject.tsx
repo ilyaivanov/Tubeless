@@ -76,7 +76,7 @@ export default class AppPage {
   }
 
   clickArrow(nodeId: string) {
-    fireEvent.click(this.getArrowForNode(nodeId));
+      fireEvent.click(this.getArrowForNode(nodeId));
   }
 
   getArrowForNode(nodeId: string) {

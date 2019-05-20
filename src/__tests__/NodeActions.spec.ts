@@ -1,12 +1,42 @@
-import AppPage from "../testUtils/AppPageObject";
+import TreePageObject from "../testUtils/TreePageObject";
+import { YoutubeVideoResponse } from "../youtube/api";
+
+jest.mock("../youtube/api", () => ({
+  searchSimilar: () =>
+    new Promise<YoutubeVideoResponse>(resolve => {
+      setTimeout(() => {
+        resolve({
+          videos: [
+            {
+              title: "My Similar Video1",
+              previewUrl: "url",
+              videoId: "similar 1"
+            },
+            {
+              title: "My Similar Video2",
+              previewUrl: "url",
+              videoId: "similar 2"
+            },
+            {
+              title: "My Similar Video3",
+              previewUrl: "url",
+              videoId: "similar 3"
+            }
+          ]
+        });
+      }, 200);
+    })
+}));
+
+jest.useFakeTimers();
 
 describe("Having a tree with nodes ", () => {
-  const app = new AppPage({favoriteFirstNodes: ['2']});
+  const app = new TreePageObject(["2"]);
 
   it("when clicking remove Node 2 that node should be removed", () => {
-    app.expectNodeToExist("2");
+    expect(app.getNode("2")).toBeDefined();
     app.clickRemoveButton("2");
-    app.expectNodeNotToExist("2");
+    expect(app.queryNode("2")).toBeNull();
   });
 
   describe("when clicking edit node 2", () => {
@@ -28,8 +58,28 @@ describe("Having a tree with nodes ", () => {
   });
 
   it("when clicking add video a new video should be added", () => {
+    expect(app.getAllNodes()).toHaveLength(1);
     app.clickAddNewVideo();
-    expect(app.getNodeByText('New Node')).toBeDefined();
-    expect(app.getAllNodes()).toHaveLength(4);
+    expect(app.getAllNodes()).toHaveLength(2);
+  });
+
+  describe("when opening a video node", () => {
+    beforeEach(() => app.clickOnArrow("2"));
+
+    it("a loading indicator should be shown", () => {
+      expect(app.getLoading("2")).toBeDefined();
+    });
+
+    describe("after similar videos have been loaded", () => {
+      beforeEach(() => {
+        jest.runAllTimers();
+      });
+      it("they should be shown as a subnodes", () => {
+        expect(app.getAllNodes()).toHaveLength(4);
+      });
+      it("Loading show be hidden", () => {
+        expect(app.queryLoading("2")).toBeNull();
+      });
+    });
   });
 });
