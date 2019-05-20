@@ -1,9 +1,14 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { Node, Placement } from "./tree/types";
-import { drop, } from "./domain/dropRules";
+import { drop } from "./domain/dropRules";
 import { shallowEqual } from "./domain/shallowCompare";
 import Tree from "./tree/Tree";
-import {updateNode, removeNode} from "./domain/nodes.utils";
+import {
+  removeNode,
+  setVideosAsChildren,
+  updateNode
+} from "./domain/nodes.utils";
+import { searchSimilar } from "./youtube/api";
 
 const TreeUpdatesHandler = ({
   setNodes,
@@ -14,15 +19,35 @@ const TreeUpdatesHandler = ({
   onPlay
 }: any) => {
   const onToggleCollapse = (id: string) => {
-    setNodes(
-      updateNode(nodes, id, node => ({
-        isHidden: !node.isHidden
-      }))
-    );
+    if (nodes[id].type === "video") {
+      setNodes(
+        updateNode(nodes, id, () => ({
+          isLoading: true
+        }))
+      );
+      searchSimilar(nodes[id].videoUrl).then(response => {
+        const withChildren = setVideosAsChildren(nodes, id, response);
+        setNodes(
+          updateNode(withChildren, id, () => ({
+            isLoading: false,
+            isHidden: false
+          }))
+        );
+      });
+    } else {
+      setNodes(
+        updateNode(nodes, id, node => ({
+          isHidden: !node.isHidden
+        }))
+      );
+    }
   };
 
   const updatePlacementOptimized = (newPlacement: Partial<Placement>) => {
-    if (!shallowEqual(newPlacement, placement)) setPlacement(newPlacement);
+    if (!shallowEqual(newPlacement, placement)) {
+      console.count("called set placement");
+      setPlacement(newPlacement);
+    }
   };
 
   const onDrop = () => {

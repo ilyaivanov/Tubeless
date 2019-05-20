@@ -6,7 +6,7 @@ jest.mock("../youtube/api", () => ({
   searchVideos: jest.fn()
 }));
 
-it("when entering some search term it should display search results", async () => {
+xit("when entering some search term it should display search results", async () => {
   const page = new AppPageObject();
   jest.useFakeTimers();
 

@@ -2,6 +2,7 @@ import { SearchResponse } from "./types/searchResponse";
 import { YOUTUBE_KEY } from "../keys";
 import { IS_REAL_API } from "../featureToggles";
 import { searchFaked } from "./types/fakedResponses";
+import { SimilarResponse } from "./types/similarResponse";
 
 interface YoutubeVideo {
   title: string;
@@ -31,19 +32,21 @@ export const searchVideos = (term: string): Promise<YoutubeVideoResponse> =>
         }))
     : Promise.resolve(searchFaked(term));
 
-// export const searchSimilar = (videoId: string): Promise<YoutubeVideoResponse> =>
-//   fetch(
-//     `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=${YOUTUBE_KEY}&relatedToVideoId=` +
-//     videoId
-//   )
-//     .then(response => response.json())
-//     .then((data: SimilarResponse) =>
-//       data.items
-//         .filter(v => v.id.videoId)
-//         .map(s => {
-//           return {text: s.snippet.title, id: s.id.videoId};
-//         })
-//     );
+export const searchSimilar = (videoId: string): Promise<YoutubeVideoResponse> =>
+  fetch(
+    `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=${YOUTUBE_KEY}&relatedToVideoId=` +
+      videoId
+  )
+    .then(response => response.json())
+    .then((data: SimilarResponse) => ({
+      videos: data.items
+        .filter(v => v.id.videoId)
+        .map(s => ({
+          title: s.snippet.title,
+          videoId: s.id.videoId,
+          previewUrl: s.snippet.thumbnails.default.url
+        }))
+    }));
 
 const logRequest = (term: string) => {
   console.log("Requesting Youtube for ", term);
