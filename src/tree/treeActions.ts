@@ -30,7 +30,10 @@ export const onCreateNode = (nodes: Nodes, parentId: string) => {
 export const onDeleteNode = (nodes: Nodes, nodeId: string) =>
   deleteNode(nodes, nodeId);
 
-export const onEditNodeText = () => {};
+export const onRenameNode = (nodes: Nodes, nodeId: string, newText: string) =>
+  updateNode(nodes, nodeId, () => ({
+    text: newText
+  }));
 
 export const onSearchStart = (nodes: Nodes, nodeId: string) =>
   updateNode(nodes, nodeId, () => ({

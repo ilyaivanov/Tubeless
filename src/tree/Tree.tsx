@@ -13,7 +13,7 @@ export interface TreeProps {
   onDrop: () => void;
   onPlay: (node: Node) => void;
   onDelete: (node: Node) => void;
-  onUpdate: (node: Partial<Node>) => void;
+  onRename: (nodeId: string, newText: string) => void;
 }
 
 const Tree = (props: TreeProps) => {

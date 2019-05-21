@@ -1,15 +1,14 @@
 import React, { Fragment } from "react";
-import { Node, Placement } from "./tree/types";
+import {Node, Placement} from "./tree/types";
 import Tree from "./tree/Tree";
 import { searchSimilar } from "./youtube/api";
-import { updateNode } from "./tree/treeOperations";
 import {
   onDeleteNode,
   onSearchDone,
   onDrop,
   onSearchStart,
   toggleVisibility,
-  onCreateNode
+  onCreateNode, onRenameNode
 } from "./tree/treeActions";
 import { mapVideosToNodes } from "./youtube/mapVideosToNodes";
 import { shallowEqual } from "./utils";
@@ -47,12 +46,8 @@ const TreeUpdatesHandler = ({
     setPlacement({});
   };
 
-  const onUpdate = (newNode: Partial<Node>) => {
-    if (!newNode.id) return;
-    setNodes(
-      updateNode(nodes, newNode.id, node => Object.assign({}, node, newNode))
-    );
-  };
+  const onRename = (nodeId: string, newText: string) =>
+    setNodes(onRenameNode(nodes, nodeId, newText));
 
   const addNewNode = () => setNodes(onCreateNode(nodes, zone));
 
@@ -69,7 +64,7 @@ const TreeUpdatesHandler = ({
         onDrop={onDrop}
         onPlay={onPlay}
         onDelete={onDelete}
-        onUpdate={onUpdate}
+        onRename={onRename}
         placement={placement}
       />
       <button data-testid="add-new-node" onClick={addNewNode}>

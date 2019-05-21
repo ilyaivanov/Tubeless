@@ -3,9 +3,9 @@ import { Node, Placement } from "./types";
 import { Arrow, Border, Bullet, NodeContainer } from "./components";
 import { TreeDragSource, TreeDropTarget } from "./dnd";
 import NodeTitle from "./NodeTitle";
-import {TreeProps} from "./Tree";
+import { TreeProps } from "./Tree";
 
-export interface NodeProps extends TreeProps{
+export interface NodeProps extends TreeProps {
   children: JSX.Element;
   level: number;
   node: Node;
@@ -14,7 +14,7 @@ export interface NodeProps extends TreeProps{
   onToggleCollapse: (id: string) => void;
   onPlay: (nodeId: Node) => void;
   onDelete: (nodeId: Node) => void;
-  onUpdate: (nodeId: Partial<Node>) => void;
+  onRename: (nodeId: string, newText: string) => void;
   onDrop: () => void;
   connectDragSource: any;
   connectDropTarget: any;
@@ -32,7 +32,7 @@ const NodeElement = React.forwardRef(
       placement,
       onPlay,
       onDelete,
-      onUpdate
+      onRename
     }: NodeProps,
     ref: Ref<HTMLDivElement>
   ) => {
@@ -70,7 +70,7 @@ const NodeElement = React.forwardRef(
           ) : (
             <Bullet itemId={node.id} ref={connectDragSource} />
           )}
-          <NodeTitle node={node} onDelete={onDelete} onUpdate={onUpdate} />
+          <NodeTitle node={node} onDelete={onDelete} onRename={onRename} />
           {node.id === placement.id && (
             <Border
               placement={placement}
