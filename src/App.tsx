@@ -5,8 +5,9 @@ import { Node, Nodes, Placement, Roots } from "./tree/types";
 import Player from "./player";
 import TreeUpdatesHandler from "./TreeUpdatesHandler";
 import { searchVideos, YoutubeVideoResponse } from "./youtube/api";
-import { useDebounce } from "./hooks";
-import { createId, createNode, updateNode } from "./domain/nodes.utils";
+import { useDebounce } from "./utils";
+import { onSearchDone } from "./tree/treeActions";
+import { mapVideosToNodes } from "./youtube/mapVideosToNodes";
 
 interface Props {
   processDefaultNodes?: (nodes: Nodes) => Nodes;
@@ -22,21 +23,8 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
-  const setSearchNodes = (videoNodes: YoutubeVideoResponse) => {
-    const children = videoNodes.videos.map(() => createId());
-    const some = updateNode(nodes, Roots.SEARCH, () => ({ children }));
-
-    const res = videoNodes.videos.reduce((state, video, index) => {
-      return createNode(state, {
-        text: video.title,
-        id: children[index],
-        type: "video",
-        videoUrl: video.videoId,
-        imageUrl: video.previewUrl,
-        isHidden: true
-      });
-    }, some);
-    setNodes(res);
+  const setSearchNodes = (response: YoutubeVideoResponse) => {
+    setNodes(onSearchDone(nodes, Roots.SEARCH, mapVideosToNodes(response)));
   };
 
   return (

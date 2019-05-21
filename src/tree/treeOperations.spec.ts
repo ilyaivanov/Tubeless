@@ -1,6 +1,6 @@
-import { Nodes } from "../tree/types";
-import { node } from "../tree/sampleTrees";
-import { copyNode } from "./nodes.utils";
+import { Nodes } from "./types";
+import { node } from "./sampleTrees";
+import { copyNodeDeep } from "./treeOperations";
 
 it("it should also copy all subnodes", () => {
   const nodes: Nodes = {
@@ -12,7 +12,7 @@ it("it should also copy all subnodes", () => {
   fn.mockReturnValueOnce("newChild");
   fn.mockReturnValueOnce("newGrandChild");
   Math.random = fn;
-  const res = copyNode(nodes, "parent", "newParent");
+  const res = copyNodeDeep(nodes, "parent", "newParent");
 
   expect(res["newParent"].text).toEqual("Node parent");
   expect(res["newChild"].text).toEqual("Node child");
