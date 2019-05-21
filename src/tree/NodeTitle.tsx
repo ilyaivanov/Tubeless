@@ -1,14 +1,14 @@
-import { Node } from "./types";
+import { Node, Nodes } from "./types";
 import React, { KeyboardEvent, useState, Fragment } from "react";
 import { NodeIcons, NodeText } from "./components";
 
 interface Props {
   node: Node;
-  onUpdate: (node: Partial<Node>) => void;
+  onRename: (nodeId: string, newText: string) => void;
   onDelete: (node: Node) => void;
 }
 
-const NodeTitle = ({ onDelete, onUpdate, node }: Props) => {
+const NodeTitle = ({ onDelete, node, onRename }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState();
 
@@ -24,10 +24,7 @@ const NodeTitle = ({ onDelete, onUpdate, node }: Props) => {
   };
 
   const endEdit = () => {
-    onUpdate({
-      id: node.id,
-      text: text
-    });
+    onRename(node.id, text);
     setIsEditing(false);
   };
   return (
