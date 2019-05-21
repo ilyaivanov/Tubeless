@@ -5,5 +5,11 @@ body {
     "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 19px;
+  font-size: 16px;
 }
+img {
+  border-radius: 3px;
+  max-width:100%;
+  height:auto;
+}
+

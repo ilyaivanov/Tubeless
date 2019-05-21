@@ -39,6 +39,7 @@ const ArrowIcon = styled.div<ArrowIconProps>`
 const ArrowContainer = styled(Center)`
   height: ${ARROW_SIZE}px;
   width: ${ARROW_SIZE}px;
+  min-width: ${ARROW_SIZE}px;
 `;
 
 const getStyleForOrientation = (orientation: ArrowIconOrientation) => {
