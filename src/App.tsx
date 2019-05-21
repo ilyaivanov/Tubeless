@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
 import { Node, Nodes, Placement, Roots } from "./tree/types";
 import Player from "./player";
-import TreeUpdatesHandler from "./TreeUpdatesHandler";
-import { searchVideos, YoutubeVideoResponse } from "./youtube/api";
-import { useDebounce } from "./utils";
-import { onSearchDone } from "./tree/treeActions";
+import {
+  searchVideos,
+  YoutubeVideoResponse
+} from "./youtube/api";
+import { shallowEqual, useDebounce } from "./utils";
+import {
+  onCreateNode,
+  onSearchDone,
+} from "./tree/treeActions";
 import { mapVideosToNodes } from "./youtube/mapVideosToNodes";
+import Tree from "./tree/Tree";
 
 interface Props {
   processDefaultNodes?: (nodes: Nodes) => Nodes;
@@ -27,29 +33,49 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
     setNodes(onSearchDone(nodes, Roots.SEARCH, mapVideosToNodes(response)));
   };
 
+  const updatePlacementOptimized = (newPlacement: Partial<Placement>) => {
+    if (!shallowEqual(newPlacement, placement)) {
+      console.count("called set placement");
+      setPlacement(newPlacement);
+    }
+  };
+
+  const addNewNodeForFavorites = () =>
+    setNodes(onCreateNode(nodes, Roots.FAVORITES));
+
   return (
     <div>
       <DragContext>
         <LayoutManager
           onSearchDone={setSearchNodes}
           renderRight={() => (
-            <TreeUpdatesHandler
-              zone={Roots.FAVORITES}
-              placement={placement}
-              setPlacement={setPlacement}
-              nodes={nodes}
-              setNodes={setNodes}
-              onPlay={onPlay}
-            />
+            <Fragment>
+              <Tree
+                nodes={nodes}
+                ids={nodes[Roots.FAVORITES].children as string[]}
+                level={0}
+                setPlacement={updatePlacementOptimized}
+                setNodes={setNodes}
+                onPlay={onPlay}
+                placement={placement}
+              />
+              <button
+                data-testid="add-new-node"
+                onClick={addNewNodeForFavorites}
+              >
+                add
+              </button>
+            </Fragment>
           )}
           renderLeft={() => (
-            <TreeUpdatesHandler
-              zone={Roots.SEARCH}
-              placement={placement}
-              setPlacement={setPlacement}
+            <Tree
               nodes={nodes}
-              setNodes={setNodes}
+              ids={nodes[Roots.SEARCH].children as string[]}
+              level={0}
               onPlay={onPlay}
+              setPlacement={updatePlacementOptimized}
+              setNodes={setNodes}
+              placement={placement}
             />
           )}
         />

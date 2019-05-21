@@ -1,14 +1,15 @@
 import { Node, Nodes } from "./types";
 import React, { KeyboardEvent, useState, Fragment } from "react";
 import { NodeIcons, NodeText } from "./components";
+import {onDeleteNode, onRenameNode} from "./treeActions";
 
 interface Props {
   node: Node;
-  onRename: (nodeId: string, newText: string) => void;
-  onDelete: (node: Node) => void;
+  nodes: Nodes;
+  setNodes: (nodes: Nodes) => void;
 }
 
-const NodeTitle = ({ onDelete, node, onRename }: Props) => {
+const NodeTitle = ({ nodes, node, setNodes }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState();
 
@@ -24,9 +25,13 @@ const NodeTitle = ({ onDelete, node, onRename }: Props) => {
   };
 
   const endEdit = () => {
-    onRename(node.id, text);
+    setNodes(onRenameNode(nodes, node.id, text));
     setIsEditing(false);
   };
+
+  const onDelete = (nodeId: string) =>
+    setNodes(onDeleteNode(nodes, nodeId));
+
   return (
     <Fragment>
       {isEditing ? (
@@ -50,7 +55,7 @@ const NodeTitle = ({ onDelete, node, onRename }: Props) => {
       <NodeIcons
         nodeId={node.id}
         onEdit={onEdit}
-        onDelete={() => onDelete(node)}
+        onDelete={() => onDelete(node.id)}
       />
     </Fragment>
   );
