@@ -1,21 +1,21 @@
-import React, { useState, Fragment } from "react";
-import { Nodes } from "../tree/types";
-import { DragContext } from "../tree/dnd";
+import React, {Fragment, useState} from "react";
+import {Nodes} from "../tree/types";
+import {DragContext} from "../tree/dnd";
 import Tree from "../tree/Tree";
-import { onCreateNode } from "../tree/treeActions";
+import {onCreateNode} from "../tree/treeActions";
 
 export type TestNodeId = "2" | "3";
 
 const TestTree = ({ ids }: { ids: TestNodeId[] }) => {
   const nodesTree: Nodes = {
     ["TEST"]: {
-      type: "root",
+      type: 'Root',
       id: "TEST",
       text: "sample",
       children: ids
     },
     "2": {
-      type: "video",
+      type: 'Video',
       id: "2",
       text: "Node 2",
       children: []
@@ -26,6 +26,11 @@ const TestTree = ({ ids }: { ids: TestNodeId[] }) => {
   const [placement, setPlacemnet] = useState({});
 
   const addNewNodeForFavorites = () => setNodes(onCreateNode(nodes, "TEST"));
+
+  const s = (nodes: Nodes) => {
+    console.log(nodes);
+    setNodes(nodes);
+  }
   return (
     <DragContext>
       <Fragment>
@@ -36,7 +41,7 @@ const TestTree = ({ ids }: { ids: TestNodeId[] }) => {
           placement={placement}
           setPlacement={setPlacemnet}
           nodes={nodes}
-          setNodes={setNodes}
+          setNodes={s}
         />
         <button data-testid="add-new-node" onClick={addNewNodeForFavorites}>
           add

@@ -1,9 +1,9 @@
-import React, { Ref, useImperativeHandle, useRef } from "react";
-import {Node, Nodes, Placement} from "./types";
+import React, {Ref, useImperativeHandle, useRef} from "react";
+import {Node, Nodes, NodeType, Placement} from "./types";
 import {Arrow, Border, Bullet, NodeContainer, VideoPreview} from "./components";
-import { TreeDragSource, TreeDropTarget } from "./dnd";
+import {TreeDragSource, TreeDropTarget} from "./dnd";
 import NodeTitle from "./NodeTitle";
-import { TreeProps } from "./Tree";
+import {TreeProps} from "./Tree";
 import {onSearchDone, onSearchStart, toggleVisibility} from "./treeActions";
 import {searchSimilar} from "../youtube/api";
 import {mapVideosToNodes} from "../youtube/mapVideosToNodes";
@@ -46,9 +46,10 @@ const NodeElement = React.forwardRef(
     });
 
     const onToggleCollapse = (id: string) => {
-      if (nodes[id].type === "video") {
+      if (nodes[id].type === 'Video') {
         setNodes(onSearchStart(nodes, id));
         searchSimilar(nodes[id].videoUrl as string).then(response => {
+          console.log('fooo', mapVideosToNodes(response))
           setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)));
         });
       } else {
@@ -68,8 +69,9 @@ const NodeElement = React.forwardRef(
             nodeId={node.id}
             onClick={() => onToggleCollapse(node.id)}
           />
-          {node.type === "video" ? (
+          {node.type !== 'Composite' ? (
             <VideoPreview
+              type={node.type}
               alt="Cover image"
               onClick={() => onPlay(node)}
               ref={connectDragSource}

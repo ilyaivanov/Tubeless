@@ -1,4 +1,4 @@
-import {Node, Nodes, Roots} from "./types";
+import {Node, Nodes, NodeType, Roots} from "./types";
 
 const sampleNodes: Nodes = {
   ...node("1", ["1.1", "1.2"]),
@@ -33,7 +33,7 @@ export function node(id: string, children?: string[]) {
     id,
     text: "Node " + id,
     children,
-    type: "generic"
+    type: 'Composite'
   };
   return {
     [id]: node
@@ -44,7 +44,7 @@ function video(label: string, videoUrl: string, imageUrl: string) {
   const node: Node = {
     id: label,
     text: label,
-    type: "video",
+    type: 'Video',
     imageUrl,
     videoUrl
   };
@@ -58,7 +58,7 @@ export function root(nodes: string[], rootType: Roots) {
     id: rootType,
     text: rootType,
     children: nodes,
-    type: "root"
+    type: 'Root'
   };
   return {
     [rootType]: node

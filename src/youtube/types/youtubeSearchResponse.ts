@@ -1,6 +1,7 @@
+// GENERATED AND MODIFIED BY HAND
 //https://transform.now.sh/json-to-ts-interface/
-// GENERATED CODE FROM SAMPLE RESPONSE
-export interface SearchResponse {
+
+export interface YoutubeSearchResponse {
   kind: string;
   etag: string;
   nextPageToken: string;
@@ -14,16 +15,20 @@ interface PageInfo {
   resultsPerPage: number;
 }
 
-interface ItemsItem {
+export interface ItemsItem {
   kind: string;
   etag: string;
   id: Id;
   snippet: Snippet;
 }
 
+export type ItemKind = "youtube#channel" | "youtube#playlist" | "youtube#video";
+
 interface Id {
-  kind: string;
-  videoId: string;
+  kind: ItemKind;
+  playlistId?: string;
+  videoId?: string;
+  channelId?: string;
 }
 
 interface Snippet {
@@ -37,23 +42,13 @@ interface Snippet {
 }
 
 interface Thumbnails {
-  default: {
-    url: string;
-    width: number;
-    height: number;
-  };
-  medium: Medium;
-  high: High;
+  default: Thumbnail;
+  medium: Thumbnail;
+  high: Thumbnail;
 }
 
-interface Medium {
+interface Thumbnail {
   url: string;
-  width: number;
-  height: number;
-}
-
-interface High {
-  url: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }
