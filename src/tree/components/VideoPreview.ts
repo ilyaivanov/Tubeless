@@ -9,6 +9,9 @@ export const VideoPreview = styled.img<Props>`
   height: 32px;
   width: 32px;
 
-  ${(props: Props) => (props.type === "Channel" ? "border-radius: 50px;" : "")}
+  max-width: 100%;
+  height: auto;
+
+  border-radius: ${(props: Props) => (props.type === "Channel" ? 32 : 3)}px;
   margin-right: 5px;
 `;
