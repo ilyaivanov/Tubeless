@@ -1,3 +1,5 @@
+export type NodeType = "Video" | "Playlist" | "Channel" | "Root" | "Composite";
+
 export interface Node {
   id: string;
   text: string;
@@ -5,19 +7,15 @@ export interface Node {
   isHidden?: boolean;
   isLoading?: boolean;
 
-  type: "root" | "generic" | "video";
+  type: NodeType;
   videoUrl?: string;
+  channelId?: string;
+  playlistId?: string;
   imageUrl?: string;
 }
 
 export interface Nodes {
   [id: string]: Node;
-}
-
-export interface TreeInfo {
-  nodes: Nodes;
-  roots: string[];
-  searchRoots: string[];
 }
 
 export type PlacementOrientation = "BEFORE" | "AFTER";
@@ -31,5 +29,5 @@ export type Placement = {
 
 export enum Roots {
   FAVORITES = "ROOT.favorites",
-  SEARCH = "ROOT.search",
+  SEARCH = "ROOT.search"
 }

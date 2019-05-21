@@ -1,21 +1,21 @@
-import { Nodes, Placement, Node } from "./types";
+import {Node, Nodes, NodeType, Placement} from "./types";
 import {
+  copyNodeDeep,
+  createNode,
+  deleteNode,
   getNodeLevel,
   getParentKey,
   getRootKey,
-  updateNode,
-  copyNodeDeep,
-  deleteNode,
-  createNode
+  updateNode
 } from "./treeOperations";
-import { createId } from "../utils";
-import { validateParent } from "./treeValidation";
+import {createId} from "../utils";
+import {validateParent} from "./treeValidation";
 
 export const onCreateNode = (nodes: Nodes, parentId: string) => {
   const id = Math.random() + "";
   const node: Node = {
     text: "New Node",
-    type: "generic",
+    type: 'Composite',
     id
   };
   const withChild = updateNode(nodes, parentId, node => ({

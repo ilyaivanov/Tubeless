@@ -1,34 +1,43 @@
 import TreePageObject from "../testUtils/TreePageObject";
-import { YoutubeVideoResponse } from "../youtube/api";
-
-jest.mock("../youtube/api", () => ({
-  searchSimilar: () =>
-    new Promise<YoutubeVideoResponse>(resolve => {
-      setTimeout(() => {
-        resolve({
-          videos: [
-            {
-              title: "My Similar Video1",
-              previewUrl: "url",
-              videoId: "similar 1"
-            },
-            {
-              title: "My Similar Video2",
-              previewUrl: "url",
-              videoId: "similar 2"
-            },
-            {
-              title: "My Similar Video3",
-              previewUrl: "url",
-              videoId: "similar 3"
-            }
-          ]
-        });
-      }, 200);
-    })
-}));
+import { SearchResponse } from "../youtube/api";
+import { searchSimilar } from "../youtube/api";
+import Mock = jest.Mock;
 
 jest.useFakeTimers();
+
+jest.mock("../youtube/api", () => ({
+  searchSimilar: jest.fn()
+}));
+
+(searchSimilar as Mock).mockReturnValue(
+  new Promise<SearchResponse>(resolve => {
+    setTimeout(() => {
+      resolve({
+        items: [
+          {
+            title: "My Similar Video1",
+            previewUrl: "url",
+            type: 'Video',
+            videoId: "similar 1"
+          },
+          {
+            title: "My Similar Video2",
+            previewUrl: "url",
+            type: 'Video',
+            videoId: "similar 2"
+          },
+          {
+            title: "My Similar Video3",
+            previewUrl: "url",
+            type: 'Video',
+            videoId: "similar 3"
+          }
+        ]
+      });
+    }, 200);
+  })
+);
+
 
 describe("Having a tree with nodes ", () => {
   const app = new TreePageObject(["2"]);

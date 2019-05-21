@@ -5,7 +5,7 @@ import { Node, Nodes, Placement, Roots } from "./tree/types";
 import Player from "./player";
 import {
   searchVideos,
-  YoutubeVideoResponse
+  SearchResponse
 } from "./youtube/api";
 import { shallowEqual, useDebounce } from "./utils";
 import {
@@ -29,7 +29,7 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
-  const setSearchNodes = (response: YoutubeVideoResponse) => {
+  const setSearchNodes = (response: SearchResponse) => {
     setNodes(onSearchDone(nodes, Roots.SEARCH, mapVideosToNodes(response)));
   };
 
