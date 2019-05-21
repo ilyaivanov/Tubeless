@@ -1,7 +1,8 @@
-import React, {useState} from "react";
-import {Nodes} from "../tree/types";
-import {DragContext} from "../tree/dnd";
-import TreeUpdatesHandler from "../TreeUpdatesHandler";
+import React, { useState, Fragment } from "react";
+import { Nodes } from "../tree/types";
+import { DragContext } from "../tree/dnd";
+import Tree from "../tree/Tree";
+import { onCreateNode } from "../tree/treeActions";
 
 export type TestNodeId = "2" | "3";
 
@@ -22,19 +23,27 @@ const TestTree = ({ ids }: { ids: TestNodeId[] }) => {
   };
 
   const [nodes, setNodes] = useState(nodesTree);
+  const [placement, setPlacemnet] = useState({});
 
+  const addNewNodeForFavorites = () => setNodes(onCreateNode(nodes, "TEST"));
   return (
     <DragContext>
-      <TreeUpdatesHandler
-        zone={"TEST"}
-        placement={{}}
-        setPlacement={() => 42}
-        nodes={nodes}
-        setNodes={setNodes}
-      />
+      <Fragment>
+        <Tree
+          level={0}
+          ids={nodes["TEST"].children as string[]}
+          onPlay={() => 42}
+          placement={placement}
+          setPlacement={setPlacemnet}
+          nodes={nodes}
+          setNodes={setNodes}
+        />
+        <button data-testid="add-new-node" onClick={addNewNodeForFavorites}>
+          add
+        </button>
+      </Fragment>
     </DragContext>
   );
 };
-
 
 export default TestTree;

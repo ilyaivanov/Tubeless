@@ -7,6 +7,7 @@ import {ARROW_SIZE, LEVEL_SHIFT} from "./components";
 import { NodeProps } from "./Node";
 import {getParentKey,} from "./treeOperations";
 import {validateParent} from "./treeValidation";
+import {onDrop} from "./treeActions";
 
 const Context = ({ children }: { children: JSX.Element }) => (
   <Fragment>{children}</Fragment>
@@ -48,7 +49,10 @@ export const TreeDropTarget = DropTarget(
   "NODE",
   {
     drop(props: NodeProps) {
-      props.onDrop();
+      props.setNodes(onDrop(props.nodes, props.placement));
+      props.setPlacement({
+        id: ""
+      });
     },
     hover(props: NodeProps, monitor: any, component: any) {
       if (!component) {

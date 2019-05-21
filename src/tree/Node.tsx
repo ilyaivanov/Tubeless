@@ -1,21 +1,21 @@
 import React, { Ref, useImperativeHandle, useRef } from "react";
-import { Node, Placement } from "./types";
+import {Node, Nodes, Placement} from "./types";
 import { Arrow, Border, Bullet, NodeContainer } from "./components";
 import { TreeDragSource, TreeDropTarget } from "./dnd";
 import NodeTitle from "./NodeTitle";
 import { TreeProps } from "./Tree";
+import {onSearchDone, onSearchStart, toggleVisibility} from "./treeActions";
+import {searchSimilar} from "../youtube/api";
+import {mapVideosToNodes} from "../youtube/mapVideosToNodes";
 
 export interface NodeProps extends TreeProps {
   children: JSX.Element;
   level: number;
   node: Node;
+  setNodes: (nodes: Nodes) => void;
   placement: Placement;
   setPlacement: (placement: Partial<Placement>) => void;
-  onToggleCollapse: (id: string) => void;
   onPlay: (nodeId: Node) => void;
-  onDelete: (nodeId: Node) => void;
-  onRename: (nodeId: string, newText: string) => void;
-  onDrop: () => void;
   connectDragSource: any;
   connectDropTarget: any;
 }
@@ -26,13 +26,12 @@ const NodeElement = React.forwardRef(
       children,
       node,
       level,
-      onToggleCollapse,
       connectDragSource,
       connectDropTarget,
       placement,
       onPlay,
-      onDelete,
-      onRename
+      setNodes,
+      nodes,
     }: NodeProps,
     ref: Ref<HTMLDivElement>
   ) => {
@@ -45,6 +44,17 @@ const NodeElement = React.forwardRef(
         getNode: () => elementRef.current
       };
     });
+
+    const onToggleCollapse = (id: string) => {
+      if (nodes[id].type === "video") {
+        setNodes(onSearchStart(nodes, id));
+        searchSimilar(nodes[id].videoUrl as string).then(response => {
+          setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)));
+        });
+      } else {
+        setNodes(toggleVisibility(nodes, id));
+      }
+    };
 
     return (
       <div>
@@ -70,7 +80,7 @@ const NodeElement = React.forwardRef(
           ) : (
             <Bullet itemId={node.id} ref={connectDragSource} />
           )}
-          <NodeTitle node={node} onDelete={onDelete} onRename={onRename} />
+          <NodeTitle setNodes={setNodes} nodes={nodes} node={node} />
           {node.id === placement.id && (
             <Border
               placement={placement}

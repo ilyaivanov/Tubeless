@@ -4,16 +4,13 @@ import NodeElement from "./Node";
 import {getParentKey} from "./treeOperations";
 
 export interface TreeProps {
-  nodes: Nodes;
   ids: string[];
   level: number;
-  onToggleCollapse: (id: string) => void;
+  nodes: Nodes;
+  setNodes: (nodes: Nodes) => void;
   placement: Partial<Placement>;
   setPlacement: (placement: Partial<Placement>) => void;
-  onDrop: () => void;
   onPlay: (node: Node) => void;
-  onDelete: (node: Node) => void;
-  onRename: (nodeId: string, newText: string) => void;
 }
 
 const Tree = (props: TreeProps) => {
@@ -35,6 +32,7 @@ const Tree = (props: TreeProps) => {
     </Fragment>
   );
 };
+
 //check that all node children can be found in the Nodes tree
 const validateChildren = (nodes: Nodes, children: string[]) => {
   children.forEach(node => {

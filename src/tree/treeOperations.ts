@@ -22,9 +22,10 @@ export const updateNode = (
 
 export const deleteNode = (nodes: Nodes, nodeId: string) => {
   const parent = validateParent(getParentKey(nodes, nodeId), nodeId);
-  return updateNode(nodes, parent, node => ({
+  const res  = updateNode(nodes, parent, node => ({
     children: except(node.children, nodeId)
   }));
+  return res;
 };
 
 export const getNodeLevel = (nodes: Nodes, nodeId: string) =>
