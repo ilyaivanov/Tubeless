@@ -1,10 +1,10 @@
-import { node, root, sampleNodes } from "../tree/sampleTrees";
-import { drop } from "./dropRules";
-import { Nodes, Roots } from "../tree/types";
+import { node, root, sampleNodes } from "./sampleTrees";
+import { onDrop} from "./treeActions";
+import { Nodes, Roots } from "./types";
 
 describe("for medium sized tree", () => {
   it("when dragging a 1.2.1 node before 1.2 it should place 1.2.1 before 1.2", () => {
-    const results = drop(sampleNodes, {
+    const results = onDrop(sampleNodes, {
       id: "1.2",
       itemBeingDragged: "1.2.1",
       dragLevel: 2,
@@ -15,7 +15,7 @@ describe("for medium sized tree", () => {
   });
 
   it("when dragging a 2 node after 1.2.1 with shift +1 it should place 2 as a first child of 1.2.1", () => {
-    const results = drop(sampleNodes, {
+    const results = onDrop(sampleNodes, {
       id: "1.2.1",
       itemBeingDragged: "2",
       dragLevel: 3,
@@ -26,7 +26,7 @@ describe("for medium sized tree", () => {
   });
 
   it("when dragging a 2 node over 1", () => {
-    const results = drop(sampleNodes, {
+    const results = onDrop(sampleNodes, {
       id: "1",
       itemBeingDragged: "2",
       dragLevel: 0,
@@ -47,7 +47,7 @@ describe("when dropping a node from search to favorites", () => {
     const fn = jest.fn();
     fn.mockReturnValueOnce("333");
     Math.random = fn;
-    const results = drop(nodes, {
+    const results = onDrop(nodes, {
       id: "1",
       itemBeingDragged: "2",
       dragLevel: 0,

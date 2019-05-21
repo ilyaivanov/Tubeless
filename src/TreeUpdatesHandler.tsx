@@ -1,14 +1,20 @@
 import React, { Fragment } from "react";
 import { Node, Placement } from "./tree/types";
-import { drop } from "./domain/dropRules";
-import { shallowEqual } from "./domain/shallowCompare";
 import Tree from "./tree/Tree";
-import {
-  removeNode,
-  setVideosAsChildren,
-  updateNode
-} from "./domain/nodes.utils";
 import { searchSimilar } from "./youtube/api";
+import { updateNode } from "./tree/treeOperations";
+import {
+  onDeleteNode,
+  onSearchDone,
+  onDrop,
+  onSearchStart,
+  toggleVisibility,
+  onCreateNode
+} from "./tree/treeActions";
+import { mapVideosToNodes } from "./youtube/mapVideosToNodes";
+import { shallowEqual } from "./utils";
+
+const handleDrop = onDrop;
 
 const TreeUpdatesHandler = ({
   setNodes,
@@ -20,26 +26,12 @@ const TreeUpdatesHandler = ({
 }: any) => {
   const onToggleCollapse = (id: string) => {
     if (nodes[id].type === "video") {
-      setNodes(
-        updateNode(nodes, id, () => ({
-          isLoading: true
-        }))
-      );
+      setNodes(onSearchStart(nodes, id));
       searchSimilar(nodes[id].videoUrl).then(response => {
-        const withChildren = setVideosAsChildren(nodes, id, response);
-        setNodes(
-          updateNode(withChildren, id, () => ({
-            isLoading: false,
-            isHidden: false
-          }))
-        );
+        setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)));
       });
     } else {
-      setNodes(
-        updateNode(nodes, id, node => ({
-          isHidden: !node.isHidden
-        }))
-      );
+      setNodes(toggleVisibility(nodes, id));
     }
   };
 
@@ -51,7 +43,7 @@ const TreeUpdatesHandler = ({
   };
 
   const onDrop = () => {
-    setNodes(drop(nodes, placement as Placement));
+    setNodes(handleDrop(nodes, placement as Placement));
     setPlacement({});
   };
 
@@ -62,24 +54,10 @@ const TreeUpdatesHandler = ({
     );
   };
 
-  const addNewNode = () => {
-    //TODO: consider extract specific node creation logic
-    const id = Math.random() + "";
-    const node: Node = {
-      text: "New Node",
-      type: "generic",
-      id
-    };
-    const withChild = updateNode(nodes, zone, node => ({
-      children: (node.children as string[]).concat([id])
-    }));
-    setNodes({
-      ...withChild,
-      [id]: node
-    });
-  };
+  const addNewNode = () => setNodes(onCreateNode(nodes, zone));
 
-  const onDelete = (node: Node) => setNodes(removeNode(nodes, node.id));
+  const onDelete = (node: Node) => setNodes(onDeleteNode(nodes, node.id));
+
   return (
     <Fragment>
       <Tree

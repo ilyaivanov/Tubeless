@@ -5,7 +5,8 @@ import { Placement, PlacementOrientation } from "./types";
 import { getBoundingClientRect, getClientOffset } from "./offsetHandler";
 import {ARROW_SIZE, LEVEL_SHIFT} from "./components";
 import { NodeProps } from "./Node";
-import { getParentKey, validateParent } from "../domain/nodes.utils";
+import {getParentKey,} from "./treeOperations";
+import {validateParent} from "./treeValidation";
 
 const Context = ({ children }: { children: JSX.Element }) => (
   <Fragment>{children}</Fragment>

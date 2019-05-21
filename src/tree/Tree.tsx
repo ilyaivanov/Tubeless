@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Node, Nodes, Placement } from "./types";
 import NodeElement from "./Node";
-import { getParentKey } from "../domain/nodes.utils";
+import {getParentKey} from "./treeOperations";
 
 export interface TreeProps {
   nodes: Nodes;
