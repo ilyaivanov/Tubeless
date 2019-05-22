@@ -11,7 +11,7 @@ import { TreeDragSource, TreeDropTarget } from "./dnd";
 import NodeTitle from "./NodeTitle";
 import { TreeProps } from "./Tree";
 import { onSearchDone, onSearchStart, toggleVisibility } from "./treeActions";
-import { searchSimilar, getPlaylistVideos } from "../youtube/api";
+import {searchSimilar, getPlaylistVideos, getChannelVideos} from "../youtube/api";
 import { mapVideosToNodes } from "../youtube/mapVideosToNodes";
 
 export interface NodeProps extends TreeProps {
@@ -63,6 +63,11 @@ const NodeElement = React.forwardRef(
       } else if (nodes[id].type === "Playlist") {
         setNodes(onSearchStart(nodes, id));
         getPlaylistVideos(nodes[id].playlistId as string).then(response =>
+          setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)))
+        );
+      } else if (nodes[id].type === "Channel") {
+        setNodes(onSearchStart(nodes, id));
+        getChannelVideos(nodes[id].channelId as string).then(response =>
           setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)))
         );
       } else {
