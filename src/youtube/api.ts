@@ -88,6 +88,21 @@ export const getPlaylistVideos = (
   }
   throw new Error("Faked playlistItems is not supported yet");
 };
+export const getChannelVideos = (
+  channelId: string
+): Promise<SearchResponse> => {
+  logRequest(channelId, "channelId");
+  if (IS_REAL_API) {
+    return fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&key=${YOUTUBE_KEY}&maxResults=20&order=date&type=video`
+    )
+      .then(response => response.json())
+      .then((data: YoutubeSearchResponse) => ({
+        items: data.items.map(parseItem)
+      }));
+  }
+  throw new Error("Faked getChannelVideos is not supported yet");
+};
 
 const isItemSupported = (itemKind: ItemKind): boolean =>
   itemKind === "youtube#video" ||
