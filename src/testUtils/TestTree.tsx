@@ -1,23 +1,30 @@
-import React, {Fragment, useState} from "react";
-import {Nodes} from "../tree/types";
-import {DragContext} from "../tree/dnd";
+import React, { Fragment, useState } from "react";
+import { Nodes } from "../tree/types";
+import { DragContext } from "../tree/dnd";
 import Tree from "../tree/Tree";
-import {onCreateNode} from "../tree/treeActions";
+import { onCreateNode } from "../tree/treeActions";
 
-export type TestNodeId = "2" | "3";
+export type TestNodeId = "2" | "3" | "MyPlaylistNodeId";
 
 const TestTree = ({ ids }: { ids: TestNodeId[] }) => {
   const nodesTree: Nodes = {
     ["TEST"]: {
-      type: 'Root',
+      type: "Root",
       id: "TEST",
       text: "sample",
       children: ids
     },
     "2": {
-      type: 'Video',
+      type: "Video",
       id: "2",
       text: "Node 2",
+      children: []
+    },
+    MyPlaylistNodeId: {
+      type: "Playlist",
+      id: "MyPlaylistNodeId",
+      text: "Sample Playlist",
+      playlistId: "MyPlaylistId",
       children: []
     }
   };
@@ -30,7 +37,7 @@ const TestTree = ({ ids }: { ids: TestNodeId[] }) => {
   const s = (nodes: Nodes) => {
     console.log(nodes);
     setNodes(nodes);
-  }
+  };
   return (
     <DragContext>
       <Fragment>

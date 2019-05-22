@@ -22,6 +22,7 @@ const sampleNodes: Nodes = {
     "KQE29az48gM",
     "https://picsum.photos/id/191/132/132?grayscale"
   ),
+  ...playlist('MyPlaylist', 'MyPlaylistId', 'https://picsum.photos/id/192/132/132?grayscale'),
   ...root(["1", "2"], Roots.FAVORITES),
   ...root(['Ambient'], Roots.SEARCH)
 };
@@ -47,6 +48,20 @@ function video(label: string, videoUrl: string, imageUrl: string) {
     type: 'Video',
     imageUrl,
     videoUrl
+  };
+  return {
+    [label]: node
+  };
+}
+
+
+function playlist(label: string, playlistId: string, imageUrl: string) {
+  const node: Node = {
+    id: label,
+    text: label,
+    type: 'Playlist',
+    imageUrl,
+    playlistId,
   };
   return {
     [label]: node
