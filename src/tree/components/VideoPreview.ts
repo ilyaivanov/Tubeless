@@ -10,8 +10,10 @@ export const VideoPreview = styled.img<Props>`
   width: 32px;
 
   max-width: 100%;
-  height: auto;
 
-  border-radius: ${(props: Props) => (props.type === "Channel" ? 32 : 3)}px;
+  border-radius: ${(props: Props) => hasRoundImage(props.type) ? 60 : 3}px;
   margin-right: 5px;
 `;
+
+const hasRoundImage = (nodeType: NodeType) =>
+  nodeType === "Channel" || nodeType === "Playlist";

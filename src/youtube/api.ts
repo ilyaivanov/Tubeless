@@ -7,6 +7,7 @@ import { YOUTUBE_KEY } from "../keys";
 import { IS_REAL_API } from "../featureToggles";
 import { searchFaked } from "./types/fakedResponses";
 import { SimilarResponse } from "./types/similarResponse";
+import { PlaylistVideosResponse } from "./types/PlaylistVideosResponse";
 
 export type ItemType = "Video" | "Channel" | "Playlist";
 
@@ -16,17 +17,17 @@ interface Item {
 }
 
 interface VideoItem extends Item {
-  type: 'Video';
+  type: "Video";
   videoId: string;
 }
 
 interface ChannelItem extends Item {
-  type: 'Channel';
+  type: "Channel";
   channelId: string;
 }
 
 interface PlaylistItem extends Item {
-  type: 'Playlist';
+  type: "Playlist";
   playlistId: string;
 }
 
@@ -40,7 +41,7 @@ export const searchVideos = (term: string): Promise<SearchResponse> =>
   IS_REAL_API
     ? fetch(
         `https://www.googleapis.com/youtube/v3/search?part=snippet&shart=mostPopular&maxResults=10&key=${YOUTUBE_KEY}&q=` +
-          logRequest(term)
+          logRequest(term, "search")
       )
         .then(response => response.json())
         .then((data: YoutubeSearchResponse) => ({
@@ -53,7 +54,7 @@ export const searchVideos = (term: string): Promise<SearchResponse> =>
 export const searchSimilar = (videoId: string): Promise<SearchResponse> =>
   fetch(
     `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=${YOUTUBE_KEY}&relatedToVideoId=` +
-      videoId
+      logRequest(videoId, "search similar")
   )
     .then(response => response.json())
     .then((data: SimilarResponse) => ({
@@ -61,11 +62,32 @@ export const searchSimilar = (videoId: string): Promise<SearchResponse> =>
         .filter(v => v.id.videoId)
         .map(s => ({
           title: s.snippet.title,
-          type: 'Video',
+          type: "Video",
           videoId: s.id.videoId,
           previewUrl: s.snippet.thumbnails.default.url
         }))
     }));
+
+export const getPlaylistVideos = (
+  playlistId: string
+): Promise<SearchResponse> => {
+  logRequest(playlistId, "playlistItems");
+  if (IS_REAL_API) {
+    return fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&key=${YOUTUBE_KEY}&maxResults=20`
+    )
+      .then(response => response.json())
+      .then((data: PlaylistVideosResponse) => ({
+        items: data.items.map(response => ({
+          title: response.snippet.title,
+          type: "Video",
+          videoId: response.snippet.resourceId.videoId,
+          previewUrl: response.snippet.thumbnails.default.url
+        }))
+      }));
+  }
+  throw new Error("Faked playlistItems is not supported yet");
+};
 
 const isItemSupported = (itemKind: ItemKind): boolean =>
   itemKind === "youtube#video" ||
@@ -101,7 +123,7 @@ const generalPart = (item: ItemsItem) => ({
   previewUrl: item.snippet.thumbnails.default.url
 });
 
-const logRequest = (term: string) => {
-  console.log("Requesting Youtube for ", term);
+const logRequest = (term: string, requestType: string) => {
+  console.log(`Requesting Youtube ${requestType} for ${term}`);
   return term;
 };
