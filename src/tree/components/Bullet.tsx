@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import React, { Ref } from "react";
 import { Node } from "../types";
-import FolderClosed from "../icons/folder-closed.svg";
+import FolderClosedNonEmpty from "../icons/folder-closed-withItems.svg";
+import FolderClosedLoader from "../icons/folder-closed-loader.svg";
+import FolderClosedEmpty from "../icons/folder-closed-empty.svg";
 import FolderOpenedMany from "../icons/folder-opened-many.svg";
 import FolderOpenedSingle from "../icons/folder-opened-single.svg";
 import FolderOpenedEmpty from "../icons/folder-opened-empty.svg";
@@ -27,7 +29,11 @@ export const Bullet = React.forwardRef(
 );
 
 const getFolderIcon = (node: Node) => {
-  if (node.isHidden) return FolderClosed;
+  if (node.isHidden) {
+    if (node.children && node.children.length > 0) return FolderClosedNonEmpty;
+    if (node.loader) return FolderClosedLoader;
+    return FolderClosedEmpty;
+  }
   const children = node.children;
 
   if (!children) return FolderOpenedEmpty;
