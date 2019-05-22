@@ -3,15 +3,9 @@ import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
 import { Node, Nodes, Placement, Roots } from "./tree/types";
 import Player from "./player";
-import {
-  searchVideos,
-  SearchResponse
-} from "./youtube/api";
+import { searchVideos, SearchResponse } from "./youtube/api";
 import { shallowEqual, useDebounce } from "./utils";
-import {
-  onCreateNode,
-  onSearchDone,
-} from "./tree/treeActions";
+import { onCreateNode, onSearchDone } from "./tree/treeActions";
 import { mapVideosToNodes } from "./youtube/mapVideosToNodes";
 import Tree from "./tree/Tree";
 
@@ -19,10 +13,24 @@ interface Props {
   processDefaultNodes?: (nodes: Nodes) => Nodes;
 }
 
+const STORAGE_KEY = "nodes:v0.1";
+
 const App: React.FC<Props> = ({ processDefaultNodes }) => {
   const [nodes, setNodes] = useState(
     processDefaultNodes ? processDefaultNodes(sampleNodes) : sampleNodes
   );
+  const updateNodes = (nodes: Nodes) => {
+    setNodes(nodes);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nodes));
+  };
+
+  useEffect(() => {
+    const res = window.localStorage.getItem(STORAGE_KEY);
+    if (res) {
+      setNodes(JSON.parse(res));
+    }
+  }, []);
+
   const [placement, setPlacement] = useState({} as Partial<Placement>);
 
   const [nodeBeingPlayed, setNodeBeingPlayer] = useState({} as Node);
@@ -30,7 +38,7 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
   const setSearchNodes = (response: SearchResponse) => {
-    setNodes(onSearchDone(nodes, Roots.SEARCH, mapVideosToNodes(response)));
+    updateNodes(onSearchDone(nodes, Roots.SEARCH, mapVideosToNodes(response)));
   };
 
   const updatePlacementOptimized = (newPlacement: Partial<Placement>) => {
@@ -41,7 +49,9 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
   };
 
   const addNewNodeForFavorites = () =>
-    setNodes(onCreateNode(nodes, Roots.FAVORITES));
+    updateNodes(onCreateNode(nodes, Roots.FAVORITES));
+
+
 
   return (
     <div>
@@ -55,7 +65,7 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
                 ids={nodes[Roots.FAVORITES].children as string[]}
                 level={0}
                 setPlacement={updatePlacementOptimized}
-                setNodes={setNodes}
+                setNodes={updateNodes}
                 onPlay={onPlay}
                 placement={placement}
               />
@@ -74,7 +84,7 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
               level={0}
               onPlay={onPlay}
               setPlacement={updatePlacementOptimized}
-              setNodes={setNodes}
+              setNodes={updateNodes}
               placement={placement}
             />
           )}
