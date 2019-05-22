@@ -11,7 +11,9 @@ export const VideoPreview = styled.img<Props>`
 
   max-width: 100%;
 
-  border-radius: ${(props: Props) => hasRoundImage(props.type) ? 60 : 3}px;
+  border-radius: ${(props: Props) => (hasRoundImage(props.type) ? 60 : 3)}px;
+
+  ${(props: Props) => (hasRoundImage(props.type) ? "" : "height: auto")};
   margin-right: 5px;
 `;
 

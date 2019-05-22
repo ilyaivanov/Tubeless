@@ -1,45 +1,41 @@
 import styled from "styled-components";
 import React, { Ref } from "react";
-
-interface CircleProps {
-  width: number;
-  color: string;
-  hoverColor?: string;
-}
+import { Node } from "../types";
+import FolderClosed from "../icons/folder-closed.svg";
+import FolderOpenedMany from "../icons/folder-opened-many.svg";
+import FolderOpenedSingle from "../icons/folder-opened-single.svg";
+import FolderOpenedEmpty from "../icons/folder-opened-empty.svg";
+import { NodeContainer } from "./NodeContainer";
 
 interface BulletProps {
-  itemId: string;
+  node: Node;
 }
 
+const FOLDER_SIZE = 30;
+
 export const Bullet = React.forwardRef(
-  ({ itemId }: BulletProps, ref: Ref<HTMLDivElement>) => (
-    <CircleContainer ref={ref} data-testid={"drag-handle-" + itemId}>
-      <Circle
-        width={18}
-        color="rgb(220, 224, 226)"
-        hoverColor={"rgb(183, 188, 191)"}
-      >
-        <Circle width={8} color="rgb(75, 81, 85)" />
-      </Circle>
+  ({ node }: BulletProps, ref: Ref<HTMLDivElement>) => (
+    <CircleContainer ref={ref} data-testid={"drag-handle-" + node.id}>
+      <Img src={getFolderIcon(node)} alt="" width={FOLDER_SIZE} height={FOLDER_SIZE} />
     </CircleContainer>
   )
 );
 
-const Circle = styled.div<CircleProps>`
-  border-radius: 10px;
-  width: ${(props: CircleProps) => `${props.width}px`};
-  height: ${(props: CircleProps) => `${props.width}px`};
-  background-color: ${(props: CircleProps) => `${props.color}`};
-  ${(props: CircleProps) =>
-    props.hoverColor
-      ? `&:hover{
-    background-color: ${props.hoverColor}
-  }`
-      : ""};
+const getFolderIcon = (node: Node) => {
+  if (node.isHidden) return FolderClosed;
+  const children = node.children;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  if (!children) return FolderOpenedEmpty;
+
+  if (children.length > 1) return FolderOpenedMany;
+  else return FolderOpenedSingle;
+};
+
+const Img = styled.img`
+  filter: invert(0.3);
+  ${NodeContainer}:hover & {
+    filter: invert(0);
+  }
 `;
 
 export const CircleContainer = styled.div`

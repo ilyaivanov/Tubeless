@@ -52,7 +52,10 @@ const NodeElement = React.forwardRef(
     });
 
     const onToggleCollapse = (id: string) => {
-      if (nodes[id].type === "Video") {
+      const children = nodes[id].children;
+      if (children && children.length > 0) {
+        setNodes(toggleVisibility(nodes, id));
+      } else if (nodes[id].type === "Video") {
         setNodes(onSearchStart(nodes, id));
         searchSimilar(nodes[id].videoUrl as string).then(response => {
           setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)));
@@ -89,7 +92,7 @@ const NodeElement = React.forwardRef(
               data-testid={`video-image-${node.id}`}
             />
           ) : (
-            <Bullet itemId={node.id} ref={connectDragSource} />
+            <Bullet node={node} ref={connectDragSource} />
           )}
           <NodeTitle setNodes={setNodes} nodes={nodes} node={node} />
           {node.id === placement.id && (
