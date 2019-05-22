@@ -1,7 +1,7 @@
-import { Node, Nodes } from "./types";
+import { Node, Nodes, NodeType } from "./types";
 import React, { KeyboardEvent, useState, Fragment } from "react";
 import { NodeIcons, NodeText } from "./components";
-import {onDeleteNode, onRenameNode} from "./treeActions";
+import { onDeleteNode, onRenameNode } from "./treeActions";
 
 interface Props {
   node: Node;
@@ -29,8 +29,10 @@ const NodeTitle = ({ nodes, node, setNodes }: Props) => {
     setIsEditing(false);
   };
 
-  const onDelete = (nodeId: string) =>
-    setNodes(onDeleteNode(nodes, nodeId));
+  const showType = (nodeType: NodeType) =>
+    nodeType === "Channel" || nodeType === "Playlist";
+
+  const onDelete = (nodeId: string) => setNodes(onDeleteNode(nodes, nodeId));
 
   return (
     <Fragment>
@@ -45,12 +47,15 @@ const NodeTitle = ({ nodes, node, setNodes }: Props) => {
           onChange={e => setText(e.target.value)}
         />
       ) : (
-        <Fragment>
+        <div>
+          {showType(node.type) && (
+            <div style={{ fontSize: 11, color: "grey" }}>{node.type}</div>
+          )}
           <NodeText data-testid={"title-" + node.id}>{node.text}</NodeText>
           {node.isLoading && (
             <span data-testid={"loading-" + node.id}>Loading...</span>
           )}
-        </Fragment>
+        </div>
       )}
       <NodeIcons
         nodeId={node.id}

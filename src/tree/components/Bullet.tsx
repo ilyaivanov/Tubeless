@@ -11,12 +11,17 @@ interface BulletProps {
   node: Node;
 }
 
-const FOLDER_SIZE = 30;
+const FOLDER_SIZE = 25;
 
 export const Bullet = React.forwardRef(
   ({ node }: BulletProps, ref: Ref<HTMLDivElement>) => (
     <CircleContainer ref={ref} data-testid={"drag-handle-" + node.id}>
-      <Img src={getFolderIcon(node)} alt="" width={FOLDER_SIZE} height={FOLDER_SIZE} />
+      <Img
+        src={getFolderIcon(node)}
+        alt=""
+        width={FOLDER_SIZE}
+        height={FOLDER_SIZE}
+      />
     </CircleContainer>
   )
 );
