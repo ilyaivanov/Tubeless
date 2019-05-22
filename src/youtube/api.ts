@@ -61,7 +61,7 @@ export const searchSimilar = (videoId: string): Promise<SearchResponse> =>
       items: data.items
         .filter(v => v.id.videoId)
         .map(s => ({
-          title: s.snippet.title,
+          ...mapTitle(s.snippet),
           type: "Video",
           videoId: s.id.videoId,
           previewUrl: s.snippet.thumbnails.default.url
@@ -78,11 +78,11 @@ export const getPlaylistVideos = (
     )
       .then(response => response.json())
       .then((data: PlaylistVideosResponse) => ({
-        items: data.items.map(response => ({
-          title: response.snippet.title,
+        items: data.items.map(item => ({
+          ...mapTitle(item.snippet),
           type: "Video",
-          videoId: response.snippet.resourceId.videoId,
-          previewUrl: response.snippet.thumbnails.default.url
+          videoId: item.snippet.resourceId.videoId,
+          previewUrl: item.snippet.thumbnails.default.url
         }))
       }));
   }
@@ -91,7 +91,7 @@ export const getPlaylistVideos = (
 export const getChannelVideos = (
   channelId: string
 ): Promise<SearchResponse> => {
-  logRequest(channelId, "channelId");
+  logRequest(channelId, "videos for channel");
   if (IS_REAL_API) {
     return fetch(
       `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&key=${YOUTUBE_KEY}&maxResults=20&order=date&type=video`
@@ -102,6 +102,26 @@ export const getChannelVideos = (
       }));
   }
   throw new Error("Faked getChannelVideos is not supported yet");
+};
+export const getPlaylistsForChannel = (
+  channelId: string
+): Promise<SearchResponse> => {
+  logRequest(channelId, "playlists for channel");
+  if (IS_REAL_API) {
+    return fetch(
+      `https://www.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails&channelId=${channelId}&maxResults=25&key=${YOUTUBE_KEY}`
+    )
+      .then(response => response.json())
+      .then((data: any) => ({
+        items: data.items.map((item: any) => ({
+          ...mapTitle(item.snippet),
+          previewUrl: item.snippet.thumbnails.default.url,
+          playlistId: item.id,
+          type: "Playlist"
+        }))
+      }));
+  }
+  throw new Error("Faked getPlaylistsForChannel is not supported yet");
 };
 
 const isItemSupported = (itemKind: ItemKind): boolean =>
@@ -116,27 +136,32 @@ const parseItem = (item: ItemsItem): SearchItem => {
 };
 
 const parseVideo = (item: ItemsItem): SearchItem => ({
-  ...generalPart(item),
+  ...mapTitle(item.snippet),
+  previewUrl: item.snippet.thumbnails.default.url,
   videoId: item.id.videoId as string,
   type: "Video"
 });
 
 const parsePlaylist = (item: ItemsItem): SearchItem => ({
-  ...generalPart(item),
+  ...mapTitle(item.snippet),
+  previewUrl: item.snippet.thumbnails.default.url,
   playlistId: item.id.playlistId as string,
   type: "Playlist"
 });
 
 const parseChannel = (item: ItemsItem): SearchItem => ({
-  ...generalPart(item),
+  ...mapTitle(item.snippet),
+  previewUrl: item.snippet.thumbnails.default.url,
   channelId: item.id.channelId as string,
   type: "Channel"
 });
 
-const generalPart = (item: ItemsItem) => ({
-  title: item.snippet.title,
-  previewUrl: item.snippet.thumbnails.default.url
+const mapTitle = ({ title }: { title: string }) => ({
+  title: handleTitle(title)
 });
+
+const handleTitle = (title: string): string =>
+  title.replace(/[^\x00-\x7F]/g, "");
 
 const logRequest = (term: string, requestType: string) => {
   console.log(`Requesting Youtube ${requestType} for ${term}`);
