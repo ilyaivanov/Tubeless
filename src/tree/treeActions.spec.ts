@@ -11,7 +11,7 @@ describe("for medium sized tree", () => {
       orientation: "BEFORE"
     });
 
-    expect(results[Roots.FAVORITES].children).toEqual(["1", "2"]);
+    expect(results[Roots.FAVORITES].children).toEqual(["1", "2", "Loading Google Playlists"]);
   });
 
   it("when dragging a 2 node after 1.2.1 with shift +1 it should place 2 as a first child of 1.2.1", () => {
@@ -21,7 +21,7 @@ describe("for medium sized tree", () => {
       dragLevel: 3,
       orientation: "AFTER"
     });
-    expect(results[Roots.FAVORITES].children).toEqual(["1"]);
+    expect(results[Roots.FAVORITES].children).toEqual(["1", "Loading Google Playlists"]);
     expect(results["1.2.1"].children).toEqual(["2"]);
   });
 
@@ -32,7 +32,7 @@ describe("for medium sized tree", () => {
       dragLevel: 0,
       orientation: "BEFORE"
     });
-    expect(results[Roots.FAVORITES].children).toEqual(["2", "1"]);
+    expect(results[Roots.FAVORITES].children).toEqual(["2", "1", "Loading Google Playlists"]);
   });
 });
 
