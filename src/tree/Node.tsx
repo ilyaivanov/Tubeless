@@ -11,8 +11,14 @@ import { TreeDragSource, TreeDropTarget } from "./dnd";
 import NodeTitle from "./NodeTitle";
 import { TreeProps } from "./Tree";
 import { onSearchDone, onSearchStart, toggleVisibility } from "./treeActions";
-import {searchSimilar, getPlaylistVideos, getChannelVideos} from "../youtube/api";
+import {
+  searchSimilar,
+  getPlaylistVideos,
+  getChannelVideos,
+  getPlaylistsForChannel
+} from "../youtube/api";
 import { mapVideosToNodes } from "../youtube/mapVideosToNodes";
+import { createPlaylistLoader } from "./sampleTrees";
 
 export interface NodeProps extends TreeProps {
   children: JSX.Element;
@@ -51,6 +57,9 @@ const NodeElement = React.forwardRef(
       };
     });
 
+    const addPlaylistsLoader = (nodes: Node[], channelId: string): Node[] =>
+      [createPlaylistLoader(channelId)].concat(nodes);
+
     const onToggleCollapse = (id: string) => {
       const children = nodes[id].children;
       if (children && children.length > 0) {
@@ -66,12 +75,31 @@ const NodeElement = React.forwardRef(
           setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)))
         );
       } else if (nodes[id].type === "Channel") {
+        const channelId = nodes[id].channelId as string;
         setNodes(onSearchStart(nodes, id));
-        getChannelVideos(nodes[id].channelId as string).then(response =>
-          setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)))
+        getChannelVideos(channelId).then(response =>
+          setNodes(
+            onSearchDone(
+              nodes,
+              id,
+              addPlaylistsLoader(mapVideosToNodes(response), channelId)
+            )
+          )
         );
       } else {
-        setNodes(toggleVisibility(nodes, id));
+        const loader = nodes[id].loader;
+        if (loader) {
+          if (loader.type === "Playlists") {
+            setNodes(onSearchStart(nodes, id));
+            getPlaylistsForChannel(loader.channelId as string).then(response =>
+              setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)))
+            );
+          } else {
+            throw new Error("Unexpected loader: " + loader.type);
+          }
+        } else {
+          setNodes(toggleVisibility(nodes, id));
+        }
       }
     };
 

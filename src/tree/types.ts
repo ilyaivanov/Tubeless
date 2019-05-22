@@ -1,5 +1,12 @@
 export type NodeType = "Video" | "Playlist" | "Channel" | "Root" | "Composite";
 
+export type LoaderType = "Playlists";
+
+export type Loader = {
+  type: LoaderType;
+  channelId: string;
+};
+
 export interface Node {
   id: string;
   text: string;
@@ -8,6 +15,8 @@ export interface Node {
   isLoading?: boolean;
 
   type: NodeType;
+
+  loader?: Loader;
   videoUrl?: string;
   channelId?: string;
   playlistId?: string;
