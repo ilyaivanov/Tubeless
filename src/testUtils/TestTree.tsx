@@ -18,6 +18,7 @@ const TestTree = ({ ids }: { ids: TestNodeId[] }) => {
       type: "Video",
       id: "2",
       text: "Node 2",
+      isHidden: true,
       children: []
     },
     MyPlaylistNodeId: {

@@ -3,9 +3,9 @@ import { DragContext } from "./tree/dnd";
 import { sampleNodes } from "./tree/sampleTrees";
 import { Node, Nodes, Placement, Roots } from "./tree/types";
 import Player from "./player";
-import { searchVideos, SearchResponse } from "./youtube/api";
+import { searchVideos, YoutubeResponse } from "./youtube/api";
 import { shallowEqual, useDebounce } from "./utils";
-import { onCreateNode, onSearchDone } from "./tree/treeActions";
+import { loadMoreItems, onCreateNode, onSearchDone } from "./tree/treeActions";
 import { mapVideosToNodes } from "./youtube/mapVideosToNodes";
 import Tree from "./tree/Tree";
 
@@ -37,8 +37,17 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
 
   const onPlay = (node: Node) => setNodeBeingPlayer(node);
 
-  const setSearchNodes = (response: SearchResponse) => {
-    updateNodes(onSearchDone(nodes, Roots.SEARCH, mapVideosToNodes(response)));
+  const setSearchNodes = (response: YoutubeResponse, override?: boolean) => {
+    //TORO: remove this anti-pattern, do not set true flags for single method
+    updateNodes(
+      onSearchDone(
+        nodes,
+        Roots.SEARCH,
+        mapVideosToNodes(response),
+        response,
+        override
+      )
+    );
   };
 
   const updatePlacementOptimized = (newPlacement: Partial<Placement>) => {
@@ -51,12 +60,16 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
   const addNewNodeForFavorites = () =>
     updateNodes(onCreateNode(nodes, Roots.FAVORITES));
 
-
+  const resetState = () => {
+    setNodes(sampleNodes);
+    window.localStorage.removeItem(STORAGE_KEY);
+  };
 
   return (
     <div>
       <DragContext>
         <LayoutManager
+          searchNode={nodes[Roots.SEARCH]}
           onSearchDone={setSearchNodes}
           renderRight={() => (
             <Fragment>
@@ -91,11 +104,22 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
         />
       </DragContext>
       <Player videoId={nodeBeingPlayed.videoUrl} />
+      <button
+        style={{ position: "absolute", top: 5, right: 5 }}
+        onClick={resetState}
+      >
+        Reset
+      </button>
     </div>
   );
 };
 
-const LayoutManager = ({ renderRight, renderLeft, onSearchDone }: any) => {
+const LayoutManager = ({
+  renderRight,
+  renderLeft,
+  onSearchDone,
+  searchNode
+}: any) => {
   const [seachVisible, setSearchVisibility] = useState(false);
   const style = seachVisible
     ? { flex: 1 }
@@ -111,6 +135,7 @@ const LayoutManager = ({ renderRight, renderLeft, onSearchDone }: any) => {
     >
       <div style={style} data-testid="search-zone">
         <Search
+          searchNode={searchNode}
           isVisible={seachVisible}
           onSearchDone={onSearchDone}
           onClick={() => setSearchVisibility(!seachVisible)}
@@ -125,12 +150,26 @@ const LayoutManager = ({ renderRight, renderLeft, onSearchDone }: any) => {
   );
 };
 
-const Search = ({ isVisible, onClick, renderTree, onSearchDone }: any) => {
+const Search = ({
+  searchNode,
+  isVisible,
+  onClick,
+  renderTree,
+  onSearchDone
+}: any) => {
   const [value, setValue] = useState("");
   const throttledValue = useDebounce(value, 500);
   useEffect(() => {
-    if (throttledValue) searchVideos(throttledValue).then(onSearchDone);
+    if (throttledValue) {
+      searchVideos(throttledValue).then(res =>
+        onSearchDone(res, true)
+      );
+    }
   }, [throttledValue]);
+
+  const loadMoreSearch = () => {
+    searchVideos(throttledValue, searchNode.nextPageToken).then(onSearchDone);
+  };
   return (
     <div>
       <div
@@ -145,14 +184,23 @@ const Search = ({ isVisible, onClick, renderTree, onSearchDone }: any) => {
         </button>
       </div>
       {isVisible && (
-        <input
-          data-testid="search-input"
-          type="text"
-          value={value}
-          onChange={e => setValue(e.target.value)}
-        />
+        <Fragment>
+          <input
+            data-testid="search-input"
+            type="text"
+            value={value}
+            onChange={e => setValue(e.target.value)}
+          />{" "}
+          {searchNode.titlePostfix && (
+            <span style={{ fontSize: 11, color: "grey" }}>
+              {" "}
+              {searchNode.titlePostfix}
+            </span>
+          )}
+        </Fragment>
       )}
       {isVisible && renderTree()}
+      {isVisible && <button onClick={loadMoreSearch}>more</button>}
     </div>
   );
 };

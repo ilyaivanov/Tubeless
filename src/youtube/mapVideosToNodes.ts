@@ -1,8 +1,8 @@
-import { ItemType, SearchItem, SearchResponse } from "./api";
+import { ItemType, SearchItem, YoutubeResponse } from "./api";
 import { Node, NodeType } from "../tree/types";
 import { createId } from "../utils";
 
-export const mapVideosToNodes = (response: SearchResponse): Node[] => {
+export const mapVideosToNodes = (response: YoutubeResponse): Node[] => {
   return response.items.map(mapItem);
 };
 

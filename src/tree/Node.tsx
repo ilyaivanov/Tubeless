@@ -3,22 +3,14 @@ import { Node, Nodes, Placement } from "./types";
 import {
   Arrow,
   Border,
-  Bullet,
+  Bullet, LEVEL_SHIFT,
   NodeContainer,
   VideoPreview
 } from "./components";
 import { TreeDragSource, TreeDropTarget } from "./dnd";
 import NodeTitle from "./NodeTitle";
 import { TreeProps } from "./Tree";
-import { onSearchDone, onSearchStart, toggleVisibility } from "./treeActions";
-import {
-  searchSimilar,
-  getPlaylistVideos,
-  getChannelVideos,
-  getPlaylistsForChannel
-} from "../youtube/api";
-import { mapVideosToNodes } from "../youtube/mapVideosToNodes";
-import { createPlaylistLoader } from "./sampleTrees";
+import {loadMoreItems, onToggleCollapse} from "./treeActions";
 
 export interface NodeProps extends TreeProps {
   children: JSX.Element;
@@ -57,52 +49,6 @@ const NodeElement = React.forwardRef(
       };
     });
 
-    const addPlaylistsLoader = (nodes: Node[], channelId: string): Node[] =>
-      [createPlaylistLoader(channelId)].concat(nodes);
-
-    const onToggleCollapse = (id: string) => {
-      const children = nodes[id].children;
-      if (children && children.length > 0) {
-        setNodes(toggleVisibility(nodes, id));
-      } else if (nodes[id].type === "Video") {
-        setNodes(onSearchStart(nodes, id));
-        searchSimilar(nodes[id].videoUrl as string).then(response => {
-          setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)));
-        });
-      } else if (nodes[id].type === "Playlist") {
-        setNodes(onSearchStart(nodes, id));
-        getPlaylistVideos(nodes[id].playlistId as string).then(response =>
-          setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)))
-        );
-      } else if (nodes[id].type === "Channel") {
-        const channelId = nodes[id].channelId as string;
-        setNodes(onSearchStart(nodes, id));
-        getChannelVideos(channelId).then(response =>
-          setNodes(
-            onSearchDone(
-              nodes,
-              id,
-              addPlaylistsLoader(mapVideosToNodes(response), channelId)
-            )
-          )
-        );
-      } else {
-        const loader = nodes[id].loader;
-        if (loader) {
-          if (loader.type === "Playlists") {
-            setNodes(onSearchStart(nodes, id));
-            getPlaylistsForChannel(loader.channelId as string).then(response =>
-              setNodes(onSearchDone(nodes, id, mapVideosToNodes(response)))
-            );
-          } else {
-            throw new Error("Unexpected loader: " + loader.type);
-          }
-        } else {
-          setNodes(toggleVisibility(nodes, id));
-        }
-      }
-    };
-
     return (
       <div>
         <NodeContainer
@@ -113,7 +59,7 @@ const NodeElement = React.forwardRef(
           <Arrow
             orientation={node.isHidden ? "right" : "down"}
             nodeId={node.id}
-            onClick={() => onToggleCollapse(node.id)}
+            onClick={() => onToggleCollapse(nodes, setNodes, node.id)}
           />
           {node.type !== "Composite" ? (
             <VideoPreview
@@ -137,6 +83,7 @@ const NodeElement = React.forwardRef(
           )}
         </NodeContainer>
         {children}
+        {(node.nextPageToken && !node.isHidden) && <button style={{marginLeft: level * LEVEL_SHIFT}} onClick={() => loadMoreItems(nodes, node.id, setNodes)}>more</button>}
       </div>
     );
   }
