@@ -68,7 +68,7 @@ export const searchSimilar = (
   videoId: string,
   pageToken?: string
 ): Promise<YoutubeResponse> =>
-  fetch(
+  fetchJson(
     url("search", {
       part: "snippet",
       type: "video",
@@ -77,7 +77,6 @@ export const searchSimilar = (
       pageToken
     })
   )
-    .then(response => response.json())
     .then((data: SimilarResponse) => ({
       //TODO: extract duplication
       nextPageToken: data.nextPageToken,
@@ -98,7 +97,7 @@ export const getPlaylistVideos = (
 ): Promise<YoutubeResponse> => {
   logRequest(playlistId, "playlistItems");
   if (IS_REAL_API) {
-    return fetch(
+    return fetchJson(
       url("playlistItems", {
         part: "snippet",
         playlistId,
@@ -106,7 +105,6 @@ export const getPlaylistVideos = (
         pageToken
       })
     )
-      .then(response => response.json())
       .then((data: PlaylistVideosResponse) => ({
         //TODO: extract duplication
         nextPageToken: data.nextPageToken,
@@ -127,7 +125,7 @@ export const getChannelVideos = (
 ): Promise<YoutubeResponse> => {
   logRequest(channelId, "videos for channel");
   if (IS_REAL_API) {
-    return fetch(
+    return fetchJson(
       url("search", {
         part: "snippet",
         channelId,
@@ -137,7 +135,6 @@ export const getChannelVideos = (
         pageToken
       })
     )
-      .then(response => response.json())
       .then((data: YoutubeSearchResponse) => ({
         //TODO: extract duplication
         nextPageToken: data.nextPageToken,
@@ -153,7 +150,7 @@ export const getPlaylistsForChannel = (
 ): Promise<YoutubeResponse> => {
   logRequest(channelId, "playlists for channel");
   if (IS_REAL_API) {
-    return fetch(
+    return fetchJson(
       url("playlists", {
         part: "snippet%2CcontentDetails",
         channelId,
@@ -161,7 +158,6 @@ export const getPlaylistsForChannel = (
         pageToken
       })
     )
-      .then(response => response.json())
       .then((data: any) => ({
         //TODO: extract duplication
         nextPageToken: data.nextPageToken,
@@ -224,6 +220,8 @@ const logRequest = (term: string, requestType: string) => {
 const defaultProps = {
   key: YOUTUBE_KEY
 };
+
+const fetchJson = (url: string) => fetch(url).then(res => res.json());
 
 const parseProps = (props: any): string => {
   const allProps = { ...props, ...defaultProps };
