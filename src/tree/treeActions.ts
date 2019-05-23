@@ -1,4 +1,4 @@
-import {Node, Nodes, NodeType, Placement} from "./types";
+import { Node, Nodes, Placement } from "./types";
 import {
   copyNodeDeep,
   createNode,
@@ -8,14 +8,23 @@ import {
   getRootKey,
   updateNode
 } from "./treeOperations";
-import {createId} from "../utils";
-import {validateParent} from "./treeValidation";
+import { createId } from "../utils";
+import { validateParent } from "./treeValidation";
+import { createPlaylistLoader } from "./sampleTrees";
+import {
+  getChannelVideos,
+  getPlaylistsForChannel,
+  getPlaylistVideos,
+  searchSimilar,
+  YoutubeResponse
+} from "../youtube/api";
+import { mapVideosToNodes } from "../youtube/mapVideosToNodes";
 
 export const onCreateNode = (nodes: Nodes, parentId: string) => {
   const id = Math.random() + "";
   const node: Node = {
     text: "New Node",
-    type: 'Composite',
+    type: "Composite",
     id
   };
   const withChild = updateNode(nodes, parentId, node => ({
@@ -40,10 +49,83 @@ export const onSearchStart = (nodes: Nodes, nodeId: string) =>
     isLoading: true
   }));
 
+const addPlaylistsLoader = (nodes: Node[], channelId: string): Node[] =>
+  [createPlaylistLoader(channelId)].concat(nodes);
+
+export const loadMoreItems = (
+  nodes: Nodes,
+  id: string,
+  setNodes: (nodes: Nodes) => void
+) => {
+  if (nodes[id].type === "Video") {
+    setNodes(onSearchStart(nodes, id));
+    searchSimilar(nodes[id].videoUrl as string, nodes[id].nextPageToken).then(
+      response =>
+        setNodes(onSearchDone(nodes, id, mapVideosToNodes(response), response))
+    );
+  } else if (nodes[id].type === "Playlist") {
+    setNodes(onSearchStart(nodes, id));
+    getPlaylistVideos(
+      nodes[id].playlistId as string,
+      nodes[id].nextPageToken
+    ).then(response =>
+      setNodes(onSearchDone(nodes, id, mapVideosToNodes(response), response))
+    );
+  } else if (nodes[id].type === "Channel") {
+    const channelId = nodes[id].channelId as string;
+    setNodes(onSearchStart(nodes, id));
+    getChannelVideos(channelId, nodes[id].nextPageToken).then(response =>
+      setNodes(
+        onSearchDone(
+          nodes,
+          id,
+          nodes[id].nextPageToken
+            ? mapVideosToNodes(response)
+            : addPlaylistsLoader(mapVideosToNodes(response), channelId),
+          response
+        )
+      )
+    );
+  } else {
+    const loader = nodes[id].loader;
+    if (loader) {
+      if (loader.type === "Playlists") {
+        setNodes(onSearchStart(nodes, id));
+        getPlaylistsForChannel(
+          loader.channelId as string,
+          nodes[id].nextPageToken
+        ).then(response =>
+          setNodes(
+            onSearchDone(nodes, id, mapVideosToNodes(response), response)
+          )
+        );
+      } else {
+        throw new Error("Unexpected loader: " + loader.type);
+      }
+    }
+  }
+};
+
+//TODO: there is an issue related to async state updates
+export const onToggleCollapse = (
+  nodes: Nodes,
+  setNodes: (nodes: Nodes) => void,
+  id: string
+) => {
+  const children = nodes[id].children;
+  if (children && children.length > 0) {
+    setNodes(toggleVisibility(nodes, id));
+  } else {
+    return loadMoreItems(nodes, id, setNodes);
+  }
+};
+
 export const onSearchDone = (
   nodes: Nodes,
   parentId: string,
-  newVideoNodes: Node[]
+  newVideoNodes: Node[],
+  response: YoutubeResponse,
+  shouldOverride?: boolean
 ): Nodes => {
   const children = newVideoNodes.map(n => n.id);
   const withNodes = newVideoNodes.reduce(
@@ -51,11 +133,30 @@ export const onSearchDone = (
     nodes
   );
 
-  return updateNode(withNodes, parentId, () => ({
-    children,
+  const withChildren = updateNode(withNodes, parentId, node => ({
+    children: shouldOverride
+      ? children
+      : (node.children || []).concat(children),
     isLoading: false,
     isHidden: false
   }));
+  return setNodePageInformation(withChildren, parentId, response);
+};
+
+const setNodePageInformation = (
+  nodes: Nodes,
+  nodeId: string,
+  response: YoutubeResponse
+) => {
+  if (response.totalResults) {
+    return updateNode(nodes, nodeId, () => ({
+      titlePostfix:
+        getChildCount(nodes[nodeId]) +
+        (response.nextPageToken ? " out " + response.totalResults : ""),
+      nextPageToken: response.nextPageToken
+    }));
+  }
+  return nodes;
 };
 
 export const toggleVisibility = (nodes: Nodes, nodeId: string) =>
@@ -112,3 +213,6 @@ export function insertDragItemAtPlacement(
   copy.splice(targetIndex, 0, action.itemBeingDragged);
   return copy;
 }
+
+const getChildCount = (node: Node) =>
+  node.children ? node.children.length : 0;

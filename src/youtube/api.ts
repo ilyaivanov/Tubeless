@@ -33,31 +33,55 @@ interface PlaylistItem extends Item {
 
 export type SearchItem = VideoItem | ChannelItem | PlaylistItem;
 
-export interface SearchResponse {
+export interface YoutubeResponse {
+  nextPageToken?: string;
+  totalResults?: number;
   items: SearchItem[];
 }
 
-export const searchVideos = (term: string): Promise<SearchResponse> =>
+export const searchVideos = (
+  term: string,
+  pageToken?: string
+): Promise<YoutubeResponse> =>
   IS_REAL_API
     ? fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&shart=mostPopular&maxResults=10&key=${YOUTUBE_KEY}&q=` +
-          logRequest(term, "search")
+        url("search", {
+          part: "snippet",
+          shart: "mostPopular",
+          maxResults: 10,
+          pageToken,
+          q: logRequest(term, "search")
+        })
       )
         .then(response => response.json())
         .then((data: YoutubeSearchResponse) => ({
+          //TODO: extract duplication
+          nextPageToken: data.nextPageToken,
+          totalResults: data.pageInfo.totalResults,
           items: data.items
             .filter(item => isItemSupported(item.id.kind))
             .map(parseItem)
         }))
     : Promise.resolve(searchFaked(term));
 
-export const searchSimilar = (videoId: string): Promise<SearchResponse> =>
+export const searchSimilar = (
+  videoId: string,
+  pageToken?: string
+): Promise<YoutubeResponse> =>
   fetch(
-    `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=${YOUTUBE_KEY}&relatedToVideoId=` +
-      logRequest(videoId, "search similar")
+    url("search", {
+      part: "snippet",
+      type: "video",
+      maxResults: 10,
+      relatedToVideoId: videoId,
+      pageToken
+    })
   )
     .then(response => response.json())
     .then((data: SimilarResponse) => ({
+      //TODO: extract duplication
+      nextPageToken: data.nextPageToken,
+      totalResults: data.pageInfo.totalResults,
       items: data.items
         .filter(v => v.id.videoId)
         .map(s => ({
@@ -69,15 +93,24 @@ export const searchSimilar = (videoId: string): Promise<SearchResponse> =>
     }));
 
 export const getPlaylistVideos = (
-  playlistId: string
-): Promise<SearchResponse> => {
+  playlistId: string,
+  pageToken?: string
+): Promise<YoutubeResponse> => {
   logRequest(playlistId, "playlistItems");
   if (IS_REAL_API) {
     return fetch(
-      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&key=${YOUTUBE_KEY}&maxResults=20`
+      url("playlistItems", {
+        part: "snippet",
+        playlistId,
+        maxResults: 20,
+        pageToken
+      })
     )
       .then(response => response.json())
       .then((data: PlaylistVideosResponse) => ({
+        //TODO: extract duplication
+        nextPageToken: data.nextPageToken,
+        totalResults: data.pageInfo.totalResults,
         items: data.items.map(item => ({
           ...mapTitle(item.snippet),
           type: "Video",
@@ -89,30 +122,50 @@ export const getPlaylistVideos = (
   throw new Error("Faked playlistItems is not supported yet");
 };
 export const getChannelVideos = (
-  channelId: string
-): Promise<SearchResponse> => {
+  channelId: string,
+  pageToken?: string
+): Promise<YoutubeResponse> => {
   logRequest(channelId, "videos for channel");
   if (IS_REAL_API) {
     return fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&key=${YOUTUBE_KEY}&maxResults=20&order=date&type=video`
+      url("search", {
+        part: "snippet",
+        channelId,
+        maxResults: 20,
+        order: "date",
+        type: "video",
+        pageToken
+      })
     )
       .then(response => response.json())
       .then((data: YoutubeSearchResponse) => ({
+        //TODO: extract duplication
+        nextPageToken: data.nextPageToken,
+        totalResults: data.pageInfo.totalResults,
         items: data.items.map(parseItem)
       }));
   }
   throw new Error("Faked getChannelVideos is not supported yet");
 };
 export const getPlaylistsForChannel = (
-  channelId: string
-): Promise<SearchResponse> => {
+  channelId: string,
+  pageToken?: string
+): Promise<YoutubeResponse> => {
   logRequest(channelId, "playlists for channel");
   if (IS_REAL_API) {
     return fetch(
-      `https://www.googleapis.com/youtube/v3/playlists?part=snippet%2CcontentDetails&channelId=${channelId}&maxResults=25&key=${YOUTUBE_KEY}`
+      url("playlists", {
+        part: "snippet%2CcontentDetails",
+        channelId,
+        maxResults: 25,
+        pageToken
+      })
     )
       .then(response => response.json())
       .then((data: any) => ({
+        //TODO: extract duplication
+        nextPageToken: data.nextPageToken,
+        totalResults: data.pageInfo.totalResults,
         items: data.items.map((item: any) => ({
           ...mapTitle(item.snippet),
           previewUrl: item.snippet.thumbnails.default.url,
@@ -167,3 +220,17 @@ const logRequest = (term: string, requestType: string) => {
   console.log(`Requesting Youtube ${requestType} for ${term}`);
   return term;
 };
+
+const defaultProps = {
+  key: YOUTUBE_KEY
+};
+
+const parseProps = (props: any): string => {
+  const allProps = { ...props, ...defaultProps };
+  return Object.keys(allProps)
+    .filter(key => typeof allProps[key] !== "undefined")
+    .map(key => `${key}=${allProps[key]}`)
+    .join("&");
+};
+const url = (verb: string, props: {}) =>
+  `https://www.googleapis.com/youtube/v3/${verb}?${parseProps(props)}`;

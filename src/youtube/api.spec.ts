@@ -1,5 +1,5 @@
 import { YoutubeSearchResponse } from "./types/youtubeSearchResponse";
-import { ItemType, SearchResponse, searchVideos } from "./api";
+import { ItemType, YoutubeResponse, searchVideos } from "./api";
 
 jest.mock("../featureToggles", () => ({
   IS_REAL_API: true
@@ -9,7 +9,9 @@ it("having a mixed respones from youtube with videos/playlists/channels", () => 
   // @ts-ignore
   fetch = () => Promise.resolve({ json: () => mixedResponse });
 
-  const expectedItems: SearchResponse = {
+  const expectedItems: YoutubeResponse = {
+    nextPageToken: 'CAoQAA',
+    totalResults: 1000000,
     items: [
       {
         title: "Jordan B Peterson",

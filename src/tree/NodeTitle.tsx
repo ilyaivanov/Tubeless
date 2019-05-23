@@ -55,6 +55,12 @@ const NodeTitle = ({ nodes, node, setNodes }: Props) => {
           {node.isLoading && (
             <span data-testid={"loading-" + node.id}>Loading...</span>
           )}
+          {node.titlePostfix && (
+            <span style={{ fontSize: 11, color: "grey" }}>
+              {" "}
+              {node.titlePostfix}
+            </span>
+          )}
         </div>
       )}
       <NodeIcons
