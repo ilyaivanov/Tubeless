@@ -1,5 +1,5 @@
 import AppPageObject from "../testUtils/AppPageObject";
-import { SearchResponse, searchVideos } from "../youtube/api";
+import { YoutubeResponse, searchVideos } from "../youtube/api";
 import { act } from "react-testing-library";
 
 jest.mock("../youtube/api", () => ({
@@ -20,7 +20,7 @@ xit("when entering some search term it should display search results", async () 
   now.mockReturnValueOnce(5000);
   Date.now = now;
 
-  const sampleRespose: SearchResponse = {
+  const sampleRespose: YoutubeResponse = {
     items: [
       {
         title: "My Video",

@@ -21,6 +21,11 @@ export interface Node {
   channelId?: string;
   playlistId?: string;
   imageUrl?: string;
+
+
+  //paging
+  titlePostfix?: string;
+  nextPageToken?: string;
 }
 
 export interface Nodes {

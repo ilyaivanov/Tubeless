@@ -1,5 +1,5 @@
 import TreePageObject from "../testUtils/TreePageObject";
-import { SearchResponse } from "../youtube/api";
+import { YoutubeResponse } from "../youtube/api";
 import { searchSimilar } from "../youtube/api";
 import Mock = jest.Mock;
 
@@ -10,7 +10,7 @@ jest.mock("../youtube/api", () => ({
 }));
 
 (searchSimilar as Mock).mockReturnValue(
-  new Promise<SearchResponse>(resolve => {
+  new Promise<YoutubeResponse>(resolve => {
     setTimeout(() => {
       resolve({
         items: [

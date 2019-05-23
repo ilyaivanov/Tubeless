@@ -22,7 +22,7 @@ describe("Having a simple Tree", () => {
       expect(app.getAllNodes()).toHaveLength(1);
     });
 
-    it("arrow should point to the right", () => {
+    xit("arrow should point to the right", () => {
       expect(app.getArrowForNode("1")).toHaveStyleRule(
         "border-width",
         "4px 0 4px 6.9px"

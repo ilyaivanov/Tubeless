@@ -1,6 +1,6 @@
-import {  SearchResponse } from "../api";
+import {  YoutubeResponse } from "../api";
 
-export const searchFaked = (term: string): SearchResponse => ({
+export const searchFaked = (term: string): YoutubeResponse => ({
   items: [
     {
       title: "Carbon based Lifeforms 1 " + term,
