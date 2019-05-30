@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import React, { Ref } from "react";
 import { Node } from "../types";
-import FolderClosedNonEmpty from "../icons/folder-closed-withItems.svg";
-import FolderClosedLoader from "../icons/folder-closed-loader.svg";
-import FolderClosedEmpty from "../icons/folder-closed-empty.svg";
-import FolderOpenedMany from "../icons/folder-opened-many.svg";
-import FolderOpenedSingle from "../icons/folder-opened-single.svg";
-import FolderOpenedEmpty from "../icons/folder-opened-empty.svg";
+import FolderClosedNonEmpty from "./icons/folder-closed-withItems.svg";
+import FolderClosedLoader from "./icons/folder-closed-loader.svg";
+import FolderClosedEmpty from "./icons/folder-closed-empty.svg";
+import FolderOpenedMany from "./icons/folder-opened-many.svg";
+import FolderOpenedSingle from "./icons/folder-opened-single.svg";
+import FolderOpenedEmpty from "./icons/folder-opened-empty.svg";
 import { NodeContainer } from "./NodeContainer";
 
 interface BulletProps {
