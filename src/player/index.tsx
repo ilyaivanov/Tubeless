@@ -28,7 +28,7 @@ const YoutubePlayerWrapper = (props: any) => (
       data-testid="player"
       opts={{
         height: "150",
-        width: "220",
+        width: "400",
         playerVars: {
           // https://developers.google.com/youtube/player_parameters
           autoplay: 1
@@ -39,7 +39,7 @@ const YoutubePlayerWrapper = (props: any) => (
 );
 
 const style = {
-  position: "absolute",
+  position: "fixed",
   right: 15,
   bottom: 15
 } as {};
