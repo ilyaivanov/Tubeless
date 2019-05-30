@@ -64,6 +64,7 @@ export const loadMoreItems = (
         setNodes(onSearchDone(nodes, id, mapVideosToNodes(response), response))
     );
   } else if (nodes[id].type === "Playlist") {
+    console.log(nodes[id])
     setNodes(onSearchStart(nodes, id));
     getPlaylistVideos(
       nodes[id].playlistId as string,
