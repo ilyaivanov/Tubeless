@@ -22,7 +22,7 @@ export const updateNode = (
 
 export const deleteNode = (nodes: Nodes, nodeId: string) => {
   const parent = validateParent(getParentKey(nodes, nodeId), nodeId);
-  const res  = updateNode(nodes, parent, node => ({
+  const res = updateNode(nodes, parent, node => ({
     children: except(node.children, nodeId)
   }));
   return res;
@@ -79,4 +79,14 @@ export const copyNodeDeep = (
       id: newNodeId
     }
   };
+};
+
+export const getNextNodeId = (nodes: Nodes, nodeId: string) => {
+  const parentKey = getParentKey(nodes, nodeId) as string;
+  const parent = nodes[parentKey];
+  if (parent.children) {
+    const index = parent.children.indexOf(nodeId);
+    return parent.children[index + 1];
+  }
+  throw new Error("Expected node to have children");
 };
