@@ -5,9 +5,10 @@ import { Node, Nodes, Placement, Roots } from "./tree/types";
 import Player from "./player";
 import { searchVideos, YoutubeResponse } from "./youtube/api";
 import { shallowEqual, useDebounce } from "./utils";
-import { loadMoreItems, onCreateNode, onSearchDone } from "./tree/treeActions";
+import { onCreateNode, onSearchDone } from "./tree/treeActions";
 import { mapVideosToNodes } from "./youtube/mapVideosToNodes";
 import Tree from "./tree/Tree";
+import { getNextNodeId } from "./tree/treeOperations";
 
 interface Props {
   processDefaultNodes?: (nodes: Nodes) => Nodes;
@@ -65,6 +66,13 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
     window.localStorage.removeItem(STORAGE_KEY);
   };
 
+  const playNextTrack = () => {
+    const next = getNextNodeId(nodes, nodeBeingPlayed.id);
+    if(next) {
+      setNodeBeingPlayer(nodes[next]);
+    }
+  };
+
   return (
     <div>
       <DragContext>
@@ -103,7 +111,7 @@ const App: React.FC<Props> = ({ processDefaultNodes }) => {
           )}
         />
       </DragContext>
-      <Player videoId={nodeBeingPlayed.videoUrl} />
+      <Player videoId={nodeBeingPlayed.videoUrl} onEnd={playNextTrack} />
       <button
         style={{ position: "absolute", top: 5, right: 5 }}
         onClick={resetState}
