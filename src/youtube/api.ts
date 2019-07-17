@@ -206,11 +206,8 @@ const parseChannel = (item: ItemsItem): SearchItem => ({
 });
 
 const mapTitle = ({ title }: { title: string }) => ({
-  title: handleTitle(title)
+  title: title
 });
-
-const handleTitle = (title: string): string =>
-  title.replace(/[^\x00-\x7F]/g, "");
 
 const logRequest = (term: string, requestType: string) => {
   console.log(`Requesting Youtube ${requestType} for ${term}`);
