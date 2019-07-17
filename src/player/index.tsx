@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Youtube from "react-youtube";
 
 interface Props {
   videoId?: string;
+  onEnd: () => void;
 }
 
-const Player = ({ videoId }: Props) => {
+const Player = ({ videoId, onEnd }: Props) => {
   const [player, setPlayer] = useState();
-
-  // useEffect(() => {
-  //   if (player) {
-  //     console.log("playing video");
-  //     player.playVideo();
-  //   }
-  // }, [player]);
 
   if (!videoId) return null;
 
-  return <YoutubePlayerWrapper onReady={setPlayer} videoId={videoId} />;
+  return <YoutubePlayerWrapper onReady={setPlayer} videoId={videoId} onEnd={onEnd} />;
 };
 
 const YoutubePlayerWrapper = (props: any) => (
@@ -25,6 +19,7 @@ const YoutubePlayerWrapper = (props: any) => (
     <Youtube
       {...props}
       onReady={e => props.onReady(e.target)}
+      onEnd={props.onEnd}
       data-testid="player"
       opts={{
         height: "150",
